@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowDiary - Personalisasi Akun</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#e9d5ff',
+                            DEFAULT: '#c084fc',
+                            dark: '#9333ea',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f9fafb; }
+        .gradient-btn { background: linear-gradient(135deg, #d8b4fe 0%, #c084fc 100%); }
+        
+        /* Efek Transisi Antar Step */
+        .step-container { display: none; animation: slideIn 0.3s ease-out forwards; }
+        .step-container.active { display: flex; flex-direction: column; }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Styling untuk opsi yang dipilih */
+        .option-card.selected {
+            border-color: #c084fc;
+            background-color: #faf5ff;
+            box-shadow: 0 4px 6px -1px rgba(192, 132, 252, 0.2);
+        }
+        .option-card.selected .check-icon { display: block; }
+        .check-icon { display: none; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-[400px] h-[800px] max-h-screen bg-white rounded-none md:rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col md:border-[6px] md:border-gray-900">
+        
+        <div class="px-6 pt-8 pb-4 bg-white z-10">
+            <div class="flex justify-between items-center mb-6">
+                <button id="btn-prev" onclick="prevStep()" class="text-gray-400 hover:text-gray-800 transition-colors w-8 h-8 flex items-center justify-center rounded-full invisible">
+                    <i class="fa-solid fa-arrow-left text-lg"></i>
+                </button>
+                
+                <span id="step-indicator" class="font-bold text-gray-800 text-sm tracking-widest uppercase">Step 1 of 4</span>
+                
+                <button onclick="finishOnboarding()" class="text-gray-400 hover:text-brand-dark text-sm font-semibold transition-colors">
+                    Skip
+                </button>
+            </div>
+
+            <div class="w-full bg-gray-100 rounded-full h-1.5 mb-2">
+                <div id="progress-bar" class="bg-brand h-1.5 rounded-full transition-all duration-300" style="width: 25%"></div>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-6 pb-24 scrollbar-hide">
+            
+            <div id="step-1" class="step-container active">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">What's your skin type?</h1>
+                <p class="text-gray-500 text-sm mb-6">Select all that apply to get personalized recommendations.</p>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="option-card border-2 border-gray-100 rounded-2xl p-4 cursor-pointer text-center transition-all relative" onclick="toggleSelection(this)">
+                        <i class="fa-solid fa-circle-check text-brand absolute top-3 right-3 check-icon"></i>
+                        <div class="text-4xl mb-2">💧</div>
+                        <h3 class="font-bold text-gray-800 text-sm">Oily</h3>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-2xl p-4 cursor-pointer text-center transition-all relative" onclick="toggleSelection(this)">
+                        <i class="fa-solid fa-circle-check text-brand absolute top-3 right-3 check-icon"></i>
+                        <div class="text-4xl mb-2">🏜️</div>
+                        <h3 class="font-bold text-gray-800 text-sm">Dry</h3>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-2xl p-4 cursor-pointer text-center transition-all relative" onclick="toggleSelection(this)">
+                        <i class="fa-solid fa-circle-check text-brand absolute top-3 right-3 check-icon"></i>
+                        <div class="text-4xl mb-2">⚡</div>
+                        <h3 class="font-bold text-gray-800 text-sm">Acne-Prone</h3>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-2xl p-4 cursor-pointer text-center transition-all relative" onclick="toggleSelection(this)">
+                        <i class="fa-solid fa-circle-check text-brand absolute top-3 right-3 check-icon"></i>
+                        <div class="text-4xl mb-2">🌸</div>
+                        <h3 class="font-bold text-gray-800 text-sm">Sensitive</h3>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-2xl p-4 cursor-pointer text-center transition-all relative" onclick="toggleSelection(this)">
+                        <i class="fa-solid fa-circle-check text-brand absolute top-3 right-3 check-icon"></i>
+                        <div class="text-4xl mb-2">☯️</div>
+                        <h3 class="font-bold text-gray-800 text-sm">Combination</h3>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-2xl p-4 cursor-pointer text-center transition-all relative" onclick="toggleSelection(this)">
+                        <i class="fa-solid fa-circle-check text-brand absolute top-3 right-3 check-icon"></i>
+                        <div class="text-4xl mb-2">😊</div>
+                        <h3 class="font-bold text-gray-800 text-sm">Normal</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div id="step-2" class="step-container">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6">Seberapa sering Anda menggunakan aplikasi sejenis?</h1>
+
+                <div class="space-y-3">
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group hover:border-purple-200" onclick="singleSelection(this, 'step-2')">
+                        <span class="font-medium text-gray-700">Baru pertama kali mencoba</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group hover:border-purple-200" onclick="singleSelection(this, 'step-2')">
+                        <span class="font-medium text-gray-700">Pernah, tapi sudah jarang/berhenti</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group hover:border-purple-200" onclick="singleSelection(this, 'step-2')">
+                        <span class="font-medium text-gray-700">Sering / Pengguna aktif</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="step-3" class="step-container">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6">Fitur apa yang paling penting untuk Anda?</h1>
+                
+                <div class="space-y-3">
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
+                        <span class="font-medium text-gray-700">Mencatat rutinitas skincare (Tracker)</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                            <i class="fa-solid fa-check text-white text-xs check-icon"></i>
+                        </div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
+                        <span class="font-medium text-gray-700">Analisa bahan produk (Ingredients Scan)</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                            <i class="fa-solid fa-check text-white text-xs check-icon"></i>
+                        </div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
+                        <span class="font-medium text-gray-700">Pengingat Jadwal (Reminders)</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                            <i class="fa-solid fa-check text-white text-xs check-icon"></i>
+                        </div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
+                        <span class="font-medium text-gray-700">Rekomendasi Produk</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                            <i class="fa-solid fa-check text-white text-xs check-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="step-4" class="step-container">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6">Kondisi/tipe kulit saat ini seperti apa?</h1>
+                
+                <div class="space-y-3">
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
+                        <span class="font-medium text-gray-700">Sedang Breakout / Berjerawat</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
+                        <span class="font-medium text-gray-700">Kering dan Mengelupas</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
+                        <span class="font-medium text-gray-700">Kusam / Warna kulit tidak merata</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                    </div>
+                    <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
+                        <span class="font-medium text-gray-700">Normal / Sedang dalam kondisi baik</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="absolute bottom-0 w-full bg-white border-t border-gray-100 p-6 z-20">
+            <button id="btn-next" onclick="nextStep()" class="w-full gradient-btn text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 hover:opacity-90 transition-all">
+                Continue
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        // Fungsi untuk multiple selection (Bisa pilih lebih dari satu - Step 1 & 3)
+        function toggleSelection(element) {
+            element.classList.toggle('selected');
+            
+            // Logika UI untuk merubah background kotak checkbox jika ada
+            let checkbox = element.querySelector('.rounded');
+            if(checkbox) {
+                if(element.classList.contains('selected')) {
+                    checkbox.classList.remove('border-gray-300');
+                    checkbox.classList.add('bg-brand', 'border-brand');
+                } else {
+                    checkbox.classList.add('border-gray-300');
+                    checkbox.classList.remove('bg-brand', 'border-brand');
+                }
+            }
+        }
+
+        // Fungsi untuk single selection (Hanya bisa pilih satu / Radio Button - Step 2 & 4)
+        function singleSelection(element, stepId) {
+            // Hapus class 'selected' dari semua opsi di step ini
+            const options = document.querySelectorAll(`#${stepId} .option-card`);
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                let radio = opt.querySelector('.check-icon-radio');
+                if(radio) {
+                    radio.classList.remove('border-brand', 'bg-brand', 'border-4');
+                    radio.classList.add('border-gray-300');
+                }
+            });
+
+            // Tambahkan class 'selected' ke opsi yang diklik
+            element.classList.add('selected');
+            let selectedRadio = element.querySelector('.check-icon-radio');
+            if(selectedRadio) {
+                selectedRadio.classList.remove('border-gray-300');
+                selectedRadio.classList.add('border-brand', 'bg-white', 'border-4');
+            }
+        }
+
+        // Navigasi ke Step Berikutnya
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                // Sembunyikan step saat ini
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                
+                currentStep++;
+                
+                // Tampilkan step berikutnya
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                
+                updateUI();
+            } else {
+                // Jika sudah di step terakhir, selesaikan
+                finishOnboarding();
+            }
+        }
+
+        // Navigasi ke Step Sebelumnya
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                updateUI();
+            }
+        }
+
+        // Selesaikan Onboarding & Pergi ke Halaman Aplikasi
+        function finishOnboarding() {
+            // Disini Anda bisa menambahkan logika untuk menyimpan data (misal ke LocalStorage/API)
+            // Kemudian alihkan user ke halaman utama (glowdiary.html)
+            window.location.href = 'glowdiary.html';
+        }
+
+        // Update UI (Progress Bar, Tombol, Label Step)
+        function updateUI() {
+            // Update Teks Label Step
+            document.getElementById('step-indicator').innerText = `Step ${currentStep} of ${totalSteps}`;
+            
+            // Update Lebar Progress Bar
+            const progressPercentage = (currentStep / totalSteps) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+
+            // Tampilkan/Sembunyikan tombol Back (Prev)
+            const btnPrev = document.getElementById('btn-prev');
+            if (currentStep === 1) {
+                btnPrev.classList.add('invisible');
+            } else {
+                btnPrev.classList.remove('invisible');
+            }
+
+            // Ganti teks tombol "Continue" menjadi "Finish" jika di step terakhir
+            const btnNext = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                btnNext.innerText = 'Finish Setup';
+            } else {
+                btnNext.innerText = 'Continue';
+            }
+        }
+    </script>
+</body>
+</html>
