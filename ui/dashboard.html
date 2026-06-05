@@ -96,6 +96,7 @@
                 background: #fff;
                 overflow: hidden;
                 display: flex;
+                transform: translateZ(0);
             }
             /* Notch iPhone */
             .iphone-frame::before {
@@ -626,23 +627,23 @@
                 </div>
             </main>
 
-            <nav class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 pt-3 flex justify-between items-center text-xs font-medium z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
-                <a href="glowdiary.html" class="flex flex-col items-center gap-1.5 text-gray-400 transition-colors">
-                    <i class="fa-solid fa-house text-xl"></i>
+            <nav class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 pt-3 flex justify-between items-center text-[10px] font-medium z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] pb-safe">
+                <button onclick="window.location.href='glowdiary.html'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
+                    <i class="fa-solid fa-house text-lg"></i>
                     <span>Home</span>
-                </a>
-                <a href="glowdiary.html#discover" class="flex flex-col items-center gap-1.5 text-gray-400 transition-colors">
-                    <i class="fa-solid fa-magnifying-glass text-xl"></i>
-                    <span>Discover</span>
-                </a>
-                <a href="analyze.html" class="flex flex-col items-center gap-1.5 text-gray-400 transition-colors">
-                    <i class="fa-solid fa-clipboard-check text-xl"></i>
+                </button>
+                <button onclick="window.location.href='glowdiary.html'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    <span>Search</span>
+                </button>
+                <button onclick="window.location.href='analyze.html'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
+                    <i class="fa-solid fa-clipboard-check text-lg"></i>
                     <span>Analyze</span>
-                </a>
-                <a href="profile.html" class="flex flex-col items-center gap-1.5 text-gray-400 transition-colors">
-                    <i class="fa-solid fa-user text-xl"></i>
+                </button>
+                <button onclick="window.location.href='profile.html'" class="nav-btn flex flex-col items-center gap-1 text-brand-dark flex flex-col items-center gap-1 transition-colors">
+                    <i class="fa-solid fa-user text-lg"></i>
                     <span>Profile</span>
-                </a>
+                </button>
             </nav>
 
         </div>
