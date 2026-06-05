@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Create Account - GlowDiary</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,10 +15,26 @@
                     },
                     colors: {
                         brand: {
-                            title: '#5c5296',     /* Warna ungu gelap untuk judul */
-                            subtitle: '#988aef',  /* Warna ungu terang untuk subtitle */
-                            card: '#f4e6f1',      /* Warna pink pucat untuk kotak form */
-                            button: '#7781ca',    /* Warna biru-ungu untuk tombol */
+                            title: '#5c5296',     
+                            subtitle: '#988aef',  
+                            card: '#f4e6f1',      
+                            button: '#7781ca',    
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'spin-slow': 'spin 4s linear infinite',
+                        'spin-reverse-slow': 'spinReverse 3s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        spinReverse: {
+                            '0%': { transform: 'rotate(360deg)' },
+                            '100%': { transform: 'rotate(0deg)' },
                         }
                     }
                 }
@@ -26,57 +42,156 @@
         }
     </script>
     <style>
+        html { height: -webkit-fill-available; }
+        
         body {
-            /* Gradasi background persis seperti gambar */
-            background: linear-gradient(180deg, #fdf6fb 0%, #e2cae7 50%, #d8b8df 100%);
+            background-color: #1a1a1a; 
             min-height: 100vh;
+            min-height: -webkit-fill-available;
+            min-height: 100dvh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
+
+        .app-bg-gradient {
+            background: linear-gradient(180deg, #fdf6fb 0%, #e2cae7 50%, #d8b8df 100%);
+        }
+
         .custom-shadow {
-            /* Shadow khusus untuk kotak form agar terlihat sedikit mengambang */
             box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        /* Bingkai HP */
+        @media (min-width: 641px) {
+            .iphone-frame {
+                width: 390px;
+                height: 844px;
+                border: 14px solid #111;
+                border-radius: 40px;
+                position: relative;
+                box-shadow: 0 0 0 2px #333, 0 20px 40px rgba(0,0,0,0.5);
+                background: #fff;
+                overflow: hidden;
+                display: flex;
+                transform: translateZ(0); 
+            }
+            .iphone-frame::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 150px;
+                height: 28px;
+                background: #111;
+                border-bottom-left-radius: 18px;
+                border-bottom-right-radius: 18px;
+                z-index: 9999;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body { background-color: #d8b8df; } 
+            .iphone-frame, .iphone-screen {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex: 1;
+            }
+            .iphone-frame { border: none; border-radius: 0; box-shadow: none; }
+            .iphone-frame::before { display: none; }
+        }
+
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
         }
     </style>
 </head>
-<body class="flex flex-col justify-center items-center px-6 font-sans text-gray-800 antialiased overflow-x-hidden">
+<body class="font-sans text-gray-800 antialiased overflow-hidden flex h-screen w-screen">
 
-    <div class="text-center mb-6 mt-10">
-        <h1 class="text-[32px] md:text-4xl font-extrabold text-brand-title tracking-tight mb-1">Create Account</h1>
-        <p class="text-brand-subtitle font-medium text-sm md:text-base">Start your skin journey here</p>
+    <div class="iphone-frame">
+        <div class="iphone-screen app-bg-gradient flex flex-col justify-center items-center px-6 w-full h-full relative overflow-x-hidden overflow-y-auto safe-bottom">
+
+            <div id="splash-overlay" class="absolute inset-0 bg-[#0f0b1a] z-[100] flex flex-col items-center justify-center w-full h-full">
+                <div class="flex flex-col items-center justify-center animate-fade-in w-full px-8">
+                    
+                    <!-- Area Logo dan Glowing Circle -->
+                    <div class="relative flex items-center justify-center w-64 h-64 mb-6">
+                        <!-- Layer 1: Cahaya blur paling luar -->
+                        <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9333ea] via-[#c084fc] to-[#f472b6] blur-[25px] opacity-70 animate-spin-slow"></div>
+                        
+                        <!-- Layer 2: Cahaya blur bagian dalam -->
+                        <div class="absolute inset-2 rounded-full bg-gradient-to-bl from-[#5c5296] to-[#988aef] blur-[15px] opacity-90 animate-spin-reverse-slow"></div>
+                        
+                        <!-- Layer 3: Dudukan logo -->
+                        <div class="absolute inset-4 bg-white rounded-full shadow-inner flex items-center justify-center overflow-hidden">
+                            <!-- Gambar Logo dibesarkan ke w-4/5 h-4/5 -->
+                            <img src="../logo.png" alt="GlowDiary Logo" class="w-[140%] h-[140%] max-w-none object-contain animate-pulse-slow mt-2 -ml-3">
+                        </div>
+                    </div>
+                    
+                    <h1 class="text-3xl font-extrabold text-white tracking-tight shadow-sm">GlowDiary</h1>
+                    <p class="text-purple-200 font-bold text-xs tracking-[0.2em] uppercase mt-2 drop-shadow-md">Your Skin Journey</p>
+
+                </div>
+            </div>
+
+            <div class="text-center mb-6 mt-10 w-full relative z-10">
+                <h1 class="text-[32px] font-extrabold text-brand-title tracking-tight mb-1">Create Account</h1>
+                <p class="text-brand-subtitle font-medium text-sm">Start your skin journey here</p>
+            </div>
+
+            <div class="w-full max-w-[320px] bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
+                <form action="kuesioner.html" class="space-y-5">
+                    <div class="flex flex-col gap-1.5">
+                        <label for="username" class="text-sm font-medium text-gray-800 ml-1">Username</label>
+                        <input type="text" id="username" required
+                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label for="email" class="text-sm font-medium text-gray-800 ml-1">Email</label>
+                        <input type="email" id="email" required
+                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label for="password" class="text-sm font-medium text-gray-800 ml-1">Password</label>
+                        <input type="password" id="password" required
+                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                    </div>
+                </form>
+            </div>
+
+            <button onclick="window.location.href='kuesioner.html'" 
+                class="w-full max-w-[280px] bg-brand-button hover:bg-[#6872b8] text-white font-semibold rounded-full py-3.5 mb-6 shadow-md transition-all active:scale-95 relative z-10">
+                Sign Up
+            </button>
+
+            <p class="text-gray-600 text-sm font-medium relative z-10">
+                Already have an account? 
+                <a href="glowdiary.html" class="text-brand-title font-bold hover:underline">Login</a>
+            </p>
+
+        </div>
     </div>
 
-    <div class="w-full max-w-sm bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
-        <form action="kuesioner.html" class="space-y-5">
-            
-            <div class="flex flex-col gap-1.5">
-                <label for="username" class="text-sm font-medium text-gray-800 ml-1">Username</label>
-                <input type="text" id="username" required
-                    class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-                <label for="email" class="text-sm font-medium text-gray-800 ml-1">Email</label>
-                <input type="email" id="email" required
-                    class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-                <label for="password" class="text-sm font-medium text-gray-800 ml-1">Password</label>
-                <input type="password" id="password" required
-                    class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
-            </div>
-
-        </form>
-    </div>
-
-    <button onclick="window.location.href='kuesioner.html'" 
-        class="w-full max-w-[280px] bg-brand-button hover:bg-[#6872b8] text-white font-semibold rounded-full py-3.5 mb-6 shadow-md transition-all active:scale-95">
-        Sign Up
-    </button>
-
-    <p class="text-gray-600 text-sm font-medium">
-        Already have an account? 
-        <a href="glowdiary.html" class="text-brand-title font-bold hover:underline">Login</a>
-    </p>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-overlay');
+                if(splash) {
+                    splash.classList.add('fade-out');
+                }
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
