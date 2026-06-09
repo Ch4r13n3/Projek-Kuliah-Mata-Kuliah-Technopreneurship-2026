@@ -45,7 +45,7 @@
         }
 
         /* =========================================
-           BINGKAI HP CSS
+            BINGKAI HP CSS
            ========================================= */
         @media (min-width: 641px) {
             body {
@@ -64,7 +64,7 @@
                 background: #fff;
                 overflow: hidden;
                 display: flex;
-                transform: translateZ(0); /* Kunci untuk absolute modal & nav */
+                transform: translateZ(0);
             }
             /* Notch iPhone */
             .iphone-frame::before {
@@ -117,7 +117,7 @@
                         <i class="fa-solid fa-magnifying-glass w-5 text-center"></i> Discover
                     </button>
                     
-                    <button onclick="switchTab('analyze')" id="sidebar-analyze" class="sidebar-btn flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
+                    <button onclick="window.location.href='analyze.html'" id="sidebar-analyze" class="sidebar-btn flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left text-gray-400 hover:bg-purple-50 hover:text-brand-dark">
                         <i class="fa-solid fa-clipboard-check w-5 text-center"></i> Analyze
                     </button>
                     
@@ -142,7 +142,7 @@
                         
                         <div class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-purple-50">
                             <div>
-                                <h1 class="text-xl font-bold text-gray-800">Hi, Chloe 👋</h1>
+                                <h1 class="text-xl font-bold text-gray-800">Hi, <span id="greeting-name">there</span> 👋</h1>
                                 <p class="text-xs text-gray-500 mt-1">Let's check your skin today</p>
                             </div>
                             <div onclick="window.location.href='profile.html'" class="cursor-pointer w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-brand-dark text-xl hover:bg-purple-200 transition-colors">
@@ -151,7 +151,6 @@
                         </div>
 
                         <div class="grid grid-cols-1 gap-6">
-                            
                             <div class="space-y-6">
                                 <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-5 shadow-sm border border-orange-100 flex items-center gap-4">
                                     <div class="w-12 h-12 bg-white text-orange-500 rounded-full flex items-center justify-center text-2xl shadow-sm flex-shrink-0">🔥</div>
@@ -254,7 +253,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -326,132 +324,6 @@
                     </div>
                 </div>
 
-                <div id="screen-analyze" class="screen hidden w-full min-h-full bg-gray-50 p-4">
-                    <div class="w-full mx-auto space-y-6">
-                        
-                        <div class="flex justify-between items-center">
-                            <h1 class="text-2xl font-bold text-gray-800">Analyze</h1>
-                            <button class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 hover:text-brand transition-colors">
-                                <i class="fa-solid fa-clock-rotate-left text-sm"></i>
-                            </button>
-                        </div>
-
-                        <div>
-                            <div class="w-full bg-gradient-to-br from-purple-500 to-brand-dark rounded-3xl p-5 text-white shadow-lg relative overflow-hidden mb-6">
-                                <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-                                <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-pink-400/20 rounded-full blur-2xl"></div>
-                                
-                                <div class="relative z-10 flex flex-col items-center gap-4 text-center">
-                                    <div class="w-20 h-20 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl border border-white/30 shadow-inner flex-shrink-0">
-                                        <i class="fa-solid fa-face-smile-beam"></i>
-                                    </div>
-                                    <div class="w-full">
-                                        <h2 class="text-xl font-bold mb-1">Daily Skin Scan</h2>
-                                        <p class="text-purple-100 text-xs mb-4">Ambil foto wajahmu hari ini untuk melihat kelembapan & jerawat.</p>
-                                        <button class="w-full bg-white text-brand-dark font-bold py-3 rounded-xl shadow-md hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 text-sm">
-                                            <i class="fa-solid fa-camera"></i> Scan Face Now
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 gap-6">
-                                <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
-                                    <div class="flex justify-between items-center mb-5">
-                                        <h3 class="font-bold text-gray-800 text-base">Weekly Progress</h3>
-                                        <span class="text-[10px] font-semibold text-green-500 bg-green-50 px-2 py-1 rounded-lg">+15% Better</span>
-                                    </div>
-                                    
-                                    <div class="flex items-end justify-between h-28 gap-2 mb-2">
-                                        <div class="w-full bg-gray-100 rounded-t-md h-[40%] relative group cursor-pointer"><div class="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-400 hidden group-hover:block">40</div></div>
-                                        <div class="w-full bg-gray-100 rounded-t-md h-[55%] relative group cursor-pointer"><div class="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-400 hidden group-hover:block">55</div></div>
-                                        <div class="w-full bg-gray-100 rounded-t-md h-[30%] relative group cursor-pointer"><div class="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-400 hidden group-hover:block">30</div></div>
-                                        <div class="w-full bg-gray-100 rounded-t-md h-[60%] relative group cursor-pointer"><div class="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-400 hidden group-hover:block">60</div></div>
-                                        <div class="w-full bg-brand rounded-t-md h-[85%] relative group cursor-pointer shadow-sm"><div class="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-brand-dark block">85</div></div>
-                                        <div class="w-full bg-gray-50 rounded-t-md h-[10%]"></div>
-                                        <div class="w-full bg-gray-50 rounded-t-md h-[10%]"></div>
-                                    </div>
-                                    <div class="flex justify-between text-[10px] text-gray-400 font-medium px-1">
-                                        <span>M</span><span>T</span><span>W</span><span>T</span><span class="text-brand-dark font-bold">F</span><span>S</span><span>S</span>
-                                    </div>
-                                </div>
-
-                                <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
-                                    <h3 class="font-bold text-gray-800 text-base mb-4">AI Insights ✨</h3>
-                                    <div class="space-y-3">
-                                        <div class="flex gap-3 p-3 rounded-xl bg-blue-50 border border-blue-100">
-                                            <div class="text-blue-500 text-lg mt-0.5"><i class="fa-solid fa-droplet"></i></div>
-                                            <div>
-                                                <h4 class="font-bold text-blue-700 text-sm">Kulit Lebih Lembap</h4>
-                                                <p class="text-xs text-blue-600/80 mt-1">Serum Hyaluronic Acid menunjukkan hasil positif.</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex gap-3 p-3 rounded-xl bg-orange-50 border border-orange-100">
-                                            <div class="text-orange-500 text-lg mt-0.5"><i class="fa-solid fa-circle-exclamation"></i></div>
-                                            <div>
-                                                <h4 class="font-bold text-orange-700 text-sm">Kemerahan Terdeteksi</h4>
-                                                <p class="text-xs text-orange-600/80 mt-1">Hindari eksfoliasi fisik untuk sementara waktu.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full border-t border-gray-200 border-dashed"></div>
-
-                        <div>
-                            <h2 class="text-lg font-bold text-gray-800 mb-3">Ingredient Matcher</h2>
-                            
-                            <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
-                                <div class="flex flex-col gap-3 border-b border-gray-50 pb-4 mb-4">
-                                    <p class="text-xs text-gray-500 font-medium">Menganalisis kecocokan untuk profil kulitmu:</p>
-                                    <div class="flex gap-2">
-                                        <span class="bg-blue-50 text-blue-600 border border-blue-100 text-[10px] px-3 py-1 rounded-full font-bold shadow-sm">Oily</span>
-                                        <span class="bg-red-50 text-red-600 border border-red-100 text-[10px] px-3 py-1 rounded-full font-bold shadow-sm">Acne</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="relative mb-4">
-                                    <textarea rows="3" placeholder="Paste daftar komposisi produk di sini..." class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 pr-12 text-xs focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand resize-none transition-colors"></textarea>
-                                    
-                                    <button class="absolute bottom-4 right-4 bg-white text-brand border border-gray-200 w-8 h-8 rounded-full flex items-center justify-center hover:bg-brand hover:text-white hover:border-brand transition-all shadow-sm" title="Scan tulisan botol">
-                                        <i class="fa-solid fa-camera"></i>
-                                    </button>
-                                </div>
-                                
-                                <button class="w-full gradient-btn text-white font-bold py-3 rounded-xl shadow-md shadow-purple-200 hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-5 text-sm">
-                                    <i class="fa-solid fa-flask"></i> Check Compatibility
-                                </button>
-
-                                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                                    <div class="flex justify-between items-center mb-3">
-                                        <h4 class="font-bold text-gray-800 text-xs">Analysis Result</h4>
-                                        <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">75% Match</span>
-                                    </div>
-                                    
-                                    <div class="space-y-3">
-                                        <div class="flex gap-3 items-start bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                                            <div class="w-6 h-6 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-check text-[10px]"></i></div>
-                                            <div>
-                                                <p class="text-xs font-bold text-gray-800">Niacinamide</p>
-                                                <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Sangat baik untuk mengontrol produksi sebum pada kulit <b>Oily</b>.</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex gap-3 items-start bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                                            <div class="w-6 h-6 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-triangle-exclamation text-[10px]"></i></div>
-                                            <div>
-                                                <p class="text-xs font-bold text-gray-800">Coconut Oil</p>
-                                                <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Peringatan: Bersifat <i>comedogenic</i>, dapat menyumbat pori dan memperparah <b>Acne</b>.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </main>
 
             <nav class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 pt-3 flex justify-between items-center text-[10px] font-medium z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] pb-safe">
@@ -461,7 +333,7 @@
                 <button onclick="switchTab('discover')" id="nav-mob-discover" class="nav-btn-mob text-gray-400 flex flex-col items-center gap-1 transition-colors">
                     <i class="fa-solid fa-magnifying-glass text-lg"></i><span>Search</span>
                 </button>
-                <button onclick="window.location.href='analyze.html'" class="nav-btn-mob text-gray-400 flex flex-col items-center gap-1 transition-colors">
+                <button onclick="window.location.href='analyze.html'" id="nav-mob-analyze" class="nav-btn-mob text-gray-400 flex flex-col items-center gap-1 transition-colors">
                     <i class="fa-solid fa-clipboard-check text-lg"></i><span>Analyze</span>
                 </button>
                 <button onclick="window.location.href='profile.html'" class="nav-btn-mob text-gray-400 flex flex-col items-center gap-1 transition-colors">
@@ -472,19 +344,15 @@
             <div id="modal-period" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
                 <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all">
                     <div class="bg-rose-500 p-5 text-white relative">
-                        <button onclick="toggleModal('modal-period')" class="absolute right-4 top-4 text-white/80 hover:text-white">
-                            <i class="fa-solid fa-xmark text-lg"></i>
-                        </button>
+                        <button onclick="toggleModal('modal-period')" class="absolute right-4 top-4 text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                         <h3 class="text-lg font-bold">Catat Siklus Haid</h3>
                         <p class="text-rose-100 text-xs mt-1">Kapan hari pertama haid terakhirmu?</p>
                     </div>
-
                     <div class="p-5 space-y-5">
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Tanggal Mulai Terakhir</label>
                             <input type="date" id="input-last-period" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-800 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all">
                         </div>
-
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Durasi (Hari)</label>
@@ -495,10 +363,7 @@
                                 <input type="number" id="input-cycle" value="28" min="21" max="40" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm outline-none">
                             </div>
                         </div>
-
-                        <button onclick="savePeriodData()" class="w-full bg-rose-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all flex items-center justify-center gap-2 text-sm">
-                            <i class="fa-solid fa-check"></i> Simpan & Hitung
-                        </button>
+                        <button onclick="savePeriodData()" class="w-full bg-rose-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-check"></i> Simpan & Hitung</button>
                     </div>
                 </div>
             </div>
@@ -506,13 +371,10 @@
             <div id="modal-routine" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
                 <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all">
                     <div class="bg-brand p-5 text-white relative">
-                        <button onclick="toggleModal('modal-routine')" class="absolute right-4 top-4 text-white/80 hover:text-white">
-                            <i class="fa-solid fa-xmark text-lg"></i>
-                        </button>
+                        <button onclick="toggleModal('modal-routine')" class="absolute right-4 top-4 text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                         <h3 class="text-lg font-bold">Catat Rutinitas</h3>
                         <p class="text-purple-100 text-xs mt-1">Produk apa yang kamu pakai hari ini?</p>
                     </div>
-
                     <div class="p-5 space-y-4">
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Kategori Produk</label>
@@ -524,34 +386,25 @@
                                 <option value="sunscreen">Sunscreen</option>
                             </select>
                         </div>
-
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Nama Produk (Opsional)</label>
                             <input type="text" id="routine-name" placeholder="Contoh: Cetaphil Gentle Cleanser" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm outline-none focus:ring-brand focus:border-brand">
                         </div>
-
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Waktu Pemakaian</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="waktu" value="morning" class="peer hidden" checked>
-                                    <div class="text-center p-2.5 rounded-xl border border-gray-200 peer-checked:bg-purple-50 peer-checked:border-brand peer-checked:text-brand-dark transition-all font-medium text-xs">
-                                        <i class="fa-solid fa-sun mr-1"></i> Morning
-                                    </div>
+                                    <div class="text-center p-2.5 rounded-xl border border-gray-200 peer-checked:bg-purple-50 peer-checked:border-brand peer-checked:text-brand-dark transition-all font-medium text-xs"><i class="fa-solid fa-sun mr-1"></i> Morning</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="waktu" value="evening" class="peer hidden">
-                                    <div class="text-center p-2.5 rounded-xl border border-gray-200 peer-checked:bg-purple-50 peer-checked:border-brand peer-checked:text-brand-dark transition-all font-medium text-xs">
-                                        <i class="fa-solid fa-moon mr-1"></i> Evening
-                                    </div>
+                                    <div class="text-center p-2.5 rounded-xl border border-gray-200 peer-checked:bg-purple-50 peer-checked:border-brand peer-checked:text-brand-dark transition-all font-medium text-xs"><i class="fa-solid fa-moon mr-1"></i> Evening</div>
                                 </label>
                             </div>
                         </div>
-
                         <div class="pt-2">
-                            <button onclick="saveRoutine()" class="w-full bg-brand text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-200 hover:bg-brand-dark transition-all text-sm">
-                                Simpan Rutinitas
-                            </button>
+                            <button onclick="saveRoutine()" class="w-full bg-brand text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-200 hover:bg-brand-dark transition-all text-sm">Simpan Rutinitas</button>
                         </div>
                     </div>
                 </div>
@@ -560,9 +413,7 @@
             <div id="modal-review" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
                 <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all">
                     <div class="p-5 relative border-b border-gray-50">
-                        <button onclick="toggleModal('modal-review')" class="absolute right-4 top-4 w-7 h-7 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors">
-                            <i class="fa-solid fa-xmark text-sm"></i>
-                        </button>
+                        <button onclick="toggleModal('modal-review')" class="absolute right-4 top-4 w-7 h-7 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors"><i class="fa-solid fa-xmark text-sm"></i></button>
                         <div class="flex items-center gap-3 mt-1">
                             <div id="review-icon" class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center text-2xl">🧴</div>
                             <div>
@@ -571,7 +422,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="p-5 space-y-5">
                         <div class="text-center">
                             <p class="font-bold text-gray-800 text-sm mb-2">Berapa ratingmu untuk produk ini?</p>
@@ -584,30 +434,70 @@
                             </div>
                             <input type="hidden" id="current-rating" value="0">
                         </div>
-
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Tulis Review (Opsional)</label>
                             <textarea id="review-text" rows="3" placeholder="Bagaimana efek produk ini di kulitmu?" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs outline-none focus:ring-brand focus:border-brand resize-none"></textarea>
                         </div>
-
-                        <button onclick="submitReview()" class="w-full bg-brand text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-200 hover:bg-brand-dark transition-all flex items-center justify-center gap-2 text-sm">
-                            <i class="fa-solid fa-paper-plane"></i> Kirim Review
-                        </button>
+                        <button onclick="submitReview()" class="w-full bg-brand text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-200 hover:bg-brand-dark transition-all flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-paper-plane"></i> Kirim Review</button>
                     </div>
                 </div>
             </div>
 
-        </div> </div> <script>
+            <div id="custom-alert" class="absolute inset-0 bg-black/60 backdrop-blur-xs z-[200] hidden items-center justify-center p-6">
+                <div class="bg-white rounded-2xl w-full max-w-[320px] overflow-hidden shadow-2xl p-5 text-center transform scale-95 transition-all space-y-4 animate-fade-in">
+                    <div id="alert-icon" class="w-12 h-12 rounded-full mx-auto flex items-center justify-center text-xl"></div>
+                    <div class="space-y-1">
+                        <h4 id="alert-title" class="font-bold text-gray-800 text-base">Pemberitahuan</h4>
+                        <p id="alert-message" class="text-xs text-gray-500 leading-relaxed">Pesan alert di sini.</p>
+                    </div>
+                    <button onclick="closeCustomAlert()" id="alert-btn" class="w-full py-2.5 rounded-xl text-white font-bold text-xs transition-colors shadow-sm"></button>
+                </div>
+            </div>
+
+        </div> 
+    </div> 
+
+    <script>
+        // --- 0. CUSTOM ALERT LOGIC ---
+        function showCustomAlert(message, title = "Notification", type = "brand") {
+            const alertModal = document.getElementById('custom-alert');
+            const alertIcon = document.getElementById('alert-icon');
+            const alertTitle = document.getElementById('alert-title');
+            const alertMessage = document.getElementById('alert-message');
+            const alertBtn = document.getElementById('alert-btn');
+            
+            alertTitle.innerText = title;
+            alertMessage.innerText = message;
+            
+            if (type === "rose") {
+                alertIcon.className = "w-12 h-12 bg-rose-50 text-rose-500 rounded-full mx-auto flex items-center justify-center text-xl";
+                alertIcon.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>`;
+                alertBtn.className = "w-full py-2.5 bg-rose-500 hover:bg-rose-600 rounded-xl text-white font-bold text-xs transition-colors shadow-sm";
+                alertBtn.innerText = "Oke";
+            } else {
+                alertIcon.className = "w-12 h-12 bg-purple-50 text-purple-500 rounded-full mx-auto flex items-center justify-center text-xl";
+                alertIcon.innerHTML = `✨`;
+                alertBtn.className = "w-full py-2.5 gradient-btn hover:opacity-90 rounded-xl text-white font-bold text-xs transition-colors shadow-sm";
+                alertBtn.innerText = "Awesome!";
+            }
+            alertModal.classList.remove('hidden');
+            alertModal.classList.add('flex');
+        }
+
+        function closeCustomAlert() {
+            const alertModal = document.getElementById('custom-alert');
+            alertModal.classList.add('hidden');
+            alertModal.classList.remove('flex');
+        }
+
         // --- 1. TAB NAVIGATION ---
-         function switchTab(tabId) {
-            // 1. Ganti Konten Layar
+        function switchTab(tabId) {
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.add('hidden');
             });
             const targetScreen = document.getElementById('screen-' + tabId);
             if (targetScreen) targetScreen.classList.remove('hidden');
 
-            // 2. Update Highlight Sidebar (Desktop)
             document.querySelectorAll('.sidebar-btn').forEach(btn => {
                 btn.classList.remove('bg-purple-50', 'text-brand-dark');
                 btn.classList.add('text-gray-400', 'hover:bg-purple-50', 'hover:text-brand-dark');
@@ -618,7 +508,6 @@
                 activeSidebar.classList.add('bg-purple-50', 'text-brand-dark');
             }
 
-            // 3. Update Highlight Navbar (Mobile)
             document.querySelectorAll('.nav-btn-mob').forEach(btn => {
                 btn.classList.remove('text-brand-dark');
                 btn.classList.add('text-gray-400');
@@ -629,19 +518,23 @@
                 activeNavMob.classList.add('text-brand-dark');
             }
 
-            // Simpan posisi tab di URL hash tanpa reload
             window.location.hash = tabId;
-            // Scroll frame bukan window
             document.querySelector('.iphone-screen main').scrollTo(0, 0);
         }
 
-        // Jalankan saat pertama kali dimuat
         document.addEventListener("DOMContentLoaded", function() {
+            if (localStorage.getItem('gd_loggedIn') !== 'true') {
+                window.location.href = 'landing.html';
+                return;
+            }
+            const username = localStorage.getItem('gd_currentUser') || 'there';
+            document.getElementById('greeting-name').textContent = username;
+
             let hash = window.location.hash.replace('#', '');
-            if (['home', 'discover', 'analyze'].includes(hash)) {
+            if (['home', 'discover'].includes(hash)) {
                 switchTab(hash);
             } else {
-                switchTab('home'); 
+                switchTab('home');
             }
         });
 
@@ -658,12 +551,13 @@
 
         function savePeriodData() {
             const dateInput = document.getElementById('input-last-period').value;
-            if(!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
-            
+            if(!dateInput) { 
+                showCustomAlert("Silakan pilih tanggal terlebih dahulu ya!", "Tanggal Kosong", "rose"); 
+                return; 
+            }
             userPeriodData.lastStartDate = new Date(dateInput);
             userPeriodData.duration = parseInt(document.getElementById('input-duration').value);
             userPeriodData.cycle = parseInt(document.getElementById('input-cycle').value);
-            
             toggleModal('modal-period');
             renderCalendar();
         }
@@ -677,35 +571,27 @@
             const monthYearText = document.getElementById('calendar-month-year');
             const daysContainer = document.getElementById('calendar-days');
             const statusText = document.getElementById('period-status-text');
-            
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             const today = new Date();
-            
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             monthYearText.innerText = `${monthNames[month]} ${year}`;
-            
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
             let nextPeriodStart = null, nextPeriodEnd = null, fertileStart = null, fertileEnd = null;
-            
             if (userPeriodData.lastStartDate) {
                 nextPeriodStart = new Date(userPeriodData.lastStartDate);
                 nextPeriodStart.setDate(nextPeriodStart.getDate() + userPeriodData.cycle);
                 nextPeriodEnd = new Date(nextPeriodStart);
                 nextPeriodEnd.setDate(nextPeriodEnd.getDate() + userPeriodData.duration - 1);
-                
                 let ovulationDate = new Date(nextPeriodStart);
                 ovulationDate.setDate(ovulationDate.getDate() - 14);
                 fertileStart = new Date(ovulationDate);
                 fertileStart.setDate(fertileStart.getDate() - 4);
                 fertileEnd = new Date(ovulationDate);
                 fertileEnd.setDate(fertileEnd.getDate() + 1);
-
                 const diffTime = nextPeriodStart - today;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
                 if(diffDays > 0) {
                     statusText.innerHTML = `Next cycle in <span class="font-bold text-rose-600">${diffDays} days</span>`;
                 } else if (diffDays <= 0 && diffDays > -userPeriodData.duration) {
@@ -714,19 +600,15 @@
                     statusText.innerHTML = `Cycle ended. Please log your next period.`;
                 }
             }
-
             let html = '';
             for (let i = 0; i < firstDay; i++) { html += `<div class="py-1"></div>`; }
-            
             for (let i = 1; i <= daysInMonth; i++) {
                 let currentIterDate = new Date(year, month, i);
                 let isToday = (i === today.getDate() && month === today.getMonth() && year === today.getFullYear());
                 let isPeriod = false, isFertile = false;
-
                 if (nextPeriodStart) {
                     currentIterDate.setHours(0,0,0,0); nextPeriodStart.setHours(0,0,0,0); nextPeriodEnd.setHours(0,0,0,0); fertileStart.setHours(0,0,0,0); fertileEnd.setHours(0,0,0,0);
                     if (currentIterDate >= nextPeriodStart && currentIterDate <= nextPeriodEnd) isPeriod = true;
-                    
                     let lastPeriodEnd = new Date(userPeriodData.lastStartDate);
                     lastPeriodEnd.setDate(lastPeriodEnd.getDate() + userPeriodData.duration - 1);
                     lastPeriodEnd.setHours(0,0,0,0);
@@ -735,7 +617,6 @@
                     if (currentIterDate >= lastStart && currentIterDate <= lastPeriodEnd) isPeriod = true;
                     if (currentIterDate >= fertileStart && currentIterDate <= fertileEnd) isFertile = true;
                 }
-
                 if (isToday) {
                     html += `<div class="py-1 relative cursor-pointer"><div class="absolute inset-0 bg-brand rounded-full shadow-md shadow-purple-200"></div><span class="relative z-10 text-white font-bold">${i}</span></div>`;
                 } else if (isPeriod) {
@@ -755,19 +636,15 @@
             const categorySelect = document.getElementById('routine-category');
             const categoryText = categorySelect.options[categorySelect.selectedIndex].text;
             const categoryValue = categorySelect.value;
-            
             let productName = document.getElementById('routine-name').value;
             if (!productName) { productName = categoryText; }
-            
             const timeRadio = document.querySelector('input[name="waktu"]:checked').value;
             const timeText = timeRadio === 'morning' ? 'Morning Routine' : 'Evening Routine';
-            
             let iconClass = "fa-pump-soap", colorClass = "bg-pink-50 text-pink-500";
             if (categoryValue === 'toner') { iconClass = "fa-spray-can"; colorClass = "bg-purple-50 text-purple-500"; }
             else if (categoryValue === 'serum') { iconClass = "fa-flask"; colorClass = "bg-yellow-50 text-yellow-500"; }
             else if (categoryValue === 'moisturizer') { iconClass = "fa-jar"; colorClass = "bg-blue-50 text-blue-500"; }
             else if (categoryValue === 'sunscreen') { iconClass = "fa-sun"; colorClass = "bg-orange-50 text-orange-500"; }
-
             const newProductHTML = `
                 <div class="flex items-center justify-between p-3 bg-gray-50 hover:bg-white border border-gray-100 rounded-xl transition-all animate-fade-in">
                     <div class="flex items-center gap-3">
@@ -778,9 +655,7 @@
                         </div>
                     </div>
                     <i class="fa-solid fa-circle-check text-green-400 text-xl"></i>
-                </div>
-            `;
-
+                </div>`;
             document.getElementById('routine-list').insertAdjacentHTML('afterbegin', newProductHTML);
             document.getElementById('routine-name').value = '';
             toggleModal('modal-routine');
@@ -813,11 +688,11 @@
         function submitReview() {
             const rating = document.getElementById('current-rating').value;
             if (rating === "0") {
-                alert("Silakan berikan rating bintang terlebih dahulu!");
+                showCustomAlert("Silakan pilih rating bintang terlebih dahulu ya!", "Rating Diperlukan", "rose");
                 return;
             }
             toggleModal('modal-review');
-            alert("Terima kasih! Review berhasil dikirim. Kamu mendapatkan +10 GlowPoints! ✨");
+            showCustomAlert("Terima kasih! Review berhasil dikirim. Kamu mendapatkan +10 GlowPoints! ✨", "Review Dikirim", "brand");
         }
     </script>
 </body>

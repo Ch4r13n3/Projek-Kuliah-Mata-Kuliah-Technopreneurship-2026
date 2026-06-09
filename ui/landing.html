@@ -10,15 +10,13 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
                     colors: {
                         brand: {
-                            title: '#5c5296',     
-                            subtitle: '#988aef',  
-                            card: '#f4e6f1',      
-                            button: '#7781ca',    
+                            title: '#5c5296',
+                            subtitle: '#988aef',
+                            card: '#f4e6f1',
+                            button: '#7781ca',
                         }
                     },
                     animation: {
@@ -43,9 +41,8 @@
     </script>
     <style>
         html { height: -webkit-fill-available; }
-        
         body {
-            background-color: #1a1a1a; 
+            background-color: #1a1a1a;
             min-height: 100vh;
             min-height: -webkit-fill-available;
             min-height: 100dvh;
@@ -55,20 +52,10 @@
             align-items: center;
             overflow: hidden;
         }
+        .app-bg-gradient { background: linear-gradient(180deg, #fdf6fb 0%, #e2cae7 50%, #d8b8df 100%); }
+        .custom-shadow { box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.08); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 20px); }
 
-        .app-bg-gradient {
-            background: linear-gradient(180deg, #fdf6fb 0%, #e2cae7 50%, #d8b8df 100%);
-        }
-
-        .custom-shadow {
-            box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .safe-bottom {
-            padding-bottom: env(safe-area-inset-bottom, 20px);
-        }
-
-        /* Bingkai HP */
         @media (min-width: 641px) {
             .iphone-frame {
                 width: 390px;
@@ -80,40 +67,27 @@
                 background: #fff;
                 overflow: hidden;
                 display: flex;
-                transform: translateZ(0); 
+                transform: translateZ(0);
             }
             .iphone-frame::before {
                 content: '';
                 position: absolute;
-                top: 0;
-                left: 50%;
+                top: 0; left: 50%;
                 transform: translateX(-50%);
-                width: 150px;
-                height: 28px;
+                width: 150px; height: 28px;
                 background: #111;
                 border-bottom-left-radius: 18px;
                 border-bottom-right-radius: 18px;
                 z-index: 9999;
             }
         }
-
         @media (max-width: 640px) {
-            body { background-color: #d8b8df; } 
-            .iphone-frame, .iphone-screen {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex: 1;
-            }
+            body { background-color: #d8b8df; }
+            .iphone-frame, .iphone-screen { width: 100%; height: 100%; display: flex; flex: 1; }
             .iphone-frame { border: none; border-radius: 0; box-shadow: none; }
             .iphone-frame::before { display: none; }
         }
-
-        .fade-out {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
-        }
+        .fade-out { opacity: 0; visibility: hidden; transition: opacity 0.6s ease-out, visibility 0.6s ease-out; }
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased overflow-hidden flex h-screen w-screen">
@@ -121,63 +95,86 @@
     <div class="iphone-frame">
         <div class="iphone-screen app-bg-gradient flex flex-col justify-center items-center px-6 w-full h-full relative overflow-x-hidden overflow-y-auto safe-bottom">
 
+            <!-- Splash Overlay -->
             <div id="splash-overlay" class="absolute inset-0 bg-[#0f0b1a] z-[100] flex flex-col items-center justify-center w-full h-full">
                 <div class="flex flex-col items-center justify-center animate-fade-in w-full px-8">
-                    
-                    <!-- Area Logo dan Glowing Circle -->
                     <div class="relative flex items-center justify-center w-64 h-64 mb-6">
-                        <!-- Layer 1: Cahaya blur paling luar -->
                         <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9333ea] via-[#c084fc] to-[#f472b6] blur-[25px] opacity-70 animate-spin-slow"></div>
-                        
-                        <!-- Layer 2: Cahaya blur bagian dalam -->
                         <div class="absolute inset-2 rounded-full bg-gradient-to-bl from-[#5c5296] to-[#988aef] blur-[15px] opacity-90 animate-spin-reverse-slow"></div>
-                        
-                        <!-- Layer 3: Dudukan logo -->
                         <div class="absolute inset-4 bg-white rounded-full shadow-inner flex items-center justify-center overflow-hidden">
-                            <!-- Gambar Logo dibesarkan ke w-4/5 h-4/5 -->
                             <img src="../logo.png" alt="GlowDiary Logo" class="w-[140%] h-[140%] max-w-none object-contain animate-pulse-slow mt-2 -ml-3">
                         </div>
                     </div>
-                    
                     <h1 class="text-3xl font-extrabold text-white tracking-tight shadow-sm">GlowDiary</h1>
                     <p class="text-purple-200 font-bold text-xs tracking-[0.2em] uppercase mt-2 drop-shadow-md">Your Skin Journey</p>
-
                 </div>
             </div>
 
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="hidden absolute inset-0 bg-[#0f0b1a] z-[200] flex-col items-center justify-center gap-5">
+                <div class="relative flex items-center justify-center w-24 h-24">
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9333ea] via-[#c084fc] to-[#f472b6] blur-[15px] opacity-70 animate-spin-slow"></div>
+                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center overflow-hidden">
+                        <img src="../logo.png" alt="GlowDiary Logo" class="w-[130%] h-[130%] max-w-none object-contain -ml-2">
+                    </div>
+                </div>
+                <p class="text-purple-200 text-sm font-semibold tracking-widest uppercase animate-pulse">Loading...</p>
+            </div>
+
+            <!-- Form Title -->
             <div class="text-center mb-6 mt-10 w-full relative z-10">
-                <h1 class="text-[32px] font-extrabold text-brand-title tracking-tight mb-1">Create Account</h1>
-                <p class="text-brand-subtitle font-medium text-sm">Start your skin journey here</p>
+                <h1 id="form-title" class="text-[32px] font-extrabold text-brand-title tracking-tight mb-1">Create Account</h1>
+                <p id="form-subtitle" class="text-brand-subtitle font-medium text-sm">Start your skin journey here</p>
             </div>
 
-            <div class="w-full max-w-[320px] bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
-                <form action="kuesioner.html" class="space-y-5">
+            <!-- Alert Box -->
+            <div id="alert-box" class="hidden w-full max-w-[320px] bg-red-100 border border-red-300 text-red-700 text-xs rounded-2xl px-4 py-3 mb-3 relative z-10"></div>
+
+            <!-- Sign Up Form -->
+            <div id="form-signup" class="w-full max-w-[320px] bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
+                <div class="space-y-5">
                     <div class="flex flex-col gap-1.5">
-                        <label for="username" class="text-sm font-medium text-gray-800 ml-1">Username</label>
-                        <input type="text" id="username" required
+                        <label class="text-sm font-medium text-gray-800 ml-1">Username</label>
+                        <input type="text" id="su-username"
                             class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label for="email" class="text-sm font-medium text-gray-800 ml-1">Email</label>
-                        <input type="email" id="email" required
+                        <label class="text-sm font-medium text-gray-800 ml-1">Email</label>
+                        <input type="email" id="su-email"
                             class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label for="password" class="text-sm font-medium text-gray-800 ml-1">Password</label>
-                        <input type="password" id="password" required
+                        <label class="text-sm font-medium text-gray-800 ml-1">Password</label>
+                        <input type="password" id="su-password"
                             class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
                     </div>
-                </form>
+                </div>
             </div>
 
-            <button onclick="window.location.href='kuesioner.html'" 
+            <!-- Login Form -->
+            <div id="form-login" class="hidden w-full max-w-[320px] bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
+                <div class="space-y-5">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-sm font-medium text-gray-800 ml-1">Email</label>
+                        <input type="email" id="li-email"
+                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-sm font-medium text-gray-800 ml-1">Password</label>
+                        <input type="password" id="li-password"
+                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                    </div>
+                </div>
+            </div>
+
+            <button id="main-btn" onclick="handleSignUp()"
                 class="w-full max-w-[280px] bg-brand-button hover:bg-[#6872b8] text-white font-semibold rounded-full py-3.5 mb-6 shadow-md transition-all active:scale-95 relative z-10">
                 Sign Up
             </button>
 
-            <p class="text-gray-600 text-sm font-medium relative z-10">
-                Already have an account? 
-                <a href="glowdiary.html" class="text-brand-title font-bold hover:underline">Login</a>
+            <p id="switch-text" class="text-gray-600 text-sm font-medium relative z-10">
+                Already have an account?
+                <a href="#" onclick="showTab('login'); return false;" class="text-brand-title font-bold hover:underline">Login</a>
             </p>
 
         </div>
@@ -187,11 +184,79 @@
         document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-overlay');
-                if(splash) {
-                    splash.classList.add('fade-out');
-                }
+                if (splash) splash.classList.add('fade-out');
             }, 3000);
+
+            if (localStorage.getItem('gd_loggedIn') === 'true') {
+                window.location.href = 'glowdiary.html';
+            }
         });
+
+        function showLoading() {
+            window.location.href = 'glowdiary.html';
+        }
+
+        function showTab(tab) {
+            clearAlert();
+            const isSignup = tab === 'signup';
+            document.getElementById('form-signup').classList.toggle('hidden', !isSignup);
+            document.getElementById('form-login').classList.toggle('hidden', isSignup);
+            document.getElementById('form-title').textContent = isSignup ? 'Create Account' : 'Welcome Back';
+            document.getElementById('form-subtitle').textContent = isSignup ? 'Start your skin journey here' : 'Login to your account';
+            document.getElementById('main-btn').textContent = isSignup ? 'Sign Up' : 'Login';
+            document.getElementById('main-btn').onclick = isSignup ? handleSignUp : handleLogin;
+            document.getElementById('switch-text').innerHTML = isSignup
+                ? 'Already have an account? <a href="#" onclick="showTab(\'login\'); return false;" class="text-brand-title font-bold hover:underline">Login</a>'
+                : 'Don\'t have an account? <a href="#" onclick="showTab(\'signup\'); return false;" class="text-brand-title font-bold hover:underline">Sign Up</a>';
+        }
+
+        function showAlert(msg) {
+            const box = document.getElementById('alert-box');
+            box.textContent = '⚠️ ' + msg;
+            box.classList.remove('hidden');
+        }
+
+        function clearAlert() {
+            document.getElementById('alert-box').classList.add('hidden');
+        }
+
+        function handleSignUp() {
+            const username = document.getElementById('su-username').value.trim();
+            const email = document.getElementById('su-email').value.trim();
+            const password = document.getElementById('su-password').value;
+
+            if (!username) { showAlert('Username wajib diisi!'); return; }
+            if (!email) { showAlert('Email wajib diisi!'); return; }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('Format email tidak valid!'); return; }
+            if (!password) { showAlert('Password wajib diisi!'); return; }
+            if (password.length < 6) { showAlert('Password minimal 6 karakter!'); return; }
+
+            const users = JSON.parse(localStorage.getItem('gd_users') || '[]');
+            if (users.find(u => u.email === email)) { showAlert('Email sudah terdaftar. Silakan login.'); return; }
+
+            users.push({ username, email, password });
+            localStorage.setItem('gd_users', JSON.stringify(users));
+            localStorage.setItem('gd_loggedIn', 'true');
+            localStorage.setItem('gd_currentUser', username);
+            window.location.href = 'kuesioner.html';
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('li-email').value.trim();
+            const password = document.getElementById('li-password').value;
+
+            if (!email) { showAlert('Email wajib diisi!'); return; }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('Format email tidak valid!'); return; }
+            if (!password) { showAlert('Password wajib diisi!'); return; }
+
+            const users = JSON.parse(localStorage.getItem('gd_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            if (!user) { showAlert('Email atau password salah!'); return; }
+
+            localStorage.setItem('gd_loggedIn', 'true');
+            localStorage.setItem('gd_currentUser', user.username);
+            showLoading();
+        }
     </script>
 </body>
 </html>

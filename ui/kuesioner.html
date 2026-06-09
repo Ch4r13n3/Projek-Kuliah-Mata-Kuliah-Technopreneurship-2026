@@ -254,7 +254,24 @@
                 </button>
             </div>
 
-        </div> </div> <script>
+        </div> </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="hidden fixed inset-0 bg-[#0f0b1a] z-[200] flex-col items-center justify-center" style="opacity:0; transition: opacity 0.4s ease;">
+            <div class="flex flex-col items-center justify-center w-full px-8">
+                <div class="relative flex items-center justify-center w-64 h-64 mb-6">
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9333ea] via-[#c084fc] to-[#f472b6] blur-[25px] opacity-70" style="animation: spin 4s linear infinite"></div>
+                    <div class="absolute inset-2 rounded-full bg-gradient-to-bl from-[#5c5296] to-[#988aef] blur-[15px] opacity-90" style="animation: spin 3s linear infinite reverse"></div>
+                    <div class="absolute inset-4 bg-white rounded-full shadow-inner flex items-center justify-center overflow-hidden">
+                        <img src="../logo.png" alt="GlowDiary Logo" class="w-[140%] h-[140%] max-w-none object-contain mt-2 -ml-3">
+                    </div>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white tracking-tight">GlowDiary</h1>
+                <p class="text-purple-200 font-bold text-xs tracking-[0.2em] uppercase mt-2">Your Skin Journey</p>
+            </div>
+        </div>
+
+        <script>
         let currentStep = 1;
         const totalSteps = 4;
 
@@ -327,8 +344,6 @@
 
         // Selesaikan Onboarding & Pergi ke Halaman Aplikasi
         function finishOnboarding() {
-            // Disini Anda bisa menambahkan logika untuk menyimpan data (misal ke LocalStorage/API)
-            // Kemudian alihkan user ke halaman utama (glowdiary.html)
             window.location.href = 'glowdiary.html';
         }
 

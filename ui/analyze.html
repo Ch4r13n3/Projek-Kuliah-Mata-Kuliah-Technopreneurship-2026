@@ -33,7 +33,6 @@
         ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
         .gradient-btn { background: linear-gradient(135deg, #d8b4fe 0%, #c084fc 100%); }
 
-        /* FIX 1: Definisikan pb-safe dengan benar */
         .pb-safe {
             padding-bottom: max(16px, env(safe-area-inset-bottom));
         }
@@ -60,7 +59,6 @@
         .sidebar-btn.active { background: #f5f3ff; color: #9333ea; font-weight: 700; }
 
         /* ── BINGKAI HP ── */
-        /* Di layar lebar (desktop): tampilkan seperti HP */
         @media (min-width: 641px) {
             body {
                 background-color: #1a1a1a !important;
@@ -80,7 +78,6 @@
                 display: flex;
                 transform: translateZ(0);
             }
-            /* Notch iPhone */
             .iphone-frame::before {
                 content: '';
                 position: absolute;
@@ -94,11 +91,9 @@
                 border-bottom-right-radius: 18px;
                 z-index: 9999;
             }
-            /* Sembunyikan sidebar di dalam frame HP */
             .iphone-screen aside { display: none !important; }
         }
 
-        /* Di HP nyata (mobile): fullscreen biasa */
         @media (max-width: 640px) {
             .iphone-frame {
                 width: 100%;
@@ -123,7 +118,6 @@
 </head>
 <body class="font-sans text-gray-800 overflow-hidden flex h-screen w-screen">
 
-    <!-- BINGKAI HP -->
     <div class="iphone-frame">
         <div class="iphone-screen bg-gray-50 flex flex-col w-full h-full relative overflow-hidden">
 
@@ -152,9 +146,9 @@
                         </button>
                     </div>
 
-                    <!-- SECTION: SKIN SCAN -->
-                    <div id="section-scan">
-                        <div class="bg-gradient-to-br from-purple-600 to-brand-dark rounded-3xl p-6 text-white shadow-lg relative overflow-hidden mb-6">
+                    <!-- SECTION 1: SKIN SCAN -->
+                    <div id="section-scan" class="hidden space-y-6">
+                        <div class="bg-gradient-to-br from-purple-600 to-brand-dark rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
                             <div class="absolute -right-10 -top-10 w-44 h-44 bg-white/10 rounded-full"></div>
                             <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-pink-400/20 rounded-full"></div>
                             <div class="relative z-10 flex justify-end mb-4">
@@ -168,30 +162,36 @@
                                 </div>
                             </div>
                             <div class="relative z-10 flex flex-col items-center gap-4 text-center">
-                                <div class="relative w-28 h-28 flex-shrink-0">
-                                    <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 flex items-center justify-center text-5xl overflow-hidden">
-                                        <i class="fa-solid fa-face-smile-beam text-white/80"></i>
+                                
+                                <div class="relative w-36 h-36 flex-shrink-0">
+                                    <div class="w-full h-full bg-black/20 backdrop-blur-md rounded-2xl border border-white/30 flex items-center justify-center overflow-hidden relative">
+                                        <!-- Pratinjau Foto Hasil Snapshot Wajah / File Upload -->
+                                        <img id="captured-preview" class="hidden w-full h-full object-cover rounded-2xl">
+                                        <i id="default-face-icon" class="fa-solid fa-user-astronaut text-5xl text-white/80"></i>
                                     </div>
-                                    <div class="scan-line absolute left-2 right-2 h-0.5 bg-white/60 rounded-full" style="top:30%"></div>
                                     <div class="absolute top-1 left-1 w-5 h-5 border-t-2 border-l-2 border-white rounded-tl-sm"></div>
                                     <div class="absolute top-1 right-1 w-5 h-5 border-t-2 border-r-2 border-white rounded-tr-sm"></div>
                                     <div class="absolute bottom-1 left-1 w-5 h-5 border-b-2 border-l-2 border-white rounded-bl-sm"></div>
                                     <div class="absolute bottom-1 right-1 w-5 h-5 border-b-2 border-r-2 border-white rounded-br-sm"></div>
                                 </div>
+
                                 <div class="w-full">
                                     <h2 class="text-xl font-bold mb-2">Daily Skin Scan</h2>
                                     <p class="text-purple-100 text-sm mb-5 leading-relaxed">Ambil foto wajahmu hari ini untuk melihat tingkat kelembapan, jerawat, dan noda hitam secara real-time.</p>
+                                    
                                     <div id="scan-mode-camera" class="flex flex-col gap-3 justify-center w-full">
-                                        <button onclick="runScan()" class="bg-white text-brand-dark font-bold px-6 py-3 rounded-xl shadow-md hover:scale-105 transition-transform flex items-center gap-2 justify-center w-full">
+                                        <!-- Tombol pemicu modal kamera wajah kustom -->
+                                        <button onclick="openFaceCamera()" class="bg-white text-brand-dark font-bold px-6 py-3 rounded-xl shadow-md hover:scale-[1.02] transition-transform flex items-center gap-2 justify-center w-full">
                                             <i class="fa-solid fa-camera"></i> Scan Face Now
                                         </button>
                                         <button class="bg-white/20 text-white font-bold px-5 py-3 rounded-xl border border-white/30 hover:bg-white/30 transition-colors flex items-center gap-2 justify-center text-sm w-full">
                                             <i class="fa-solid fa-circle-question"></i> Cara Scan
                                         </button>
                                     </div>
+                                    
                                     <div id="scan-mode-upload" class="hidden w-full">
-                                        <label class="cursor-pointer bg-white text-brand-dark font-bold px-6 py-3 rounded-xl shadow-md hover:scale-105 transition-transform flex items-center gap-2 justify-center w-full">
-                                            <i class="fa-solid fa-upload"></i> Upload Foto
+                                        <label class="cursor-pointer bg-white text-brand-dark font-bold px-6 py-3 rounded-xl shadow-md hover:scale-[1.02] transition-transform flex items-center gap-2 justify-center w-full">
+                                            <i class="fa-solid fa-upload"></i> Upload Foto Wajah
                                             <input type="file" accept="image/*" class="hidden" onchange="handleUpload(this)">
                                         </label>
                                     </div>
@@ -199,8 +199,10 @@
                             </div>
                         </div>
 
+                        <canvas id="capture-canvas" class="hidden"></canvas>
+
                         <!-- Loading State -->
-                        <div id="scan-loading" class="hidden bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center mb-6">
+                        <div id="scan-loading" class="hidden bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center">
                             <div class="relative w-20 h-20 mx-auto mb-4">
                                 <div class="pulse-ring absolute inset-0 bg-purple-100 rounded-full"></div>
                                 <div class="relative w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center text-brand-dark text-3xl">
@@ -214,8 +216,8 @@
                             </div>
                         </div>
 
-                        <!-- Scan Results -->
-                        <div id="scan-results" class="hidden space-y-6 mb-6">
+                        <!-- Scan Results Wrapper -->
+                        <div id="scan-results" class="hidden space-y-6">
                             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-6">
                                 <div class="relative w-20 h-20 flex-shrink-0">
                                     <svg class="w-20 h-20 -rotate-90" viewBox="0 0 36 36">
@@ -233,6 +235,7 @@
                                     <p class="text-sm text-gray-400 mt-1">Naik 5 poin dari scan terakhir (3 hari lalu)</p>
                                 </div>
                             </div>
+                            
                             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                                 <h3 class="font-bold text-gray-800 text-lg mb-5">Detail Kondisi Kulit</h3>
                                 <div class="space-y-5">
@@ -273,6 +276,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                                 <h3 class="font-bold text-gray-800 text-lg mb-4">Zona Kulit <span class="text-sm font-normal text-gray-400 ml-1">(Area Deteksi)</span></h3>
                                 <div class="flex flex-col gap-6 items-center">
@@ -290,6 +294,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                                 <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">AI Recommendations <span class="text-xl">✨</span></h3>
                                 <div class="space-y-3">
@@ -307,6 +312,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                                 <div class="flex justify-between items-center mb-5">
                                     <h3 class="font-bold text-gray-800 text-lg">Weekly Progress</h3>
@@ -324,7 +330,7 @@
                             </div>
                         </div>
 
-                        <!-- Empty state -->
+                        <!-- Standby Empty State -->
                         <div id="scan-empty" class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center">
                             <div class="w-20 h-20 bg-purple-50 rounded-full mx-auto flex items-center justify-center text-4xl mb-4">📸</div>
                             <h3 class="font-bold text-gray-800 text-lg mb-2">Belum Ada Riwayat Scan</h3>
@@ -332,7 +338,7 @@
                         </div>
                     </div>
 
-                    <!-- SECTION: INGREDIENT MATCHER -->
+                    <!-- SECTION 2: INGREDIENT MATCHER -->
                     <div id="section-ingredient" class="hidden space-y-6">
                         <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                             <div class="flex flex-col mb-5 gap-3 border-b border-gray-50 pb-4">
@@ -348,7 +354,7 @@
                             <div class="relative mb-4">
                                 <textarea id="ing-input" rows="4" placeholder="Tulis daftar ingredients di sini...&#10;&#10;Contoh:&#10;Water, Niacinamide, Glycerin, Zinc PCA, Coconut Oil..."
                                     class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 pr-14 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand resize-none transition-colors leading-relaxed"></textarea>
-                                <button class="absolute bottom-4 right-4 bg-white text-brand border border-gray-200 w-10 h-10 rounded-full flex items-center justify-center hover:bg-brand hover:text-white hover:border-brand transition-all shadow-sm">
+                                <button onclick="openProductCamera()" class="absolute bottom-4 right-4 bg-white text-brand border border-gray-200 w-10 h-10 rounded-full flex items-center justify-center hover:bg-brand hover:text-white hover:border-brand transition-all shadow-sm shadow-purple-100">
                                     <i class="fa-solid fa-camera"></i>
                                 </button>
                             </div>
@@ -429,39 +435,69 @@
                                 <div class="flex-1"><p class="font-bold text-gray-800 text-sm">Hari ini — Jum, 6 Jun</p><p class="text-xs text-gray-400">Hidrasi 72% · 3 jerawat aktif</p></div>
                                 <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
                             </div>
-                            <div class="hist-card flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 cursor-pointer transition-colors">
-                                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 font-bold">73</div>
-                                <div class="flex-1"><p class="font-bold text-gray-800 text-sm">3 hari lalu — Sel, 3 Jun</p><p class="text-xs text-gray-400">Hidrasi 68% · 5 jerawat aktif</p></div>
-                                <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                            </div>
-                            <div class="hist-card flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 cursor-pointer transition-colors">
-                                <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600 font-bold">61</div>
-                                <div class="flex-1"><p class="font-bold text-gray-800 text-sm">1 minggu lalu — Sab, 31 Mei</p><p class="text-xs text-gray-400">Hidrasi 55% · 7 jerawat aktif</p></div>
-                                <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                            </div>
                         </div>
                     </div>
 
                 </div>
             </main>
 
+            <!-- ⚠️ NEW COMPONENT: MODAL VIEWPORT KAMERA KHUSUS SCAN WAJAH (TAB 1) -->
+            <div id="modal-face-camera" class="absolute inset-0 bg-black/90 z-[300] hidden flex-col justify-between p-6">
+                <div class="flex justify-between items-center text-white">
+                    <span class="text-xs font-bold uppercase tracking-wider text-purple-300">Daily Skin Biometric Scan</span>
+                    <button onclick="closeFaceCamera()" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <!-- Lingkaran Deteksi Wajah untuk Pratinjau Aliran Kamera Depan -->
+                <div class="w-72 h-72 mx-auto bg-neutral-900 rounded-full border-2 border-brand/50 overflow-hidden relative shadow-lg shadow-purple-500/20">
+                    <video id="face-webcam-view" autoplay playsinline muted class="w-full h-full object-cover scale-x-[-1]"></video>
+                    <!-- Animasi Garis Laser Scan Bergerak Naik-Turun -->
+                    <div id="laser-line-face" class="scan-line absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent shadow-[0_0_8px_#c084fc]"></div>
+                </div>
+
+                <div class="w-full pb-safe flex flex-col items-center gap-2 text-center text-white">
+                    <p class="text-xs text-gray-400 max-w-[240px]">Posisikan wajah Anda tepat di dalam lingkaran radar scan</p>
+                    <button onclick="captureFaceSnapshot()" class="w-16 h-16 bg-white rounded-full border-4 border-purple-300 flex items-center justify-center active:scale-95 transition-transform mt-2">
+                        <div class="w-12 h-12 bg-brand rounded-full flex items-center justify-center text-white text-xl"><i class="fa-solid fa-expand"></i></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODAL VIEWPORT KAMERA KHUSUS PRODUK BOTOL (TAB 2) -->
+            <div id="modal-product-camera" class="absolute inset-0 bg-black/90 z-[300] hidden flex-col justify-between p-6">
+                <div class="flex justify-between items-center text-white">
+                    <span class="text-xs font-bold uppercase tracking-wider text-purple-300">Scan Product Ingredients</span>
+                    <button onclick="closeProductCamera()" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="w-full aspect-[4/5] bg-neutral-900 rounded-2xl border border-white/10 overflow-hidden relative">
+                    <video id="product-webcam-view" autoplay playsinline muted class="w-full h-full object-cover"></video>
+                    <div class="absolute inset-y-10 inset-x-6 border border-dashed border-brand rounded-xl pointer-events-none flex items-center justify-center">
+                        <span class="text-[10px] text-white/40 font-medium bg-black/40 px-2 py-1 rounded-md">Posisikan tulisan komposisi di area ini</span>
+                    </div>
+                    <div class="scan-line absolute left-0 right-0 h-0.5 bg-brand shadow-md"></div>
+                </div>
+
+                <div class="w-full pb-safe flex justify-center">
+                    <button onclick="captureProductSnapshot()" class="w-16 h-16 bg-white rounded-full border-4 border-purple-300 flex items-center justify-center active:scale-95 transition-transform">
+                        <div class="w-12 h-12 bg-brand rounded-full flex items-center justify-center text-white text-lg"><i class="fa-solid fa-expand"></i></div>
+                    </button>
+                </div>
+            </div>
+
             <!-- Bottom Nav -->
             <nav class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 pt-3 flex justify-between items-center text-[10px] font-medium z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] pb-safe">
-                <button onclick="window.location.href='glowdiary.html'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-house text-lg"></i>
-                    <span>Home</span>
+                <button onclick="window.location.href='glowdiary.html#home'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
+                    <i class="fa-solid fa-house text-lg"></i><span>Home</span>
                 </button>
-                <button onclick="window.location.href='glowdiary.html'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
-                    <span>Search</span>
+                <button onclick="window.location.href='glowdiary.html#discover'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i><span>Search</span>
                 </button>
-                <button class="nav-btn flex flex-col items-center gap-1 text-brand-dark transition-colors">
-                    <i class="fa-solid fa-clipboard-check text-lg"></i>
-                    <span>Analyze</span>
+                <button onclick="switchMainTab('scan')" class="nav-btn flex flex-col items-center gap-1 text-brand-dark transition-colors">
+                    <i class="fa-solid fa-clipboard-check text-lg"></i><span>Analyze</span>
                 </button>
                 <button onclick="window.location.href='profile.html'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-user text-lg"></i>
-                    <span>Profile</span>
+                    <i class="fa-solid fa-user text-lg"></i><span>Profile</span>
                 </button>
             </nav>
 
@@ -469,29 +505,178 @@
     </div>
 
     <script>
+        let faceStream = null;     // Stream kamera depan wajah
+        let productStream = null;  // Stream kamera belakang produk
+
+        // TAB SWITCHER MANAGEMENT
         function switchMainTab(tab) {
-            document.getElementById('section-scan').classList.toggle('hidden', tab !== 'scan');
-            document.getElementById('section-ingredient').classList.toggle('hidden', tab !== 'ingredient');
-            document.getElementById('tab-scan').classList.toggle('active', tab === 'scan');
-            document.getElementById('tab-ingredient').classList.toggle('active', tab === 'ingredient');
+            document.getElementById('section-scan').classList.add('hidden');
+            document.getElementById('section-ingredient').classList.add('hidden');
+            document.getElementById('history-panel').classList.add('hidden');
+
+            document.getElementById('tab-scan').classList.remove('active', 'text-gray-400');
+            document.getElementById('tab-ingredient').classList.remove('active', 'text-gray-400');
+
             if (tab === 'scan') {
-                document.getElementById('tab-scan').classList.remove('text-gray-400');
+                document.getElementById('section-scan').classList.remove('hidden');
+                document.getElementById('tab-scan').classList.add('active');
                 document.getElementById('tab-ingredient').classList.add('text-gray-400');
-            } else {
-                document.getElementById('tab-ingredient').classList.remove('text-gray-400');
+                
+                document.getElementById('scan-empty').classList.remove('hidden');
+                document.getElementById('scan-results').classList.add('hidden');
+                document.getElementById('scan-loading').classList.add('hidden');
+            } else if (tab === 'ingredient') {
+                document.getElementById('section-ingredient').classList.remove('hidden');
+                document.getElementById('tab-ingredient').classList.add('active');
                 document.getElementById('tab-scan').classList.add('text-gray-400');
+                
+                closeFaceCamera(); // Matikan kamera wajah jika pindah tab
             }
         }
+
+        // --- 📸 MODAL KAMERA WAJAH LOGIC (TAB 1) ---
+        async function openFaceCamera() {
+            const modalFace = document.getElementById('modal-face-camera');
+            const videoElement = document.getElementById('face-webcam-view');
+
+            modalFace.classList.remove('hidden');
+            modalFace.classList.add('flex');
+
+            try {
+                faceStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user" }, // Kamera depan default
+                    audio: false
+                });
+                videoElement.srcObject = faceStream;
+            } catch (error) {
+                console.error("Gagal memuat kamera depan wajah:", error);
+                alert("Gagal mengakses kamera depan Anda.");
+                closeFaceCamera();
+            }
+        }
+
+        function captureFaceSnapshot() {
+            const videoElement = document.getElementById('face-webcam-view');
+            const canvas = document.getElementById('capture-canvas');
+            const previewImage = document.getElementById('captured-preview');
+            const defaultIcon = document.getElementById('default-face-icon');
+
+            if (!faceStream) return;
+
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            const ctx = canvas.getContext('2d');
+            
+            // Efek mirror kamera depan agar preview gambar pas
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            previewImage.src = canvas.toDataURL('image/jpeg');
+            previewImage.classList.remove('hidden');
+            defaultIcon.classList.add('hidden');
+            
+            closeFaceCamera(); // Tutup modal & bersihkan stream harian
+            runScan();        // Jalankan proses bar simulasi AI scan
+        }
+
+        function closeFaceCamera() {
+            const modalFace = document.getElementById('modal-face-camera');
+            modalFace.classList.add('hidden');
+            modalFace.classList.remove('flex');
+
+            if (faceStream) {
+                faceStream.getTracks().forEach(track => track.stop());
+                faceStream = null;
+            }
+        }
+
+        // --- 🧴 MODAL KAMERA PRODUK LOGIC (TAB 2) ---
+        async function openProductCamera() {
+            const modalCam = document.getElementById('modal-product-camera');
+            const videoElement = document.getElementById('product-webcam-view');
+
+            modalCam.classList.remove('hidden');
+            modalCam.classList.add('flex');
+
+            try {
+                productStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" }, // Kamera belakang default
+                    audio: false
+                });
+                videoElement.srcObject = productStream;
+            } catch (error) {
+                console.error("Gagal membuka kamera belakang produk:", error);
+                alert("Gagal memuat perangkat kamera belakang.");
+                closeProductCamera();
+            }
+        }
+
+        function captureProductSnapshot() {
+            const videoElement = document.getElementById('product-webcam-view');
+            const canvas = document.getElementById('capture-canvas');
+            const textarea = document.getElementById('ing-input');
+
+            if (!productStream) return;
+
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            // Pengisian text otomatis (Simulasi OCR)
+            textarea.value = "Water, Niacinamide, Glycerin, Zinc PCA, Centella Asiatica Extract, Phenoxyethanol, Hyaluronic Acid, Fragrance, Coconut Oil.";
+            
+            closeProductCamera();
+            textarea.focus();
+            
+            alert("Bahan aktif berhasil dipindai! Silakan klik 'Check Compatibility'. ✨");
+        }
+
+        function closeProductCamera() {
+            const modalCam = document.getElementById('modal-product-camera');
+            modalCam.classList.add('hidden');
+            modalCam.classList.remove('flex');
+
+            if (productStream) {
+                productStream.getTracks().forEach(track => track.stop());
+                productStream = null;
+            }
+        }
+
+        // --- GLOBAL HANDLING UPLOAD FILE ---
+        function handleUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('captured-preview');
+                    const defaultIcon = document.getElementById('default-face-icon');
+                    
+                    closeFaceCamera(); // Matikan stream jika sedang berjalan
+
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('hidden');
+                    defaultIcon.classList.add('hidden');
+
+                    runScan();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function setScanMode(mode) {
             document.getElementById('mode-camera').classList.toggle('active', mode === 'camera');
             document.getElementById('mode-upload').classList.toggle('active', mode === 'upload');
             document.getElementById('scan-mode-camera').classList.toggle('hidden', mode !== 'camera');
             document.getElementById('scan-mode-upload').classList.toggle('hidden', mode !== 'upload');
+            if (mode !== 'camera') closeFaceCamera();
         }
+
         function runScan() {
             document.getElementById('scan-empty').classList.add('hidden');
             document.getElementById('scan-results').classList.add('hidden');
             document.getElementById('scan-loading').classList.remove('hidden');
+            
             let progress = 0;
             const bar = document.getElementById('scan-progress-bar');
             const interval = setInterval(() => {
@@ -505,20 +690,27 @@
                     }, 400);
                 }
                 bar.style.width = Math.min(progress, 100) + '%';
-            }, 250);
+            }, 200);
         }
-        function handleUpload(input) {
-            if (input.files && input.files[0]) runScan();
-        }
+
         function runIngredientCheck() {
             const val = document.getElementById('ing-input').value.trim();
             if (!val) { document.getElementById('ing-input').focus(); return; }
             document.getElementById('ing-results').classList.remove('hidden');
             document.getElementById('ing-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
         function toggleHistory() {
             document.getElementById('history-panel').classList.toggle('hidden');
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (localStorage.getItem('gd_loggedIn') !== 'true') {
+                window.location.href = 'landing.html';
+                return;
+            }
+            switchMainTab('scan');
+        });
     </script>
 </body>
 </html>
