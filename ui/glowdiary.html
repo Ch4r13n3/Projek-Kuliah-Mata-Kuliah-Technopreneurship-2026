@@ -161,10 +161,9 @@
                                 </div>
 
                                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                                    <h2 class="font-semibold text-base mb-4">Chloe's Skin Condition</h2>
-                                    <div class="flex flex-wrap gap-3">
-                                        <span class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl text-xs font-medium flex items-center gap-2"><i class="fa-solid fa-droplet"></i> Oily</span>
-                                        <span class="px-3 py-1.5 bg-red-50 text-red-600 rounded-xl text-xs font-medium flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Acne</span>
+                                    <h2 class="font-semibold text-base mb-4" id="skin-condition-title">Skin Condition</h2>
+                                    <div class="flex flex-wrap gap-3" id="skin-status-box">
+                                        <span class="text-xs text-gray-400 italic">Memuat data...</span>
                                     </div>
                                 </div>
 
@@ -529,6 +528,19 @@
             }
             const username = localStorage.getItem('gd_currentUser') || 'there';
             document.getElementById('greeting-name').textContent = username;
+            document.getElementById('skin-condition-title').textContent = username + "'s Skin Condition";
+
+            // Load skin badges from localStorage
+            const skinBox = document.getElementById('skin-status-box');
+            const storedSkin = localStorage.getItem('gd_skin');
+            if (storedSkin) {
+                const skinData = JSON.parse(storedSkin);
+                let html = skinData.skinType.map(t => `<span class="px-3 py-1.5 bg-purple-50 text-brand-dark rounded-xl text-xs font-medium flex items-center gap-2"><i class="fa-solid fa-check"></i> ${t}</span>`).join('');
+                if (skinData.skinConcern) html += `<span class="px-3 py-1.5 border border-rose-100 bg-rose-50 text-rose-600 rounded-xl text-xs font-medium flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> ${skinData.skinConcern}</span>`;
+                skinBox.innerHTML = html;
+            } else {
+                skinBox.innerHTML = `<a href="kuesioner.html" class="text-xs text-brand font-bold hover:underline">Mulai Analisis Kulit →</a>`;
+            }
 
             let hash = window.location.hash.replace('#', '');
             if (['home', 'discover'].includes(hash)) {
