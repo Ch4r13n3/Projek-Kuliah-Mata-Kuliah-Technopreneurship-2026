@@ -22,7 +22,10 @@
         }
     </script>
     <style>
-        body { background-color: #f9fafb; }
+        /* Mengubah scrollbar bawaan agar lebih bersih */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
         .gradient-btn { background: linear-gradient(135deg, #d8b4fe 0%, #c084fc 100%); }
         
         /* Efek Transisi Antar Step */
@@ -44,11 +47,13 @@
         .check-icon { display: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="bg-slate-100 min-h-screen flex items-center justify-center antialiased">
 
-    <div class="w-full max-w-[400px] h-[800px] max-h-screen bg-white rounded-none md:rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col md:border-[6px] md:border-gray-900">
+    <div class="relative w-full min-full-screen bg-white md:w-[412px] md:h-[892px] md:min-h-[892px] md:my-6 md:rounded-[48px] md:border-[12px] md:border-slate-950 md:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] md:overflow-hidden flex flex-col">
         
-        <div class="px-6 pt-8 pb-4 bg-white z-10">
+        <div class="hidden md:block absolute top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-950 rounded-full z-50 shadow-inner"></div>
+        
+        <div class="px-6 pt-8 md:pt-12 pb-4 bg-white z-10">
             <div class="flex justify-between items-center mb-6">
                 <button id="btn-prev" onclick="prevStep()" class="text-gray-400 hover:text-gray-800 transition-colors w-8 h-8 flex items-center justify-center rounded-full invisible">
                     <i class="fa-solid fa-arrow-left text-lg"></i>
@@ -56,7 +61,7 @@
                 
                 <span id="step-indicator" class="font-bold text-gray-800 text-sm tracking-widest uppercase">Step 1 of 4</span>
                 
-                <button onclick="finishOnboarding()" class="text-gray-400 hover:text-brand-dark text-sm font-semibold transition-colors">
+                <button onclick="skipOnboarding()" class="text-gray-400 hover:text-brand-dark text-sm font-semibold transition-colors">
                     Skip
                 </button>
             </div>
@@ -66,7 +71,7 @@
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto px-6 pb-24 scrollbar-hide">
+        <div class="flex-1 overflow-y-auto px-6 pb-36 scrollbar-hide">
             
             <div id="step-1" class="step-container active">
                 <h1 class="text-2xl font-bold text-gray-900 mb-2">What's your skin type?</h1>
@@ -193,11 +198,8 @@
         let currentStep = 1;
         const totalSteps = 4;
 
-        // Fungsi untuk multiple selection (Bisa pilih lebih dari satu - Step 1 & 3)
         function toggleSelection(element) {
             element.classList.toggle('selected');
-            
-            // Logika UI untuk merubah background kotak checkbox jika ada
             let checkbox = element.querySelector('.rounded');
             if(checkbox) {
                 if(element.classList.contains('selected')) {
@@ -210,9 +212,7 @@
             }
         }
 
-        // Fungsi untuk single selection (Hanya bisa pilih satu / Radio Button - Step 2 & 4)
         function singleSelection(element, stepId) {
-            // Hapus class 'selected' dari semua opsi di step ini
             const options = document.querySelectorAll(`#${stepId} .option-card`);
             options.forEach(opt => {
                 opt.classList.remove('selected');
@@ -223,7 +223,6 @@
                 }
             });
 
-            // Tambahkan class 'selected' ke opsi yang diklik
             element.classList.add('selected');
             let selectedRadio = element.querySelector('.check-icon-radio');
             if(selectedRadio) {
@@ -232,25 +231,17 @@
             }
         }
 
-        // Navigasi ke Step Berikutnya
         function nextStep() {
             if (currentStep < totalSteps) {
-                // Sembunyikan step saat ini
                 document.getElementById(`step-${currentStep}`).classList.remove('active');
-                
                 currentStep++;
-                
-                // Tampilkan step berikutnya
                 document.getElementById(`step-${currentStep}`).classList.add('active');
-                
                 updateUI();
             } else {
-                // Jika sudah di step terakhir, selesaikan
                 finishOnboarding();
             }
         }
 
-        // Navigasi ke Step Sebelumnya
         function prevStep() {
             if (currentStep > 1) {
                 document.getElementById(`step-${currentStep}`).classList.remove('active');
@@ -260,23 +251,11 @@
             }
         }
 
-        // Selesaikan Onboarding & Pergi ke Halaman Aplikasi
-        function finishOnboarding() {
-            // Disini Anda bisa menambahkan logika untuk menyimpan data (misal ke LocalStorage/API)
-            // Kemudian alihkan user ke halaman utama (glowdiary.html)
-            window.location.href = 'glowdiary.html';
-        }
-
-        // Update UI (Progress Bar, Tombol, Label Step)
         function updateUI() {
-            // Update Teks Label Step
             document.getElementById('step-indicator').innerText = `Step ${currentStep} of ${totalSteps}`;
-            
-            // Update Lebar Progress Bar
             const progressPercentage = (currentStep / totalSteps) * 100;
             document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
 
-            // Tampilkan/Sembunyikan tombol Back (Prev)
             const btnPrev = document.getElementById('btn-prev');
             if (currentStep === 1) {
                 btnPrev.classList.add('invisible');
@@ -284,13 +263,44 @@
                 btnPrev.classList.remove('invisible');
             }
 
-            // Ganti teks tombol "Continue" menjadi "Finish" jika di step terakhir
             const btnNext = document.getElementById('btn-next');
             if (currentStep === totalSteps) {
                 btnNext.innerText = 'Finish Setup';
             } else {
                 btnNext.innerText = 'Continue';
             }
+        }
+
+        function skipOnboarding() {
+            localStorage.setItem('glowdiary_onboarding_done', 'false');
+            localStorage.removeItem('glowdiary_skin');
+            window.location.href = 'glowdiary.html';
+        }
+
+        function finishOnboarding() {
+            const selectedSkinTypes = [];
+            document.querySelectorAll('#step-1 .option-card.selected h3').forEach(el => {
+                selectedSkinTypes.push(el.innerText.trim());
+            });
+
+            const conditionNode = document.querySelector('#step-4 .option-card.selected span');
+            const selectedSkinConcern = conditionNode ? conditionNode.innerText.trim() : 'Tidak ada masalah khusus';
+
+            if (selectedSkinTypes.length === 0) {
+                selectedSkinTypes.push('Belum dianalisis');
+            }
+
+            const skinAnalysis = {
+                skinType: selectedSkinTypes,
+                skinConcern: selectedSkinConcern,
+                analyzedAt: new Date().toLocaleDateString('id-ID')
+            };
+
+            localStorage.setItem('glowdiary_skin', JSON.stringify(skinAnalysis));
+            localStorage.setItem('glowdiary_onboarding_done', 'true');
+
+            alert('Terima kasih telah menyelesaikan kuesioner! Mempersiapkan GlowDiary milikmu...');
+            window.location.href = 'glowdiary.html';
         }
     </script>
 </body>

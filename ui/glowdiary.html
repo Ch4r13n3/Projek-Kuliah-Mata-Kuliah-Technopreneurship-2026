@@ -32,50 +32,57 @@
         .gradient-bg { background: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%); }
         .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800 h-screen overflow-hidden flex">
 
-    <aside class="hidden md:flex flex-col w-64 h-screen bg-white border-r border-gray-100 p-6 z-20 shadow-sm">
-        <div class="flex items-center gap-3 text-2xl font-bold text-brand-dark mb-10">
-            <div class="w-10 h-10 bg-brand-light rounded-xl flex items-center justify-center text-xl">✨</div>
-            GlowDiary
-        </div>
-        
-        <div class="flex flex-col gap-2 flex-1">
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">Menu Utama</p>
+    <!-- SIDEBAR (DESKTOP) -->
+<aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-100 h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 transition-colors">        <div class="p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-purple-200">G</div>
+                <h1 class="text-xl font-black tracking-tight text-gray-800">Glow<span class="text-brand">Diary</span></h1>
+            </div>
             
-            <button onclick="switchTab('home')" id="sidebar-home" class="sidebar-btn flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                <i class="fa-solid fa-house w-5 text-center"></i> Home
-            </button>
-            
-            <button onclick="switchTab('discover')" id="sidebar-discover" class="sidebar-btn flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                <i class="fa-solid fa-magnifying-glass w-5 text-center"></i> Discover
-            </button>
-            
-            <button onclick="switchTab('analyze')" id="sidebar-analyze" class="sidebar-btn flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                <i class="fa-solid fa-clipboard-check w-5 text-center"></i> Analyze
-            </button>
-            
-            <button onclick="window.location.href='profile.html'" class="sidebar-btn text-gray-400 hover:bg-purple-50 hover:text-brand-dark flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                <i class="fa-solid fa-user w-5 text-center"></i> Profile
-            </button>
+            <nav class="flex-1 space-y-2">
+                <button onclick="switchTab('home')" id="sidebar-home" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left text-gray-500 hover:bg-purple-50 hover:text-brand">
+                    <i class="fa-solid fa-house w-5 text-center"></i> Home
+                </button>
+                
+                <button onclick="switchTab('discover')" id="sidebar-discover" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left text-gray-500 hover:bg-purple-50 hover:text-brand">
+                    <i class="fa-solid fa-compass w-5 text-center"></i> Discover
+                </button>
+                
+                <button onclick="switchTab('analyze')" id="sidebar-analyze" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left text-gray-500 hover:bg-purple-50 hover:text-brand">
+                    <i class="fa-solid fa-wand-magic-sparkles w-5 text-center"></i> Analyze
+                </button>
+                
+                <button onclick="window.location.href='profile_2.html'" id="sidebar-profile" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left text-gray-500 hover:bg-purple-50 hover:text-brand">
+                    <i class="fa-solid fa-user w-5 text-center"></i> Profile
+                </button>
+            </nav>
+
+            <div class="mt-auto">
+                <button onclick="logout()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:bg-red-50 transition-all font-medium text-left">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Keluar
+                </button>
+            </div>
         </div>
     </aside>
 
+    <!-- MAIN VIEW CONTAINER -->
     <main class="flex-1 h-screen overflow-y-auto pb-24 md:pb-0 relative">
         
-        <div id="screen-home" class="screen w-full min-h-full gradient-bg p-4 md:p-8">
+        <!-- SCREEN 1: HOME -->
+        <div id="screen-home" class="screen w-full min-h-full gradient-bg p-4 md:p-8 animate-fade-in">
             <div class="max-w-5xl mx-auto">
                 <div class="flex justify-between items-center mb-8 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-purple-50">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Hi, Chloe 👋</h1>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800" id="home-greeting">Hi 👋</h1>
                         <p class="text-sm md:text-base text-gray-500 mt-1">Let's check your skin today</p>
                     </div>
-                    <!-- <div onclick="switchTab('profile')" class="cursor-pointer w-12 h-12 md:w-16 md:h-16 bg-purple-100 rounded-full flex items-center justify-center text-brand-dark text-xl md:text-2xl hover:bg-purple-200 transition-colors">
-                        <i class="fa-solid fa-user"></i>
-                    </div> -->
-                    <div onclick="window.location.href='profile.html'" class="cursor-pointer w-12 h-12 md:w-16 md:h-16 bg-purple-100 rounded-full flex items-center justify-center text-brand-dark text-xl md:text-2xl hover:bg-purple-200 transition-colors">
+                    <div onclick="switchTab('profile')" class="cursor-pointer w-12 h-12 md:w-16 md:h-16 bg-purple-100 rounded-full flex items-center justify-center text-brand-dark text-xl md:text-2xl hover:bg-purple-200 transition-colors">
                         <i class="fa-solid fa-user"></i>
                     </div>
                 </div>
@@ -91,238 +98,384 @@
                         </div>
 
                         <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                            <h2 class="font-semibold text-lg mb-4">Chloe's Skin Condition</h2>
-                            <div class="flex flex-wrap gap-3">
-                                <span class="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm font-medium flex items-center gap-2"><i class="fa-solid fa-droplet"></i> Oily</span>
-                                <span class="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Acne</span>
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="font-semibold text-lg" id="skin-condition-title">My Skin Condition</h2>
+                                <div class="flex items-center gap-3">
+                                    <button id="btn-toggle-update" class="text-xs bg-purple-50 text-brand-dark px-2.5 py-1 rounded-full font-bold hover:bg-brand hover:text-white transition-all flex items-center gap-1 shadow-sm" onclick="toggleHomeConcernEdit(true)">
+                                        <i class="fa-solid fa-pen text-[9px]"></i> Ubah
+                                    </button>
+                                    <a href="kuesioner.html" class="text-xs text-brand hover:underline font-medium">Isi Ulang</a>
+                                </div>
+                            </div>
+                            
+                            <div id="skin-status-box" class="flex flex-wrap gap-3">
+                                <span class="text-sm text-gray-400 italic">Memuat data...</span>
+                            </div>
+
+                            
+                            <style>
+                                .skin-cb-input:checked + .skin-cb-card {
+                                    background: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%);
+                                    border-color: #c084fc;
+                                    color: #7e22ce;
+                                    box-shadow: 0 4px 12px -2px rgba(192, 132, 252, 0.15);
+                                    transform: translateY(-1px);
+                                }
+                            </style>
+
+                            <div id="home-concern-form" class="mt-4 p-5 bg-white rounded-2xl border border-purple-100 hidden shadow-xl shadow-purple-100/30 animate-fade-in select-none">
+                                <div class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-50">
+                                    <div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center text-brand-dark">
+                                        <i class="fa-solid fa-sliders text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-gray-800">Pembaruan Profil Kulit</h4>
+                                        <p class="text-[10px] text-gray-400">Pilih kondisi kulit Anda secara real-time saat ini</p>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="text-[10px] font-bold text-purple-500 block mb-2 uppercase tracking-wider flex items-center gap-1">
+                                        <i class="fa-solid fa-sparkles text-[9px]"></i> Tipe Kulit (Bisa Pilih > 1):
+                                    </label>
+                                    <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-type-cb" value="Normal" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-purple-200">
+                                                <i class="fa-solid fa-face-smile text-purple-400 text-[11px]"></i>
+                                                <span>Normal</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-type-cb" value="Oily" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-purple-200">
+                                                <i class="fa-solid fa-droplet text-blue-400 text-[11px]"></i>
+                                                <span>Oily</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-type-cb" value="Dry" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-purple-200">
+                                                <i class="fa-solid fa-sun text-amber-500 text-[11px]"></i>
+                                                <span>Dry</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-type-cb" value="Combination" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-purple-200">
+                                                <i class="fa-solid fa-layer-group text-teal-400 text-[11px]"></i>
+                                                <span>Kombinasi</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-type-cb" value="Sensitive" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-purple-200">
+                                                <i class="fa-solid fa-shield-heart text-rose-400 text-[11px]"></i>
+                                                <span>Sensitif</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-type-cb" value="Acne-Prone" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-purple-200">
+                                                <i class="fa-solid fa-bacteria text-orange-400 text-[11px]"></i>
+                                                <span>Acne-Prone</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="text-[10px] font-bold text-amber-600 block mb-2 uppercase tracking-wider flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-exclamation text-[9px]"></i> Kondisi Kulit Saat Ini:
+                                    </label>
+                                    <div class="grid grid-cols-1 gap-1.5 text-xs font-semibold">
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-concern-cb" value="Tidak ada masalah khusus" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-amber-200">
+                                                <i class="fa-solid fa-circle-check text-green-400 text-[11px]"></i>
+                                                <span>Normal / Tidak ada masalah khusus</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-concern-cb" value="Berjerawat" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-amber-200">
+                                                <i class="fa-solid fa-circle-dot text-red-400 text-[11px]"></i>
+                                                <span>Berjerawat (Acne-Prone)</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-concern-cb" value="Kusam & Hiperpigmentasi" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-amber-200">
+                                                <i class="fa-solid fa-wand-magic text-yellow-500 text-[11px]"></i>
+                                                <span>Kusam & Flek Hitam</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-concern-cb" value="Kemerahan & Iritasi" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-amber-200">
+                                                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-[11px]"></i>
+                                                <span>Kemerahan & Iritasi</span>
+                                            </div>
+                                        </label>
+                                        <label class="relative cursor-pointer">
+                                            <input type="checkbox" name="home-concern-cb" value="Sangat Kering & Mengelupas" class="sr-only skin-cb-input">
+                                            <div class="skin-cb-card flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-gray-600 transition-all duration-200 hover:border-amber-200">
+                                                <i class="fa-solid fa-snowflake text-sky-400 text-[11px]"></i>
+                                                <span>Sangat Kering & Mengelupas</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-2 justify-end text-xs font-bold pt-2">
+                                    <button type="button" class="text-gray-400 hover:text-gray-600 px-3 py-1.5 rounded-lg transition-colors text-[11px]" onclick="toggleHomeConcernEdit(false)">Batal</button>
+                                    <button type="button" class="gradient-btn text-white px-4 py-1.5 rounded-xl shadow-sm hover:opacity-95 active:scale-[0.98] transition-all text-[11px]" onclick="saveHomeConcernUpdate()">Simpan Perubahan</button>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-rose-100 relative overflow-hidden">
-                            <div class="absolute -right-10 -top-10 w-32 h-32 bg-rose-50 rounded-full blur-2xl"></div>
-                            <div class="flex justify-between items-start mb-6 relative z-10">
-                                <div>
-                                    <h2 class="font-semibold text-lg text-gray-800 flex items-center gap-2 mb-1">
-                                        <i class="fa-solid fa-droplet text-rose-500"></i> Period Log
-                                    </h2>
-                                    <p id="period-status-text" class="text-sm text-gray-500">Belum ada data tercatat</p>
-                                </div>
-                                <button onclick="toggleModal('modal-period')" class="text-rose-500 hover:text-white hover:bg-rose-400 bg-rose-50 w-10 h-10 rounded-xl transition-colors flex items-center justify-center font-bold shadow-sm">
-                                    <i class="fa-solid fa-plus"></i>
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-rose-100 relative overflow-hidden transition-all duration-300" id="period-log-container">
+                            <div class="absolute top-4 right-4 z-20">
+                                <button onclick="togglePeriodFeature()" id="btn-hide-period" class="text-gray-400 hover:text-rose-500 text-sm transition-colors" title="Sembunyikan Period Log">
+                                    <i class="fa-solid fa-eye-slash"></i>
                                 </button>
                             </div>
 
-                            <div class="flex justify-between items-center mb-4 relative z-10 bg-gray-50 py-2 px-3 rounded-xl border border-gray-100">
-                                <button onclick="changeMonth(-1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg shadow-sm transition-all"><i class="fa-solid fa-chevron-left text-sm"></i></button>
-                                <h3 id="calendar-month-year" class="font-bold text-gray-800 text-sm tracking-wide">Bulan Tahun</h3>
-                                <button onclick="changeMonth(1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg shadow-sm transition-all"><i class="fa-solid fa-chevron-right text-sm"></i></button>
+                            <div id="period-log-content">
+                                <div class="absolute -right-10 -top-10 w-32 h-32 bg-rose-50 rounded-full blur-2xl"></div>
+                                <div class="flex justify-between items-start mb-6 relative z-10">
+                                    <div>
+                                        <h2 class="font-semibold text-lg text-gray-800 flex items-center gap-2 mb-1">
+                                            <i class="fa-solid fa-droplet text-rose-500"></i> Period Log
+                                        </h2>
+                                        <p id="period-status-text" class="text-sm text-gray-500">Belum ada data tercatat</p>
+                                    </div>
+                                    <button onclick="toggleModal('modal-period')" class="mr-6 text-rose-500 hover:text-white hover:bg-rose-400 bg-rose-50 w-10 h-10 rounded-xl transition-colors flex items-center justify-center font-bold shadow-sm">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                </div>
+
+                                <div class="flex justify-between items-center mb-4 relative z-10 bg-gray-50 py-2 px-3 rounded-xl border border-gray-100">
+                                    <button onclick="changeMonth(-1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg shadow-sm transition-all"><i class="fa-solid fa-chevron-left text-sm"></i></button>
+                                    <h3 id="calendar-month-year" class="font-bold text-gray-800 text-sm tracking-wide">Bulan Tahun</h3>
+                                    <button onclick="changeMonth(1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg shadow-sm transition-all"><i class="fa-solid fa-chevron-right text-sm"></i></button>
+                                </div>
+
+                                <div class="relative z-10 select-none">
+                                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2">
+                                        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                                    </div>
+                                    <div id="calendar-days" class="grid grid-cols-7 gap-y-2 text-center text-sm font-medium text-gray-700"></div>
+                                    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-5 pt-4 border-t border-gray-100 justify-center text-[10px] sm:text-xs text-gray-500 font-medium">
+                                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-brand shadow-sm"></div> Today</div>
+                                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></div> Period</div>
+                                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-100 border border-rose-200"></div> Fertile</div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="relative z-10 select-none">
-                                <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2">
-                                    <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                            <div id="period-log-off" class="hidden flex-col items-center justify-center py-2 relative z-10 text-center">
+                                <div class="w-10 h-10 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center text-lg mb-2">
+                                    <i class="fa-solid fa-droplet-slash"></i>
                                 </div>
-                                <div id="calendar-days" class="grid grid-cols-7 gap-y-2 text-center text-sm font-medium text-gray-700"></div>
-                                <div class="flex flex-wrap gap-x-4 gap-y-2 mt-5 pt-4 border-t border-gray-100 justify-center text-[10px] sm:text-xs text-gray-500 font-medium">
-                                    <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-brand shadow-sm"></div> Today</div>
-                                    <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></div> Period</div>
-                                    <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-100 border border-rose-200"></div> Fertile</div>
-                                </div>
+                                <p class="text-xs font-medium text-gray-500 mb-2">Fitur Period Log dinonaktifkan.</p>
+                                <button onclick="togglePeriodFeature()" class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full font-bold transition-colors">
+                                    <i class="fa-solid fa-eye mr-1"></i> Aktifkan
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="lg:col-span-2">
+                    <!-- <div class="lg:col-span-2">
                         <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-gray-100 h-full">
-                            
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="font-semibold text-lg text-gray-800">Products Used Today</h2>
-                                <button onclick="toggleModal('modal-routine')" class="text-brand hover:text-white hover:bg-brand bg-purple-50 w-8 h-8 rounded-lg transition-colors flex items-center justify-center font-bold shadow-sm text-sm">
+                                <button onclick="openAddModal()" class="text-brand hover:text-white hover:bg-brand bg-purple-50 w-8 h-8 rounded-lg transition-colors flex items-center justify-center font-bold shadow-sm text-sm">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div>
 
-                            <div id="routine-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="flex items-center justify-between p-4 bg-gray-50 hover:bg-white border border-gray-100 rounded-xl transition-all">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-lg flex items-center justify-center text-lg"><i class="fa-solid fa-pump-soap"></i></div>
-                                        <div>
-                                            <h4 class="font-bold text-gray-800">Cleanser</h4>
-                                            <p class="text-xs text-gray-400">Morning Routine</p>
-                                        </div>
+                            <div id="routine-list"></div>
+
+                            <div class="mt-6 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                                <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand mr-2"></i> Riwayat Terkini</h3>
+                                <div id="home-history-list" class="space-y-2">
                                     </div>
-                                    <i class="fa-solid fa-circle-check text-green-400 text-2xl"></i>
-                                </div>
-                                <div class="flex items-center justify-between p-4 bg-gray-50 hover:bg-white border border-gray-100 rounded-xl transition-all">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-lg flex items-center justify-center text-lg"><i class="fa-solid fa-spray-can"></i></div>
-                                        <div>
-                                            <h4 class="font-bold text-gray-800">Toner</h4>
-                                            <p class="text-xs text-gray-400">Morning Routine</p>
-                                        </div>
-                                    </div>
-                                    <i class="fa-solid fa-circle-check text-green-400 text-2xl"></i>
-                                </div>
-                                <div class="flex items-center justify-between p-4 bg-gray-50 hover:bg-white border border-gray-100 rounded-xl transition-all">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-yellow-50 text-yellow-500 rounded-lg flex items-center justify-center text-lg"><i class="fa-solid fa-flask"></i></div>
-                                        <div>
-                                            <h4 class="font-bold text-gray-800">Serum</h4>
-                                            <p class="text-xs text-gray-400">Morning Routine</p>
-                                        </div>
-                                    </div>
-                                    <i class="fa-solid fa-circle-check text-green-400 text-2xl"></i>
-                                </div>
-                                <div class="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl transition-all">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-lg"><i class="fa-solid fa-jar"></i></div>
-                                        <div>
-                                            <h4 class="font-bold text-gray-800">Moisturizer</h4>
-                                            <p class="text-xs text-gray-400">Evening Routine</p>
-                                        </div>
-                                    </div>
-                                    <i class="fa-regular fa-circle text-gray-300 text-2xl"></i>
-                                </div>
                             </div>
                         </div>
+                    </div> -->
+
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-white rounded-2xl p-5 md:p-6 shadow-xs border border-gray-100">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center text-brand-dark">
+                                        <i class="fa-solid fa-sparkles text-xs"></i>
+                                    </div>
+                                    <h2 class="font-bold text-lg text-gray-800">Products Used Today</h2>
+                                </div>
+                                <button onclick="openAddModal()" class="text-brand hover:text-white hover:bg-brand bg-purple-50 w-8 h-8 rounded-lg transition-colors flex items-center justify-center font-bold shadow-xs text-sm">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <div id="routine-list"></div>
+
+                            <div class="mt-5 pt-4 border-t border-gray-100">
+                                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">7 Hari Terakhir</h3>
+                                <div id="product-history-list" class="space-y-2.5">
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-5 md:p-6 shadow-xs border border-purple-50/50">
+                            <div class="flex items-center justify-between mb-4 pb-1 border-b border-gray-50">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center text-brand-dark">
+                                        <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-800 text-sm">Riwayat Profil & Kondisi Kulit</h3>
+                                        <p class="text-[10px] text-gray-400">Jejak perubahan berkala kondisi kulit Anda</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-purple-50 text-brand-dark font-bold px-2 py-0.5 rounded-full border border-purple-100">Log Riwayat</span>
+                            </div>
+                            
+                            <div id="skin-history-list" class="space-y-2.5 max-h-[280px] overflow-y-auto pr-1">
+                                </div>
+                        </div>
                     </div>
+                    
+
                 </div>
             </div>
         </div>
 
-        <div id="screen-discover" class="screen hidden w-full min-h-full bg-white p-4 md:p-8">
+        <!-- SCREEN 2: DISCOVER -->
+        <div id="screen-discover" class="screen hidden w-full min-h-full gradient-bg p-4 md:p-8 animate-fade-in">
             <div class="max-w-5xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Discover</h1>
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Discover & Learn</h1>
+                        <p class="text-sm text-gray-500 mt-1">Eksplorasi kandungan bahan aktif dan wawasan seputar kesehatan kulitmu.</p>
+                    </div>
                     <div class="flex w-full md:w-auto gap-3">
-                        <div class="relative flex-1 md:w-72 lg:w-96">
+                        <div class="relative flex-1 md:w-72 lg:w-80">
                             <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-400"></i>
-                            <input type="text" placeholder="Search products..." class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand">
+                            <input type="text" id="search-discover" onkeyup="searchDiscover()" placeholder="Cari artikel, produk atau kandungan..." 
+                                   class="w-full bg-white border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand text-sm transition-colors shadow-sm">
                         </div>
-                        <button class="gradient-btn text-white rounded-xl px-6 py-3 font-medium flex justify-center items-center gap-2 shadow-md hover:opacity-90 transition-opacity whitespace-nowrap">
-                            <i class="fa-solid fa-camera"></i> <span class="hidden sm:inline">Scan Ingredients</span>
-                        </button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                    <div>
-                        <h2 class="font-semibold text-xl mb-4 text-gray-800">Top 3 of the Month</h2>
-                        <div class="space-y-4">
-                            <div onclick="openReview('Hydrating Serum', 'GlowLab', '🧴')" class="flex items-center gap-4 p-4 bg-white border border-gray-100 hover:shadow-md transition-shadow rounded-2xl shadow-sm cursor-pointer hover:border-brand">
-                                <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center text-3xl">🧴</div>
-                                <div class="flex-1">
-                                    <h4 class="font-bold text-gray-800 text-base">Hydrating Serum</h4>
-                                    <p class="text-sm text-gray-400">GlowLab</p>
-                                    <p class="text-sm font-medium text-yellow-500 mt-1"><i class="fa-solid fa-star"></i> 4.8 <span class="text-gray-400 font-normal">(2341)</span></p>
-                                </div>
-                                <div class="w-10 h-10 rounded-full bg-purple-100 text-brand-dark flex items-center justify-center font-bold text-lg">1</div>
-                            </div>
-                            <div onclick="openReview('Vitamin C Cream', 'SkinEssence', '✨')" class="flex items-center gap-4 p-4 bg-white border border-gray-100 hover:shadow-md transition-shadow rounded-2xl shadow-sm cursor-pointer hover:border-brand">
-                                <div class="w-16 h-16 bg-orange-50 rounded-xl flex items-center justify-center text-3xl">✨</div>
-                                <div class="flex-1">
-                                    <h4 class="font-bold text-gray-800 text-base">Vitamin C Cream</h4>
-                                    <p class="text-sm text-gray-400">SkinEssence</p>
-                                    <p class="text-sm font-medium text-yellow-500 mt-1"><i class="fa-solid fa-star"></i> 4.7 <span class="text-gray-400 font-normal">(1876)</span></p>
-                                </div>
-                                <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center font-bold text-lg">2</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Filter Kategori Tabs (Pills Layout) -->
+                <div class="flex gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar snap-x">
+                    <button onclick="filterDiscover('all')" class="discover-tag bg-brand text-white text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap shadow-sm transition-all snap-start">Semua</button>
+                    <button onclick="filterDiscover('Edukasi')" class="discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap hover:bg-purple-50 hover:text-brand-dark shadow-sm transition-all snap-start">Edukasi Kulit</button>
+                    <button onclick="filterDiscover('Kandungan')" class="discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap hover:bg-purple-50 hover:text-brand-dark shadow-sm transition-all snap-start">Bahan Aktif</button>
+                    <button onclick="filterDiscover('Rekomendasi')" class="discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap hover:bg-purple-50 hover:text-brand-dark shadow-sm transition-all snap-start">Rekomendasi</button>
+                    <button onclick="filterDiscover('produk')" class="discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap hover:bg-purple-50 hover:text-brand-dark shadow-sm transition-all snap-start"><i class="fa-solid fa-bag-shopping mr-1"></i> Produk</button>
+                
+                </div>
 
-                    <div>
-                        <h2 class="font-semibold text-xl mb-4 text-gray-800">Recommended for You</h2>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                            <div onclick="openReview('Gentle Cleanser', 'ClearSkin', '🧼')" class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer group hover:border-brand">
-                                <div class="w-full aspect-square bg-green-50 rounded-xl mb-4 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform">🧼</div>
-                                <h4 class="font-bold text-gray-800 text-sm truncate">Gentle Cleanser</h4>
-                                <p class="text-xs text-gray-400 mb-3">ClearSkin</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-yellow-500 text-sm font-medium"><i class="fa-solid fa-star"></i> 4.6</span>
-                                    <span class="font-bold text-brand-dark">$24</span>
-                                </div>
-                            </div>
-                            <div onclick="openReview('Retinol Serum', 'Youth', '🌟')" class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer group hover:border-brand">
-                                <div class="w-full aspect-square bg-purple-50 rounded-xl mb-4 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform">🌟</div>
-                                <h4 class="font-bold text-gray-800 text-sm truncate">Retinol Serum</h4>
-                                <p class="text-xs text-gray-400 mb-3">Youth</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-yellow-500 text-sm font-medium"><i class="fa-solid fa-star"></i> 4.8</span>
-                                    <span class="font-bold text-brand-dark">$45</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Grid Konten Utama Discover -->
+                <div id="discover-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards dinamis di-render lewat JavaScript -->
                 </div>
             </div>
         </div>
 
-        <div id="screen-analyze" class="screen hidden w-full min-h-full bg-gray-50 p-4 md:p-8">
+        <!-- SCREEN 3: ANALYZE -->
+        <div id="screen-analyze" class="screen hidden w-full min-h-full gradient-bg p-4 md:p-8 animate-fade-in">
             <div class="max-w-4xl mx-auto space-y-8">
-                
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Analyze</h1>
-                    <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 hover:text-brand transition-colors">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Skin Analysis Pro</h1>
+                    <button onclick="alert('Membuka riwayat analisis terdahulu...')" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 hover:text-brand transition-colors">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </button>
                 </div>
 
-                <div>
-                    <div class="w-full bg-gradient-to-br from-purple-500 to-brand-dark rounded-3xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden mb-6">
-                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-                        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-pink-400/20 rounded-full blur-2xl"></div>
+                <!-- AI Scan Hero Banner -->
+                <div class="w-full bg-white rounded-3xl p-5 md:p-8 shadow-sm border border-gray-100 relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row gap-8 items-center">
                         
-                        <div class="relative z-10 flex flex-col md:flex-row items-center gap-6">
-                            <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl border border-white/30 shadow-inner">
-                                <i class="fa-solid fa-face-smile-beam"></i>
+                        <div class="relative w-full md:w-1/2 h-72 md:h-80 bg-gray-100 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center shrink-0">
+                            <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600" alt="Face Scan" class="w-full h-full object-cover opacity-90 transition-all duration-500" id="scan-image">
+                            
+                            <div class="absolute inset-6 md:inset-8 border-2 border-dashed border-white/60 rounded-2xl"></div>
+                            <div class="absolute top-4 left-4 w-10 h-10 border-t-4 border-l-4 border-brand rounded-tl-2xl"></div>
+                            <div class="absolute top-4 right-4 w-10 h-10 border-t-4 border-r-4 border-brand rounded-tr-2xl"></div>
+                            <div class="absolute bottom-4 left-4 w-10 h-10 border-b-4 border-l-4 border-brand rounded-bl-2xl"></div>
+                            <div class="absolute bottom-4 right-4 w-10 h-10 border-b-4 border-r-4 border-brand rounded-br-2xl"></div>
+
+                            <div id="scanner-laser" class="absolute top-0 left-0 w-full h-1.5 bg-brand shadow-[0_0_25px_#c084fc] hidden z-10"></div>
+                            <div id="scan-overlay" class="absolute inset-0 bg-brand/20 backdrop-blur-[2px] hidden z-0"></div>
+                        </div>
+
+                        <div class="flex-1 text-center md:text-left w-full">
+                            <h2 class="text-2xl md:text-3xl font-black text-gray-800 mb-2">Daily Skin Scan</h2>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">Pindai wajahmu untuk mengukur kelembapan, kadar sebum, dan analisis perkembangan jerawat secara real-time.</p>
+                            
+                            <div id="scan-results" class="hidden mb-6 space-y-3 animate-fade-in text-left">
+                                <div class="flex justify-between items-center bg-rose-50 p-3 rounded-xl border border-rose-100">
+                                    <span class="text-xs font-bold text-rose-600"><i class="fa-solid fa-circle-exclamation mr-1"></i> Risiko Jerawat</span>
+                                    <span class="text-sm font-black text-rose-600">12% (Sangat Rendah)</span>
+                                </div>
+                                <div class="flex justify-between items-center bg-blue-50 p-3 rounded-xl border border-blue-100">
+                                    <span class="text-xs font-bold text-blue-600"><i class="fa-solid fa-droplet mr-1"></i> Hidrasi Kulit</span>
+                                    <span class="text-sm font-black text-blue-600">85% (Sangat Baik)</span>
+                                </div>
+                                <div class="flex justify-between items-center bg-amber-50 p-3 rounded-xl border border-amber-100">
+                                    <span class="text-xs font-bold text-amber-600"><i class="fa-solid fa-sun mr-1"></i> Noda Hitam</span>
+                                    <span class="text-sm font-black text-amber-600">Memudar (Pipi Kiri)</span>
+                                </div>
                             </div>
-                            <div class="flex-1 text-center md:text-left">
-                                <h2 class="text-2xl font-bold mb-2">Daily Skin Scan</h2>
-                                <p class="text-purple-100 text-sm mb-4">Ambil foto wajahmu hari ini untuk melihat tingkat kelembapan, jerawat, dan noda hitam.</p>
-                                <button class="bg-white text-brand-dark font-bold px-6 py-3 rounded-xl shadow-md hover:scale-105 transition-transform flex items-center gap-2 mx-auto md:mx-0">
-                                    <i class="fa-solid fa-camera"></i> Scan Face Now
-                                </button>
-                            </div>
+
+                            <button id="btn-scan" onclick="startFaceScan()" class="w-full md:w-auto gradient-btn text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-purple-200 hover:scale-105 transition-all flex items-center justify-center gap-2 mx-auto md:mx-0">
+                                <i class="fa-solid fa-camera"></i> Mulai Analisis Wajah
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Progress Graph & AI Insights -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-gray-800 text-lg">Weekly Progress</h3>
+                            <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-1 rounded-lg">+15% Better</span>
+                        </div>
+                        
+                        <div class="flex items-end justify-between h-32 gap-2 mb-2">
+                            <div class="w-full bg-gray-100 rounded-t-md h-[40%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">40</div></div>
+                            <div class="w-full bg-gray-100 rounded-t-md h-[55%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">55</div></div>
+                            <div class="w-full bg-gray-100 rounded-t-md h-[30%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">30</div></div>
+                            <div class="w-full bg-gray-100 rounded-t-md h-[60%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">60</div></div>
+                            <div class="w-full bg-brand rounded-t-md h-[85%] relative group cursor-pointer shadow-sm"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-brand-dark block">85</div></div>
+                            <div class="w-full bg-gray-100 rounded-t-md h-[45%]"></div>
+                            <div class="w-full bg-gray-100 rounded-t-md h-[50%]"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 font-medium px-1">
+                            <span>M</span><span>T</span><span>W</span><span>T</span><span class="text-brand-dark font-bold">F</span><span>S</span><span>S</span>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-bold text-gray-800 text-lg">Weekly Progress</h3>
-                                <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-1 rounded-lg">+15% Better</span>
-                            </div>
-                            
-                            <div class="flex items-end justify-between h-32 gap-2 mb-2">
-                                <div class="w-full bg-gray-100 rounded-t-md h-[40%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">40</div></div>
-                                <div class="w-full bg-gray-100 rounded-t-md h-[55%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">55</div></div>
-                                <div class="w-full bg-gray-100 rounded-t-md h-[30%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">30</div></div>
-                                <div class="w-full bg-gray-100 rounded-t-md h-[60%] relative group cursor-pointer hover:bg-brand-light transition-colors"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-400 hidden group-hover:block">60</div></div>
-                                <div class="w-full bg-brand rounded-t-md h-[85%] relative group cursor-pointer shadow-sm"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-brand-dark block">85</div></div>
-                                <div class="w-full bg-gray-50 rounded-t-md h-[10%]"></div>
-                                <div class="w-full bg-gray-50 rounded-t-md h-[10%]"></div>
-                            </div>
-                            <div class="flex justify-between text-xs text-gray-400 font-medium px-1">
-                                <span>M</span><span>T</span><span>W</span><span>T</span><span class="text-brand-dark font-bold">F</span><span>S</span><span>S</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                            <h3 class="font-bold text-gray-800 text-lg mb-4">AI Insights <span class="text-xl">✨</span></h3>
-                            <div class="space-y-4">
-                                <div class="flex gap-4 p-3 rounded-xl bg-blue-50 border border-blue-100">
-                                    <div class="text-blue-500 text-xl mt-0.5"><i class="fa-solid fa-droplet"></i></div>
-                                    <div>
-                                        <h4 class="font-bold text-blue-700 text-sm">Kulit Lebih Lembap</h4>
-                                        <p class="text-xs text-blue-600/80 mt-1">Serum Hyaluronic Acid menunjukkan hasil positif.</p>
-                                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                        <h3 class="font-bold text-gray-800 text-lg mb-4">AI Smart Insights ✨</h3>
+                        <div class="space-y-4">
+                            <div class="flex gap-4 p-3 rounded-xl bg-blue-50 border border-blue-100">
+                                <div class="text-blue-500 text-xl mt-0.5"><i class="fa-solid fa-droplet"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-blue-700 text-sm">Kulit Lebih Lembap</h4>
+                                    <p class="text-xs text-blue-600/80 mt-1">Serum Hyaluronic Acid yang kamu pakai menunjukkan kecocokan tinggi.</p>
                                 </div>
-                                <div class="flex gap-4 p-3 rounded-xl bg-orange-50 border border-orange-100">
-                                    <div class="text-orange-500 text-xl mt-0.5"><i class="fa-solid fa-circle-exclamation"></i></div>
-                                    <div>
-                                        <h4 class="font-bold text-orange-700 text-sm">Kemerahan Terdeteksi</h4>
-                                        <p class="text-xs text-orange-600/80 mt-1">Hindari eksfoliasi fisik untuk sementara waktu.</p>
-                                    </div>
+                            </div>
+                            <div class="flex gap-4 p-3 rounded-xl bg-orange-50 border border-orange-100">
+                                <div class="text-orange-500 text-xl mt-0.5"><i class="fa-solid fa-circle-exclamation"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-orange-700 text-sm">Kemerahan Ringan</h4>
+                                    <p class="text-xs text-orange-600/80 mt-1">Disarankan kurangi frekuensi eksfoliasi fisik untuk 3 hari ke depan.</p>
                                 </div>
                             </div>
                         </div>
@@ -331,532 +484,1363 @@
 
                 <div class="w-full border-t border-gray-200 border-dashed"></div>
 
+                <!-- Ingredient Matcher System -->
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">Ingredient Matcher</h2>
-                    
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Ingredient Compatibility Checker</h2>
                     <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
                         <div class="flex flex-wrap items-center justify-between mb-5 gap-3 border-b border-gray-50 pb-4">
-                            <p class="text-sm text-gray-500 font-medium">Menganalisis kecocokan untuk profil kulitmu:</p>
-                            <div class="flex gap-2">
-                                <span class="bg-blue-50 text-blue-600 border border-blue-100 text-xs px-3 py-1 rounded-full font-bold shadow-sm">Oily</span>
-                                <span class="bg-red-50 text-red-600 border border-red-100 text-xs px-3 py-1 rounded-full font-bold shadow-sm">Acne</span>
+                            <p class="text-sm text-gray-500 font-medium">Kesesuaian komposisi dengan profil kulit aktifmu:</p>
+                            <div id="analyze-badges" class="flex gap-2">
+                                <!-- Badge otomatis mengikuti profile kulit -->
                             </div>
                         </div>
                         
                         <div class="relative mb-5">
-                            <textarea rows="3" placeholder="Paste daftar komposisi produk (ingredients) di sini..." class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 pr-12 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand resize-none transition-colors"></textarea>
-                            
-                            <button class="absolute bottom-4 right-4 bg-white text-brand border border-gray-200 w-10 h-10 rounded-full flex items-center justify-center hover:bg-brand hover:text-white hover:border-brand transition-all shadow-sm group" title="Scan tulisan botol">
-                                <i class="fa-solid fa-camera group-hover:scale-110 transition-transform"></i>
-                            </button>
+                            <textarea id="ingredients-input" rows="3" placeholder="Masukkan daftar komposisi produk (pisahkan dengan koma), contoh: Niacinamide, Salicylic Acid, Coconut Oil..." class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 pr-12 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand resize-none transition-colors"></textarea>
                         </div>
                         
-                        <button class="w-full gradient-btn text-white font-bold py-3.5 rounded-xl shadow-md shadow-purple-200 hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-6">
-                            <i class="fa-solid fa-flask"></i> Check Compatibility
+                        <button onclick="checkCompatibility()" class="w-full gradient-btn text-white font-bold py-3.5 rounded-xl shadow-md shadow-purple-200 hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-6">
+                            <i class="fa-solid fa-flask"></i> Mulai Cek Kompatibilitas
                         </button>
 
-                        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100">
+                        <!-- Box Hasil Analisis Ingredients -->
+                        <div id="analysis-result-box" class="hidden bg-gray-50 rounded-2xl p-5 border border-gray-100 animate-fade-in">
                             <div class="flex justify-between items-center mb-4">
-                                <h4 class="font-bold text-gray-800 text-sm">Analysis Result</h4>
-                                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200">75% Match</span>
+                                <h4 class="font-bold text-gray-800 text-sm"->Analysis Result</h4>
+                                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200">Aman Digunakan</span>
                             </div>
-                            
-                            <div class="space-y-4">
-                                <div class="flex gap-4 items-start bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                                    <div class="w-8 h-8 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-check"></i></div>
-                                    <div>
-                                        <p class="text-sm font-bold text-gray-800">Niacinamide</p>
-                                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Sangat baik untuk profil kulitmu. Membantu mengontrol produksi sebum berlebih pada kulit <b>Oily</b>.</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 items-start bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                                    <div class="w-8 h-8 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                                    <div>
-                                        <p class="text-sm font-bold text-gray-800">Coconut Oil</p>
-                                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Peringatan: Bersifat <i>comedogenic</i> tingkat tinggi, dapat menyumbat pori-pori dan memperparah <b>Acne</b>.</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="ingredients-feedback" class="space-y-4"></div>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- <div id="screen-profile" class="screen hidden w-full min-h-full bg-gray-50 p-4 md:p-8">
-            <div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
-                
-                <div class="w-full md:w-1/3 flex flex-col items-center bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <div class="w-32 h-32 bg-gradient-to-tr from-purple-200 to-pink-200 rounded-full flex items-center justify-center text-brand-dark text-5xl mb-6 border-4 border-white shadow-lg">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                    <h1 class="text-2xl font-bold text-gray-800">Chloe Williams</h1>
-                    <p class="text-gray-500 mb-8">chloe.williams@email.com</p>
 
-                    <div class="w-full grid grid-cols-2 gap-4 text-center">
-                        <div class="bg-gray-50 p-4 rounded-2xl">
-                            <h3 class="font-bold text-2xl text-brand-dark">45</h3>
-                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Days Active</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-2xl">
-                            <h3 class="font-bold text-2xl text-brand-dark">23</h3>
-                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Products Tried</p>
-                        </div>
-                        <div class="col-span-2 bg-gray-50 p-4 rounded-2xl">
-                            <h3 class="font-bold text-2xl text-brand-dark">12</h3>
-                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Total Reviews</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="w-full md:w-2/3 space-y-4">
-                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                        <button class="w-full p-5 md:p-6 flex items-center justify-between hover:bg-gray-50 transition-colors border-b border-gray-50">
-                            <div class="flex items-center gap-5">
-                                <div class="w-12 h-12 bg-purple-50 text-brand rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-chart-simple"></i></div>
-                                <div class="text-left">
-                                    <h4 class="font-bold text-gray-800 text-lg">Dashboard</h4>
-                                    <p class="text-sm text-gray-400">View your skincare statistics</p>
-                                </div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300"></i>
-                        </button>
-                        
-                        <button class="w-full p-5 md:p-6 flex items-center justify-between hover:bg-gray-50 transition-colors border-b border-gray-50">
-                            <div class="flex items-center gap-5">
-                                <div class="w-12 h-12 bg-pink-50 text-pink-400 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-file-lines"></i></div>
-                                <div class="text-left">
-                                    <h4 class="font-bold text-gray-800 text-lg">Skin Report</h4>
-                                    <p class="text-sm text-gray-400">View and download your analysis</p>
-                                </div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300"></i>
-                        </button>
-
-                        <button class="w-full p-5 md:p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                            <div class="flex items-center gap-5">
-                                <div class="w-12 h-12 bg-yellow-50 text-yellow-500 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-crown"></i></div>
-                                <div class="text-left flex flex-col items-start gap-1">
-                                    <div class="flex items-center gap-2">
-                                        <h4 class="font-bold text-gray-800 text-lg">Premium</h4>
-                                        <span class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Upgrade</span>
-                                    </div>
-                                    <p class="text-sm text-gray-400">Unlock streaks and deeper insights</p>
-                                </div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300"></i>
-                        </button>
-                    </div>
-
-                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div class="p-5 md:p-6 flex justify-between items-center border-b border-gray-50">
-                            <span class="font-bold text-gray-700 text-lg">Notifications</span>
-                            <div class="w-14 h-7 bg-brand rounded-full relative cursor-pointer shadow-inner">
-                                <div class="w-6 h-6 bg-white rounded-full absolute right-0.5 top-0.5 shadow-sm"></div>
-                            </div>
-                        </div>
-                        <div class="p-5 md:p-6 flex justify-between items-center">
-                            <span class="font-bold text-gray-700 text-lg">Dark Mode</span>
-                            <div class="w-14 h-7 bg-gray-200 rounded-full relative cursor-pointer shadow-inner">
-                                <div class="w-6 h-6 bg-white rounded-full absolute left-0.5 top-0.5 shadow-sm"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="window.location.href='landing.html'" class="w-full flex items-center justify-center gap-3 px-6 py-4 mt-6 text-pink-600 bg-white border border-pink-100 hover:bg-pink-50 hover:border-pink-200 rounded-3xl transition-all font-bold shadow-sm">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar (Logout)
-                    </button>
-                </div>
-            </div>
-        </div> -->
     </main>
 
-    <nav class="md:hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 py-3 pb-safe flex justify-between items-center text-xs font-medium z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-        <button onclick="switchTab('home')" id="nav-mob-home" class="nav-btn-mob flex flex-col items-center gap-1.5 transition-colors">
-            <i class="fa-solid fa-house text-xl"></i>
-            <span>Home</span>
+    <!-- BOTTOM NAVBAR (MOBILE) -->
+    <nav class="md:hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 z-50 px-4 py-3 flex justify-between items-center pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+        <button onclick="switchTab('home')" id="mobile-home" class="flex flex-col items-center gap-1 flex-1 text-gray-400 transition-all hover:text-brand">
+            <i class="fa-solid fa-house text-xl"></i><span class="text-[10px] font-medium">Home</span>
         </button>
-        <button onclick="switchTab('discover')" id="nav-mob-discover" class="nav-btn-mob flex flex-col items-center gap-1.5 transition-colors">
-            <i class="fa-solid fa-magnifying-glass text-xl"></i>
-            <span>Search</span>
+        <button onclick="switchTab('discover')" id="mobile-discover" class="flex flex-col items-center gap-1 flex-1 text-gray-400 transition-all hover:text-brand">
+            <i class="fa-solid fa-compass text-xl"></i><span class="text-[10px] font-medium">Discover</span>
         </button>
-        <button onclick="switchTab('analyze')" id="nav-mob-analyze" class="nav-btn-mob flex flex-col items-center gap-1.5 transition-colors">
-            <i class="fa-solid fa-clipboard-check text-xl"></i>
-            <span>Analyze</span>
+        <button onclick="switchTab('analyze')" id="mobile-analyze" class="flex flex-col items-center gap-1 flex-1 text-gray-400 transition-all hover:text-brand">
+            <i class="fa-solid fa-wand-magic-sparkles text-xl"></i><span class="text-[10px] font-medium">Analyze</span>
         </button>
-        <button onclick="window.location.href='profile.html'" class="nav-btn-mob text-gray-400 flex flex-col items-center gap-1.5 transition-colors">
-            <i class="fa-solid fa-user text-xl"></i>
-            <span>Profile</span>
+        <button onclick="window.location.href='profile_2.html'" id="mobile-profile" class="flex flex-col items-center gap-1 flex-1 text-gray-400 transition-all hover:text-brand">
+            <i class="fa-solid fa-user text-xl"></i><span class="text-[10px] font-medium">Profile</span>
         </button>
     </nav>
 
-    <div id="modal-period" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform transition-all">
-            <div class="bg-rose-500 p-6 text-white relative">
-                <button onclick="toggleModal('modal-period')" class="absolute right-4 top-4 text-white/80 hover:text-white">
+    <!-- MODAL: PERIOD LOG -->
+    <div id="modal-period" class="fixed inset-0 bg-gray-900/60 z-50 hidden items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h3 class="font-bold text-xl text-gray-800">Set Period Data</h3>
+                <button onclick="toggleModal('modal-period')" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
-                <h3 class="text-xl font-bold">Catat Siklus Haid</h3>
-                <p class="text-rose-100 text-sm mt-1">Kapan hari pertama haid terakhirmu?</p>
             </div>
-
-            <div class="p-6 space-y-6">
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Tanggal Mulai Terakhir</label>
-                    <input type="date" id="input-last-period" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all">
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai Terakhir</label>
+                    <input type="date" id="period-start-input" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-brand outline-none">
                 </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Durasi (Hari)</label>
-                        <input type="number" id="input-duration" value="5" min="2" max="10" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Siklus (Hari)</label>
-                        <input type="number" id="input-cycle" value="28" min="21" max="40" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm outline-none">
-                    </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Berapa Lama (Hari)</label>
+                    <input type="number" id="period-duration-input" value="5" min="1" max="10" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-brand outline-none">
                 </div>
-
-                <button onclick="savePeriodData()" class="w-full bg-rose-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-check"></i> Simpan & Hitung Prediksi
+                <div class="mb-6">
+                    <label class="text-sm font-bold text-gray-700 block mb-2">Lama Siklus (Hari)</label>
+                    <input type="number" id="period-cycle-input" value="28" min="21" max="45" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-brand outline-none">
+                </div>
+                <button onclick="savePeriodData()" class="w-full bg-rose-500 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-rose-600 transition-all flex justify-center gap-2">
+                    <i class="fa-solid fa-check mt-1"></i> Simpan
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="modal-routine" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform transition-all">
-            <div class="bg-brand p-6 text-white relative">
-                <button onclick="toggleModal('modal-routine')" class="absolute right-4 top-4 text-white/80 hover:text-white">
+    <!-- MODAL: ADD/EDIT ROUTINE PRODUCT -->
+    <div id="modal-routine" class="fixed inset-0 bg-gray-900/60 z-50 hidden items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h3 id="modal-routine-title" class="font-bold text-xl text-gray-800">Tambah Produk</h3>
+                <button onclick="toggleModal('modal-routine')" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
-                <h3 class="text-xl font-bold">Catat Rutinitas</h3>
-                <p class="text-purple-100 text-sm mt-1">Produk apa yang kamu pakai hari ini?</p>
             </div>
-
-            <div class="p-6 space-y-5">
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Kategori Produk</label>
-                    <select id="routine-category" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-gray-800 focus:ring-brand focus:border-brand outline-none appearance-none">
-                        <option value="cleanser">Cleanser (Pembersih)</option>
-                        <option value="toner">Toner</option>
-                        <option value="serum">Serum / Essence</option>
-                        <option value="moisturizer">Moisturizer (Pelembap)</option>
-                        <option value="sunscreen">Sunscreen</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Nama Produk (Opsional)</label>
-                    <input type="text" id="routine-name" placeholder="Contoh: Cetaphil Gentle Cleanser" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm outline-none focus:ring-brand focus:border-brand">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Waktu Pemakaian</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <label class="cursor-pointer">
-                            <input type="radio" name="waktu" value="morning" class="peer hidden" checked>
-                            <div class="text-center p-3 rounded-xl border border-gray-200 peer-checked:bg-purple-50 peer-checked:border-brand peer-checked:text-brand-dark transition-all font-medium text-sm">
-                                <i class="fa-solid fa-sun mr-1"></i> Morning
-                            </div>
-                        </label>
-                        <label class="cursor-pointer">
-                            <input type="radio" name="waktu" value="evening" class="peer hidden">
-                            <div class="text-center p-3 rounded-xl border border-gray-200 peer-checked:bg-purple-50 peer-checked:border-brand peer-checked:text-brand-dark transition-all font-medium text-sm">
-                                <i class="fa-solid fa-moon mr-1"></i> Evening
-                            </div>
-                        </label>
+            <div class="p-6">
+                <form id="productForm" onsubmit="saveProduct(event)" class="space-y-4">
+                    <input type="hidden" id="productId" value="">
+                    
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-sm font-medium text-gray-700">Nama Produk</label>
+                        <input type="text" id="productName" required placeholder="Contoh: COSRX Snail Mucin" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:border-brand outline-none transition-all">
                     </div>
-                </div>
 
-                <div class="pt-2">
-                    <button onclick="saveRoutine()" class="w-full bg-brand text-white font-bold py-4 rounded-2xl shadow-lg shadow-purple-200 hover:bg-brand-dark transition-all">
-                        Simpan Rutinitas
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-sm font-medium text-gray-700">Kategori</label>
+                        <select id="productCategory" onchange="handleCategoryChange()" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:border-brand outline-none">
+                            <option value="Cleanser">Cleanser</option>
+                            <option value="Toner">Toner</option>
+                            <option value="Serum">Serum</option>
+                            <option value="Moisturizer">Moisturizer</option>
+                            <option value="Sunscreen">Sunscreen</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div id="customCategoryContainer" class="hidden flex flex-col gap-1.5 animate-fade-in">
+                        <label class="text-sm font-medium text-gray-700">Nama Kategori Kustom</label>
+                        <input type="text" id="customCategory" placeholder="Contoh: Eye Cream, Masker" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:border-brand outline-none transition-all">
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-sm font-medium text-gray-700">Waktu Pemakaian</label>
+                        <div class="flex gap-3 mt-1">
+                            <label class="flex-1 flex items-center gap-3 cursor-pointer bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 hover:bg-purple-50 hover:border-brand transition-all select-none">
+                                <input type="checkbox" name="productTime" value="Morning Routine" class="w-4 h-4 text-brand rounded border-gray-300 focus:ring-brand accent-purple-500">
+                                <span class="text-sm font-semibold text-gray-700">☀️ Pagi</span>
+                            </label>
+                            
+                            <label class="flex-1 flex items-center gap-3 cursor-pointer bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 hover:bg-purple-50 hover:border-brand transition-all select-none">
+                                <input type="checkbox" name="productTime" value="Evening Routine" class="w-4 h-4 text-brand rounded border-gray-300 focus:ring-brand accent-purple-500">
+                                <span class="text-sm font-semibold text-gray-700">🌙 Malam</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand hover:bg-brand-dark text-white font-bold rounded-xl py-3 mt-4 shadow-md transition-colors">
+                        Simpan Produk
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <div id="modal-review" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform transition-all">
-            <div class="p-6 relative border-b border-gray-50">
-                <button onclick="toggleModal('modal-review')" class="absolute right-4 top-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <div class="flex items-center gap-4 mt-2">
-                    <div id="review-icon" class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-3xl">🧴</div>
-                    <div>
-                        <h3 id="review-title" class="text-lg font-bold text-gray-800">Nama Produk</h3>
-                        <p id="review-brand" class="text-sm text-gray-500">Nama Brand</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-6 space-y-6">
-                <div class="text-center">
-                    <p class="font-bold text-gray-800 mb-2">Berapa ratingmu untuk produk ini?</p>
-                    <div class="flex justify-center gap-2 text-3xl text-gray-300" id="star-rating">
-                        <i class="fa-solid fa-star cursor-pointer hover:text-yellow-400 transition-colors" onclick="setRating(1)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-yellow-400 transition-colors" onclick="setRating(2)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-yellow-400 transition-colors" onclick="setRating(3)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-yellow-400 transition-colors" onclick="setRating(4)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-yellow-400 transition-colors" onclick="setRating(5)"></i>
-                    </div>
-                    <input type="hidden" id="current-rating" value="0">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Tulis Review (Opsional)</label>
-                    <textarea id="review-text" rows="4" placeholder="Bagaimana efek produk ini di kulitmu? Apakah ada reaksi negatif?" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm outline-none focus:ring-brand focus:border-brand resize-none"></textarea>
-                </div>
-
-                <button onclick="submitReview()" class="w-full bg-brand text-white font-bold py-4 rounded-2xl shadow-lg shadow-purple-200 hover:bg-brand-dark transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-paper-plane"></i> Kirim Review
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <!-- MAIN CORE LOGIC JAVASCRIPT -->
     <script>
-        // --- 1. TAB NAVIGATION ---
-         function switchTab(tabId) {
-            // 1. Ganti Konten Layar
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.add('hidden');
-            });
+        // --- DATA MOCKUP / SEEDERS ---
+        const discoverData = [
+        // Konten Artikel
+        { 
+        id: 1, 
+        type: "artikel",
+        title: "Panduan Layering Serum: Niacinamide + Retinol", 
+        category: "Edukasi", 
+        desc: "Cara menggabungkan Niacinamide dan Retinol tanpa memicu iritasi pada kulit sensitif.", 
+        readTime: "3 mnt baca", 
+        likes: 142, 
+        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400" 
+        },
+
+        { 
+        id: 2, 
+        type: "artikel",
+        title: "Mengenal Ceramide: Si Penjaga Utama Skin Barrier", 
+        category: "Kandungan", 
+        desc: "Kulit sering kemerahan? Pelajari bagaimana Ceramide mengunci kelembapan alami wajah.", 
+        readTime: "4 mnt baca", 
+        likes: 98, 
+        image: "https://images.unsplash.com/photo-1608248597481-496100c80836?w=400" 
+        },
+        
+        {
+        id: 3,
+        type: "artikel",
+        title: "5 Rekomendasi Sunscreen Terbaik untuk Kulit Berjerawat",
+        category: "Rekomendasi",
+        desc: "Lindungi kulit berjerawatmu dengan sunscreen yang ringan, non-comedogenic, dan efektif.",
+        readTime: "5 mnt baca",
+        likes: 210
+        },
+
+        {
+        id: 4,
+        type: "artikel",
+        title: "Eksfoliasi Kimia vs Fisik: Mana yang Lebih Baik untuk Kulit Sensitif?",
+        category: "Edukasi",
+        desc: "Pelajari perbedaan eksfoliasi kimia dan fisik serta mana yang lebih cocok untuk kulit sensitifmu.",
+        readTime: "4 mnt baca",
+        likes: 185
+        },
+
+        {
+        id: 5,
+        type: "artikel",
+        title: "Mengenal BHA: Solusi Ampuh untuk Pori-pori Tersumbat",
+        category: "Kandungan",
+        desc: "BHA (Beta Hydroxy Acid) efektif membersihkan pori-pori dan mengurangi jerawat. Pelajari cara kerjanya!",
+        readTime: "3 mnt baca",
+        likes: 160
+        },
+
+        // Konten Produk
+        {
+        id: 6,
+        type: "produk",
+        title: "COSRX Advanced Snail 96 Mucin Power Essence",
+        category: "Essence",
+        desc: "Essence dengan 96% ekstrak siput untuk memperbaiki tekstur kulit dan meningkatkan kelembapan.",
+        brand: "COSRX",
+        price: "Rp 250.000",
+        likes: 320,
+        image: "https://images.unsplash.com/photo-1612831455547-9c8b1e5f0c3a?w=400"
+        },
+
+        {
+        id: 7,
+        type: "produk",
+        title: "The Ordinary Niacinamide 10% + Zinc 1%",
+        category: "Serum",
+        desc: "Serum dengan 10% Niacinamide untuk mengurangi kemerahan dan 1% Zinc untuk mengontrol produksi sebum.",
+        brand: "The Ordinary",
+        price: "Rp 150.000",
+        likes: 450,
+        image: "https://images.unsplash.com/photo-1588776814546-9c8b1e5f0c3a?w=400"
+        },
+
+        {
+        id: 8,
+        type: "produk",
+        title: "La Roche-Posay Effaclar Duo (+)",
+        category: "Krim Jerawat",
+        desc: "Krim jerawat dengan formula ganda untuk mengatasi jerawat dan mencegah bekasnya.",
+        brand: "La Roche-Posay",
+        price: "Rp 300.000",
+        likes: 280,
+        image: "https://www.larocheposay.co.id/-/media/project/lor…&amp;cw=600&hash=92AC1407545AFD29C14CEC11C67A33BA"
+        },
+
+        {
+        id: 9,
+        type: "produk",
+        title: "Sunscreen Anessa Perfect UV Sunscreen Skincare Milk",
+        category: "Sunscreen",
+        desc: "Sunscreen dengan teknologi Aqua Booster yang memberikan perlindungan maksimal meski terkena air atau keringat.",
+        brand: "Anessa",
+        price: "Rp 350.000",
+        likes: 400,
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400"
+        },
+
+        {
+        id: 10,
+        type: "produk",
+        title: "Innisfree Green Tea Seed Serum",
+        category: "Serum",
+        desc: "Serum dengan ekstrak biji teh hijau untuk hidrasi intensif dan perlindungan antioksidan.",
+        brand: "Innisfree",
+        price: "Rp 200.000",
+        likes: 350,
+        image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400"
+        },
+
+        {
+        id: 11,
+        type: "produk",
+        title: "Vaseline Healthy White SPF 24 PA++",
+        category: "Sunscreen",
+        desc: "Sunscreen dengan formula ringan yang melindungi kulit dari sinar UV sekaligus memberikan efek mencerahkan.",
+        brand: "Vaseline",
+        price: "Rp 50.000",
+        likes: 220,
+        image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400"
+        },
+
+        {
+        id: 12,
+        type: "produk",
+        title: "Emina Sun Protection SPF 30 PA++",
+        category: "Sunscreen",  
+        desc: "Sunscreen lokal dengan formula ringan, cepat meresap, dan memberikan perlindungan optimal untuk aktivitas sehari-hari.",
+        brand: "Emina",
+        price: "Rp 40.000",
+        likes: 180,
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400"
+        },
+
+        {
+        id: 13,
+        type: "produk",
+        title: "Skintific Sun Shield Matte SPF 50 PA++++",
+        category: "Sunscreen",
+        desc: "Sunscreen dengan hasil akhir matte yang cocok untuk kulit berminyak, memberikan perlindungan tinggi terhadap sinar UVA dan UVB.",
+        brand: "Skintific",
+        price: "Rp 60.000",
+        likes: 250,
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400"
+        },
+
+        {
+        id: 14,
+        type: "produk",
+        title: "NIVEA Sun Protect & Moisture SPF 50 PA+++",
+        category: "Sunscreen",
+        desc: "Sunscreen dengan formula yang melembapkan, memberikan perlindungan tinggi terhadap sinar UV, dan cocok untuk kulit kering.",
+        brand: "NIVEA", 
+        price: "Rp 45.000",
+        likes: 210,
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400"
+        },
+        
+        {
+        id: 15,
+        type: "produk",
+        title: "Skintific 5X Ceramide Barrier Moisture Gel",
+        category: "Moisturizer",
+        desc: "Moisturizer yang menggabungkan 3 kandungan aktif Ceramide, Hyaluronic Acid, dan Centella Asiatica untuk mengatasi skin barrier rusak.",
+        brand: "Skintific",
+        price: "Rp 139.000",
+        likes: 520,
+        image: "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=400"
+        },   
+        
+        {
+        id: 16,
+        type: "produk",
+        title: "CeraVe PM Facial Moisturizing Lotion",
+        category: "Moisturizer",
+        desc: "Moisturizer malam dengan formula ringan yang mengandung Ceramide dan Niacinamide untuk memperbaiki skin barrier saat tidur.",
+        brand: "CeraVe",
+        price: "Rp 200.000",
+        likes: 480,
+        image: "https://www.cerave.co.id/-/media/project/loreal/br…ev=-1?w=800&hash=EF2946C7A379430398A71A9B1F0F18AA"
+        }
+        ];
+
+        let currentDiscoverFilter = 'all';
+
+        // --- 1. INITIALIZATION & DATA LOADING ---
+        document.addEventListener("DOMContentLoaded", function() {
+            // Auth Guard check
+            if (!localStorage.getItem('glowdiary_username') || localStorage.getItem('glowdiary_logged_in') !== 'true') {
+                window.location.href = 'landing.html';
+                return;
+            }
+
+            const username = localStorage.getItem('glowdiary_username') || 'User';
+            const firstName = username.split(' ')[0];
+            
+            // Set name greetings
+            if (document.getElementById('home-greeting')) document.getElementById('home-greeting').textContent = `Hi, ${firstName} 👋`;
+            if (document.getElementById('skin-condition-title')) document.getElementById('skin-condition-title').textContent = `${firstName}'s Skin Condition`;
+            if (document.getElementById('profile-name')) document.getElementById('profile-name').textContent = username;
+            if (document.getElementById('profile-username')) document.getElementById('profile-username').textContent = `@${firstName.toLowerCase()}${Math.floor(Math.random() * 90 + 10)}`;
+
+            // Parse Skin Type
+            loadSkinConditionBadges();
+            
+            // Tambahkan ini di bagian DOMContentLoaded glowdiary.html
+            localStorage.setItem('skincare_discover_data', JSON.stringify(discoverData));
+            
+            // Cek dan reset daily routine jika sudah lewat tengah malam
+            checkAndResetDailyRoutine();
+
+            // Render rutinitas (checklist)
+            renderProducts();
+            
+            // PERBAIKAN: Langsung cek dan panggil renderHistory
+            if (typeof renderHistory === "function") {
+                renderHistory();
+            }
+
+            // TAMBAHAN: Munculkan GlowPoints saat web di-reload (dari features.js)
+            if (typeof renderGlowPoints === "function") {
+                renderGlowPoints();
+            }
+
+            // Period Treacker
+            applyPeriodFeatureState();
+            if (localStorage.getItem('glowdiary_periodData')) {
+                userPeriodData = JSON.parse(localStorage.getItem('glowdiary_periodData'));
+                calculatePeriodDates();
+                if (userPeriodData.lastStart) document.getElementById('period-start-input').value = userPeriodData.lastStart;
+                if (userPeriodData.duration) document.getElementById('period-duration-input').value = userPeriodData.duration;
+                if (userPeriodData.cycleLength) document.getElementById('period-cycle-input').value = userPeriodData.cycleLength;
+                document.getElementById('period-status-text').textContent = "Siklus Terpantau Aktif";
+            }
+            renderCalendar();
+            loadFavoritesFromStorage();
+            renderDiscover();
+
+            if(typeof renderProfileFavorites === "function") renderProfileFavorites();
+
+            // Set Initial Active Tab
+            let hash = window.location.hash.replace('#', '');
+            switchTab(['home', 'discover', 'analyze', 'profile'].includes(hash) ? hash : 'home');
+        });
+
+        function loadSkinConditionBadges() {
+            const storedSkin = localStorage.getItem('glowdiary_skin');
+            const skinStatusBox = document.getElementById('skin-status-box');
+            const analyzeBadges = document.getElementById('analyze-badges');
+            
+            if (storedSkin) {
+                const skinData = JSON.parse(storedSkin);
+                let html = '';
+                skinData.skinType.forEach(type => {
+                    html += `<span class="px-4 py-2 bg-purple-50 text-brand-dark rounded-xl text-sm font-medium flex items-center gap-2"><i class="fa-solid fa-check"></i> ${type}</span>`;
+                });
+                html += `<span class="px-4 py-2 border border-rose-100 bg-rose-50 text-rose-600 rounded-xl text-sm font-medium flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> ${skinData.skinConcern}</span>`;
+                
+                if (skinStatusBox) skinStatusBox.innerHTML = html;
+                if (analyzeBadges) analyzeBadges.innerHTML = html;
+            } else {
+                const emptyHTML = `<div class="bg-amber-50 text-amber-700 p-4 rounded-xl text-xs w-full"><a href="kuesioner.html" class="font-bold underline">Mulai Analisis Kulit &rarr;</a></div>`;
+                if (skinStatusBox) skinStatusBox.innerHTML = emptyHTML;
+                if (analyzeBadges) analyzeBadges.innerHTML = emptyHTML;
+            }
+        }
+
+
+        // --- 2. TAB MENU NAVIGATION ---
+        function switchTab(tabId) {
+            // 1. Sembunyikan semua kontainer layar utama
+            document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
+            
+            // Tampilkan layar aktif yang sesuai dengan tabId
             const targetScreen = document.getElementById('screen-' + tabId);
             if (targetScreen) targetScreen.classList.remove('hidden');
 
-            // 2. Update Highlight Sidebar (Desktop)
+            // 2. Atur Gaya Aktif/Tidak Aktif pada Desktop Sidebar
             document.querySelectorAll('.sidebar-btn').forEach(btn => {
-                btn.classList.remove('bg-purple-50', 'text-brand-dark');
-                btn.classList.add('text-gray-400', 'hover:bg-purple-50', 'hover:text-brand-dark');
-            });
-            const activeSidebar = document.getElementById('sidebar-' + tabId);
-            if (activeSidebar) {
-                activeSidebar.classList.remove('text-gray-400');
-                activeSidebar.classList.add('bg-purple-50', 'text-brand-dark');
-            }
-
-            // 3. Update Highlight Navbar (Mobile)
-            document.querySelectorAll('.nav-btn-mob').forEach(btn => {
-                btn.classList.remove('text-brand-dark');
+                // Kembalikan ke warna default abu-abu dan hapus background ungu muda aktif
+                btn.classList.remove('bg-purple-100', 'text-brand-dark');
                 btn.classList.add('text-gray-400');
             });
-            const activeNavMob = document.getElementById('nav-mob-' + tabId);
-            if (activeNavMob) {
-                activeNavMob.classList.remove('text-gray-400');
-                activeNavMob.classList.add('text-brand-dark');
+            
+            let activeDesktop = document.getElementById('sidebar-' + tabId);
+            if (activeDesktop) {
+                // Berikan latar belakang ungu muda dan teks gelap pekat pada menu desktop aktif
+                activeDesktop.classList.add('bg-purple-100', 'text-brand-dark');
+                activeDesktop.classList.remove('text-gray-400');
             }
 
-            // Simpan posisi tab di URL hash tanpa reload
+            // 3. Atur Gaya Aktif/Tidak Aktif pada Mobile Bottom Navbar
+            document.querySelectorAll('nav button').forEach(btn => {
+                // Reset semua teks tombol mobile menjadi abu-abu bawaan
+                btn.classList.remove('text-brand');
+                btn.classList.add('text-gray-400');
+            });
+            
+            let activeMobile = document.getElementById('mobile-' + tabId);
+            if (activeMobile) {
+                // Ubah warna teks tombol mobile yang aktif menjadi warna ungu brand utama
+                activeMobile.classList.add('text-brand');
+                activeMobile.classList.remove('text-gray-400');
+            }
+
+            // Simpan posisi hash di URL browser agar perpindahan terekam dengan baik
             window.location.hash = tabId;
             window.scrollTo(0, 0);
         }
 
-        // Jalankan saat pertama kali dimuat
-        document.addEventListener("DOMContentLoaded", function() {
-            let hash = window.location.hash.replace('#', '');
-            if (['home', 'discover', 'analyze'].includes(hash)) {
-                switchTab(hash);
+        // --- OTOMATIS MENYALAKAN NAVIGASI AKTIF SAAT KEMBALI DARI PROFILE ---
+        window.addEventListener('DOMContentLoaded', function() {
+            let currentTab = window.location.hash.replace('#', '');
+            const validTabs = ['home', 'discover', 'analyze'];
+            
+            if (currentTab && validTabs.includes(currentTab)) {
+                switchTab(currentTab);
             } else {
-                switchTab('home'); 
+                switchTab('home'); // Default jika halaman diakses pertama kali tanpa hash
             }
         });
 
-        // --- 2. MODAL TOGGLE UTILITY ---
-        function toggleModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.toggle('hidden');
-            modal.classList.toggle('flex');
-        }
+        // --- 3. DISCOVER INTERACTIVE FEATURES ---
+        function renderDiscover() {
+            const container = document.getElementById('discover-container');
+            if (!container) return;
 
-        // --- 3. PERIOD TRACKER LOGIC ---
-        let currentDate = new Date();
-        let userPeriodData = { lastStartDate: null, duration: 5, cycle: 28 };
+            const searchInput = document.getElementById('search-discover');
+            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
-        function savePeriodData() {
-            const dateInput = document.getElementById('input-last-period').value;
-            if(!dateInput) { alert("Pilih tanggal terlebih dahulu!"); return; }
-            
-            userPeriodData.lastStartDate = new Date(dateInput);
-            userPeriodData.duration = parseInt(document.getElementById('input-duration').value);
-            userPeriodData.cycle = parseInt(document.getElementById('input-cycle').value);
-            
-            toggleModal('modal-period');
-            renderCalendar();
-        }
+            // Filter data multi-kriteria
+            const filtered = discoverData.filter(item => {
+                let matchesCat = false;
+                if (currentDiscoverFilter === 'all') matchesCat = true;
+                else if (currentDiscoverFilter === 'artikel') matchesCat = item.type === 'artikel';
+                else if (currentDiscoverFilter === 'produk') matchesCat = item.type === 'produk';
+                else matchesCat = item.category === currentDiscoverFilter;
 
-        function changeMonth(offset) {
-            currentDate.setMonth(currentDate.getMonth() + offset);
-            renderCalendar();
-        }
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) || 
+                                      item.desc.toLowerCase().includes(searchQuery) ||
+                                      item.category.toLowerCase().includes(searchQuery) ||
+                                      (item.brand && item.brand.toLowerCase().includes(searchQuery));
+                                      
+                return matchesCat && matchesSearch;
+            });
 
-        function renderCalendar() {
-            const monthYearText = document.getElementById('calendar-month-year');
-            const daysContainer = document.getElementById('calendar-days');
-            const statusText = document.getElementById('period-status-text');
-            
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const today = new Date();
-            
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            monthYearText.innerText = `${monthNames[month]} ${year}`;
-            
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            let nextPeriodStart = null, nextPeriodEnd = null, fertileStart = null, fertileEnd = null;
-            
-            if (userPeriodData.lastStartDate) {
-                nextPeriodStart = new Date(userPeriodData.lastStartDate);
-                nextPeriodStart.setDate(nextPeriodStart.getDate() + userPeriodData.cycle);
-                nextPeriodEnd = new Date(nextPeriodStart);
-                nextPeriodEnd.setDate(nextPeriodEnd.getDate() + userPeriodData.duration - 1);
-                
-                let ovulationDate = new Date(nextPeriodStart);
-                ovulationDate.setDate(ovulationDate.getDate() - 14);
-                fertileStart = new Date(ovulationDate);
-                fertileStart.setDate(fertileStart.getDate() - 4);
-                fertileEnd = new Date(ovulationDate);
-                fertileEnd.setDate(fertileEnd.getDate() + 1);
-
-                const diffTime = nextPeriodStart - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
-                if(diffDays > 0) {
-                    statusText.innerHTML = `Next cycle in <span class="font-bold text-rose-600">${diffDays} days</span>`;
-                } else if (diffDays <= 0 && diffDays > -userPeriodData.duration) {
-                    statusText.innerHTML = `<span class="font-bold text-rose-600">You are on your period</span>`;
-                } else {
-                    statusText.innerHTML = `Cycle ended. Please log your next period.`;
-                }
+            // Jika pencarian kosong
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16 px-4 animate-fade-in">
+                        <div class="w-16 h-16 bg-purple-50 text-brand rounded-full flex items-center justify-center text-2xl mx-auto mb-4 shadow-sm">
+                            <i class="fa-solid fa-magnifying-glass-minus"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-700 text-base mb-1">Hasil tidak ditemukan</h4>
+                        <p class="text-xs text-gray-400 max-w-xs mx-auto">Kami tidak menemukan konten untuk "<span class="text-brand-dark font-semibold">${searchQuery}</span>".</p>
+                    </div>
+                `;
+                return;
             }
 
-            let html = '';
-            for (let i = 0; i < firstDay; i++) { html += `<div class="py-1.5"></div>`; }
-            
-            for (let i = 1; i <= daysInMonth; i++) {
-                let currentIterDate = new Date(year, month, i);
-                let isToday = (i === today.getDate() && month === today.getMonth() && year === today.getFullYear());
-                let isPeriod = false, isFertile = false;
+            // PISAHKAN DATA MENJADI DUA BLOK
+            const artikelData = filtered.filter(item => item.type === 'artikel');
+            const produkData = filtered.filter(item => item.type === 'produk');
 
-                if (nextPeriodStart) {
-                    currentIterDate.setHours(0,0,0,0); nextPeriodStart.setHours(0,0,0,0); nextPeriodEnd.setHours(0,0,0,0); fertileStart.setHours(0,0,0,0); fertileEnd.setHours(0,0,0,0);
-                    if (currentIterDate >= nextPeriodStart && currentIterDate <= nextPeriodEnd) isPeriod = true;
-                    
-                    let lastPeriodEnd = new Date(userPeriodData.lastStartDate);
-                    lastPeriodEnd.setDate(lastPeriodEnd.getDate() + userPeriodData.duration - 1);
-                    lastPeriodEnd.setHours(0,0,0,0);
-                    let lastStart = new Date(userPeriodData.lastStartDate);
-                    lastStart.setHours(0,0,0,0);
-                    if (currentIterDate >= lastStart && currentIterDate <= lastPeriodEnd) isPeriod = true;
-                    if (currentIterDate >= fertileStart && currentIterDate <= fertileEnd) isFertile = true;
+            let finalHTML = '';
+
+            // 1. RENDER BLOK ARTIKEL
+            if (artikelData.length > 0) {
+                if (currentDiscoverFilter === 'all') {
+                    finalHTML += `<div class="col-span-full mb-2 mt-2"><h3 class="font-bold text-gray-800 text-lg flex items-center gap-2"><i class="fa-solid fa-book-open text-brand"></i> Edukasi & Artikel Terkait</h3></div>`;
                 }
 
-                if (isToday) {
-                    html += `<div class="py-1.5 relative cursor-pointer"><div class="absolute inset-0 bg-brand rounded-full shadow-md shadow-purple-200"></div><span class="relative z-10 text-white font-bold">${i}</span></div>`;
-                } else if (isPeriod) {
-                    html += `<div class="py-1.5 relative cursor-pointer"><div class="absolute inset-0 bg-rose-500 shadow-sm rounded-lg scale-90"></div><span class="relative z-10 text-white font-bold">${i}</span></div>`;
-                } else if (isFertile) {
-                    html += `<div class="py-1.5 relative cursor-pointer"><div class="absolute inset-0 bg-rose-50 rounded-lg scale-90"></div><span class="relative z-10 text-rose-500 font-bold">${i}</span></div>`;
-                } else {
-                    html += `<div class="py-1.5 cursor-pointer hover:bg-gray-100 rounded-full transition-colors">${i}</div>`;
-                }
-            }
-            daysContainer.innerHTML = html;
-        }
-        renderCalendar();
-
-        // --- 4. SKINCARE ROUTINE LOGIC ---
-        function saveRoutine() {
-            const categorySelect = document.getElementById('routine-category');
-            const categoryText = categorySelect.options[categorySelect.selectedIndex].text;
-            const categoryValue = categorySelect.value;
-            
-            let productName = document.getElementById('routine-name').value;
-            if (!productName) { productName = categoryText; }
-            
-            const timeRadio = document.querySelector('input[name="waktu"]:checked').value;
-            const timeText = timeRadio === 'morning' ? 'Morning Routine' : 'Evening Routine';
-            
-            let iconClass = "fa-pump-soap", colorClass = "bg-pink-50 text-pink-500";
-            if (categoryValue === 'toner') { iconClass = "fa-spray-can"; colorClass = "bg-purple-50 text-purple-500"; }
-            else if (categoryValue === 'serum') { iconClass = "fa-flask"; colorClass = "bg-yellow-50 text-yellow-500"; }
-            else if (categoryValue === 'moisturizer') { iconClass = "fa-jar"; colorClass = "bg-blue-50 text-blue-500"; }
-            else if (categoryValue === 'sunscreen') { iconClass = "fa-sun"; colorClass = "bg-orange-50 text-orange-500"; }
-
-            const newProductHTML = `
-                <div class="flex items-center justify-between p-4 bg-gray-50 hover:bg-white border border-gray-100 rounded-xl transition-all animate-fade-in">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 ${colorClass} rounded-lg flex items-center justify-center text-lg"><i class="fa-solid ${iconClass}"></i></div>
-                        <div>
-                            <h4 class="font-bold text-gray-800">${productName}</h4>
-                            <p class="text-xs text-gray-400">${timeText}</p>
+                finalHTML += artikelData.map(item => `
+                    <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col animate-fade-in hover:border-purple-200">
+                        <div class="relative">
+                            <img src="${item.image}" class="w-full h-44 object-cover">
+                            <span class="absolute top-3 left-3 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm"><i class="fa-solid fa-book-open mr-1"></i> EDUKASI</span>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] font-bold bg-purple-50 text-brand-dark px-2 py-1 rounded">${item.category}</span>
+                                <span class="text-xs text-gray-400"><i class="fa-regular fa-clock mr-1"></i>${item.readTime}</span>
+                            </div>
+                            <h3 class="font-bold text-gray-800 text-sm mb-1.5 line-clamp-2">${item.title}</h3>
+                            <p class="text-xs text-gray-500 line-clamp-3 mb-4 leading-relaxed">${item.desc}</p>
+                            <div class="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
+                                <button onclick="likeArticle(${item.id})" class="text-xs text-gray-500 hover:text-rose-500 transition-colors flex items-center gap-1">
+                                    <i class="fa-regular fa-heart"></i> <span>${item.likes}</span>
+                                </button>
+                                <button onclick="alert('Membuka artikel: ${item.title}')" class="text-xs font-bold text-brand-dark hover:underline">Baca Selengkapnya &rarr;</button>
+                            </div>
                         </div>
                     </div>
-                    <i class="fa-solid fa-circle-check text-green-400 text-2xl"></i>
+                `).join('');
+            }
+
+            // 2. RENDER BLOK PRODUK (Dengan 2 Tombol Aksi)
+            if (produkData.length > 0) {
+                if (currentDiscoverFilter === 'all') {
+                    const marginClass = artikelData.length > 0 ? "mt-6 pt-6 border-t border-gray-100" : "mt-2";
+                    finalHTML += `<div class="col-span-full mb-2 ${marginClass}"><h3 class="font-bold text-gray-800 text-lg flex items-center gap-2"><i class="fa-solid fa-bag-shopping text-rose-500"></i> Rekomendasi Produk</h3></div>`;
+                }
+
+                finalHTML += produkData.map(item => `
+                    <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col animate-fade-in hover:border-rose-200">
+                        <div class="relative cursor-pointer" onclick="showProductDetail(${item.id})">
+                            <img src="${item.image}" class="w-full h-44 object-cover bg-gray-50">
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-brand-dark text-[10px] font-bold px-2 py-1 rounded-md shadow-sm border border-purple-100"><i class="fa-solid fa-tag mr-1"></i> PRODUK</span>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">${item.brand}</span>
+                                <span class="text-sm font-bold text-brand-dark">${item.price}</span>
+                            </div>
+                            <h3 class="font-bold text-gray-800 text-sm mb-1.5 line-clamp-2 cursor-pointer hover:text-brand" onclick="showProductDetail(${item.id})">${item.title}</h3>
+                            
+                            <!-- Rating Bintang (Opsional jika data review ada) -->
+                            <div class="flex items-center gap-1 mb-3">
+                                <i class="fa-solid fa-star text-yellow-400 text-[10px]"></i>
+                                <span class="text-[11px] text-gray-500 font-medium">${item.rating || '4.5'} <button onclick="openReviewModal(${item.id})" class="text-brand hover:underline ml-1">(Beri Ulasan)</button></span>
+                            </div>
+                            
+                            <!-- DUA TOMBOL AKSI UTAMA -->
+                            <div class="grid grid-cols-2 gap-2 mt-auto mb-3">
+                                <button onclick="addToRoutineFromDiscover('${item.title}', '${item.category}')" class="bg-brand hover:bg-brand-dark text-white text-[11px] font-semibold py-2 px-2 rounded-xl transition-colors flex items-center justify-center shadow-sm">
+                                    <i class="fa-solid fa-plus mr-1"></i> Rutinitas
+                                </button>
+                                
+                                <button onclick="showProductDetail(${item.id})" class="bg-white border border-gray-200 hover:border-brand hover:text-brand text-gray-700 text-[11px] font-semibold py-2 px-2 rounded-xl text-center transition-colors flex items-center justify-center">
+                                    <i class="fa-solid fa-circle-info mr-1"></i> Detail
+                                </button>
+                            </div>
+
+                            <!-- BOTTOM ROW: LIKE -->
+                            <div class="flex items-center justify-between border-t border-gray-50 pt-2">
+                                <span class="text-[10px] text-gray-400">Klik detail untuk info bahan & cara pakai</span>
+                                <button onclick="toggleFavoriteProduct(${item.id})" class="transition-colors px-1 flex items-center gap-1 ${item.isLiked ? 'text-rose-500' : 'text-gray-400 hover:text-rose-500'}" title="${item.likes} Menyukai ini">
+                                    <span class="text-xs font-semibold">${item.likes}</span>
+                                    <i class="${item.isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            container.innerHTML = finalHTML;
+        }
+
+        // --- DATA & LOGIKA FAVORIT PROFIL ---
+        let favoriteProducts = []; // Array untuk menyimpan produk favorit di halaman Profil
+
+        function toggleFavoriteProduct(id) {
+            const product = discoverData.find(p => p.id === id);
+            if (!product) return;
+
+            // Ambil data favorit terkini dari LocalStorage
+            let favoriteProducts = JSON.parse(localStorage.getItem('glowdiary_favorites')) || [];
+
+            if (product.isLiked) {
+                // Jika sudah dilike, batalkan (hapus dari favorit)
+                favoriteProducts = favoriteProducts.filter(p => p.id !== id);
+                product.likes--;
+                product.isLiked = false;
+            } else {
+                // Jika belum dilike, tambahkan ke favorit
+                product.likes++;
+                product.isLiked = true;
+                favoriteProducts.push(product);
+            }
+
+            // Simpan kembali array favorit terupdate ke LocalStorage
+            localStorage.setItem('glowdiary_favorites', JSON.stringify(favoriteProducts));
+
+            // Render ulang discover agar icon heart berubah
+            renderDiscover();
+        }
+
+        // --- LOGIKA MODAL DETAIL PRODUK ---
+        function showProductDetail(id) {
+            const product = discoverData.find(p => p.id === id);
+            if (!product) return;
+
+            // Data dummy (bahan, cara pakai, link) jika di data asli belum ada
+            const ingredients = product.ingredients || "Water, Glycerin, Niacinamide, Hyaluronic Acid, Centella Asiatica Extract...";
+            const usage = product.usage || "Aplikasikan 2-3 tetes pada wajah yang bersih. Tepuk perlahan hingga menyerap sempurna.";
+            const webLink = product.link || "https://www.tokopedia.com"; 
+
+            const modalHtml = `
+                <div id="productDetailModal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex justify-center items-end sm:items-center animate-fade-in">
+                    <div class="bg-white w-full max-w-md sm:rounded-2xl rounded-t-2xl max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl animate-slide-up">
+                        <div class="relative">
+                            <img src="${product.image}" class="w-full h-56 object-cover bg-gray-50">
+                            <button onclick="document.getElementById('productDetailModal').remove()" class="absolute top-4 right-4 bg-white text-gray-800 rounded-full w-8 h-8 flex items-center justify-center shadow">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">${product.brand}</span>
+                            <h2 class="font-bold text-gray-800 text-xl mb-2">${product.title}</h2>
+                            <p class="text-sm text-gray-600 mb-4">${product.desc}</p>
+                            
+                            <div class="mb-4">
+                                <h4 class="font-bold text-gray-800 text-sm mb-1"><i class="fa-solid fa-flask text-brand mr-1"></i> Bahan Utama (Ingredients)</h4>
+                                <p class="text-xs text-gray-500 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">${ingredients}</p>
+                            </div>
+
+                            <div class="mb-5">
+                                <h4 class="font-bold text-gray-800 text-sm mb-1"><i class="fa-solid fa-hand-sparkles text-brand mr-1"></i> Cara Penggunaan</h4>
+                                <p class="text-xs text-gray-500 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">${usage}</p>
+                            </div>
+
+                            <div class="flex gap-3 mt-4">
+                                <a href="${webLink}" target="_blank" class="flex-1 bg-brand text-white font-bold py-3 px-4 rounded-xl text-center shadow hover:bg-brand-dark transition">
+                                    Beli di Website Resmi
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
 
-            document.getElementById('routine-list').insertAdjacentHTML('afterbegin', newProductHTML);
-            document.getElementById('routine-name').value = '';
+        // --- LOGIKA MODAL REVIEW ---
+        function openReviewModal(id) {
+            const product = discoverData.find(p => p.id === id);
+            if (!product) return;
+
+            const modalHtml = `
+                <div id="reviewModal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex justify-center items-center animate-fade-in p-4">
+                    <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl animate-slide-up">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-gray-800 text-lg">Beri Ulasan</h3>
+                            <button onclick="document.getElementById('reviewModal').remove()" class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-xmark text-xl"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Bagaimana pengalaman Anda menggunakan <b>${product.title}</b>?</p>
+                        
+                        <textarea id="reviewText" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none mb-4" placeholder="Tulis ulasan jujur Anda di sini..."></textarea>
+                        
+                        <button onclick="submitReview(${product.id})" class="w-full bg-brand text-white font-bold py-3 rounded-xl shadow hover:bg-brand-dark transition">
+                            Kirim Ulasan
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function submitReview(id) {
+            const text = document.getElementById('reviewText').value;
+            if (!text.trim()) {
+                alert("Ulasan tidak boleh kosong!");
+                return;
+            }
+            
+            // Di sini Anda bisa menyimpan review ke database/array
+            alert("Terima kasih! Ulasan Anda telah berhasil disimpan.");
+            document.getElementById('reviewModal').remove();
+        }
+
+        // --- FUNGSI BARU: Integrasi Tombol Rutinitas Tab Discover & Home ---
+        function addToRoutineFromDiscover(productName, productCategory) {
+            // 1. Pindah ke layar Home secara otomatis
+            switchTab('home');
+            
+            // 2. Buka Modal Tambah Produk
+            openAddModal();
+            
+            // 3. Isi otomatis Nama Produk
+            document.getElementById('productName').value = productName;
+            
+            // 4. Isi otomatis Kategori Produk
+            const selectCategory = document.getElementById('productCategory');
+            // Kategori bawaan pada form Tambah Produk di Home
+            const validDropdownCategories = ['Cleanser', 'Toner', 'Serum', 'Moisturizer', 'Sunscreen'];
+            
+            if (validDropdownCategories.includes(productCategory)) {
+                selectCategory.value = productCategory;
+                handleCategoryChange(); // Sembunyikan kategori kustom
+            } else {
+                // Jika kategorinya tidak ada di dropdown (contoh: Krim Jerawat, Essence)
+                selectCategory.value = 'Lainnya';
+                handleCategoryChange(); // Munculkan input kustom
+                document.getElementById('customCategory').value = productCategory;
+            }
+        }
+
+        function filterDiscover(category) {
+            currentDiscoverFilter = category;
+            document.querySelectorAll('.discover-tag').forEach(btn => {
+                btn.className = "discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap shadow-sm transition-all snap-start hover:bg-purple-50 hover:text-brand-dark";
+            });
+            // Memberi warna ungu pada tombol yang sedang aktif
+            if (window.event && window.event.currentTarget) {
+                window.event.currentTarget.className = "discover-tag bg-brand text-white text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap shadow-sm transition-all snap-start";
+            }
+            renderDiscover();
+        }
+
+        function searchDiscover() { renderDiscover(); }
+        
+        function likeArticle(id) {
+            const article = discoverData.find(a => a.id === id);
+            if (article) { article.likes++; renderDiscover(); }
+        }
+
+
+        // --- LOGIKA RENDER PRODUK FAVORIT DI PROFIL ---
+        function renderProfileFavorites() {
+            const container = document.getElementById('profile-favorites-container');
+            const countBadge = document.getElementById('fav-count');
+            
+            if (!container) return;
+
+            // Update badge jumlah favorit
+            if (countBadge) {
+                countBadge.textContent = `${favoriteProducts.length} Produk`;
+            }
+
+            // Jika belum ada produk yang dilike
+            if (favoriteProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-8 bg-gray-50 rounded-2xl border border-dashed border-gray-200 animate-fade-in">
+                        <i class="fa-regular fa-heart text-gray-300 text-3xl mb-2"></i>
+                        <p class="text-sm text-gray-500">Belum ada produk di wishlist.</p>
+                        <button onclick="switchTab('discover')" class="mt-3 text-xs font-bold text-brand hover:underline">Eksplor Produk Sekarang &rarr;</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Jika ada produk yang dilike, tampilkan dalam bentuk grid mini
+            container.innerHTML = favoriteProducts.map(item => `
+                <div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col group cursor-pointer animate-fade-in" onclick="showProductDetail(${item.id})">
+                    <div class="relative overflow-hidden">
+                        <img src="${item.image}" class="w-full h-32 object-cover bg-gray-50 group-hover:scale-110 transition-transform duration-500">
+                        <button onclick="event.stopPropagation(); toggleFavoriteProduct(${item.id})" class="absolute top-2 right-2 w-7 h-7 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-rose-500 shadow-sm hover:bg-rose-50 transition-colors" title="Hapus dari favorit">
+                            <i class="fa-solid fa-heart text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="p-3 flex flex-col flex-grow">
+                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1 line-clamp-1">${item.brand}</span>
+                        <h4 class="font-bold text-gray-800 text-xs mb-1 line-clamp-2 leading-tight group-hover:text-brand transition-colors">${item.title}</h4>
+                        <span class="text-[10px] font-bold text-brand-dark mt-auto">${item.price}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- LOGIKA PENYIMPANAN LOCALSTORAGE ---
+        
+        // 1. Fungsi untuk menyimpan ID produk yang di-like ke LocalStorage
+        function saveFavoritesToStorage() {
+            // Kita hanya menyimpan ID produknya saja agar ringan
+            const favIds = favoriteProducts.map(product => product.id);
+            localStorage.setItem('skincare_favorites', JSON.stringify(favIds));
+        }
+
+        // 2. Fungsi untuk memuat data dari LocalStorage saat halaman pertama kali dibuka
+        function loadFavoritesFromStorage() {
+            const storedFavs = localStorage.getItem('skincare_favorites');
+            if (storedFavs) {
+                const favIds = JSON.parse(storedFavs);
+                favoriteProducts = []; // Kosongkan array terlebih dahulu
+                
+                favIds.forEach(id => {
+                    // Cari produk asli di discoverData
+                    const product = discoverData.find(p => p.id === id);
+                    if (product) {
+                        favoriteProducts.push(product);
+                        // Tandai sebagai disukai tanpa menambah jumlah like global berulang kali
+                        if (!product.isLiked) {
+                            product.isLiked = true;
+                            product.likes++; 
+                        }
+                    }
+                });
+            }
+        }
+        loadFavoritesFromStorage(); // Panggil fungsi ini saat inisialisasi halaman 
+
+
+        function toggleFavoriteProduct(id) {
+            const product = discoverData.find(p => p.id === id);
+            if (!product) return;
+
+            const favIndex = favoriteProducts.findIndex(p => p.id === id);
+            
+            if (favIndex > -1) {
+                // Hapus dari favorit
+                favoriteProducts.splice(favIndex, 1);
+                product.likes = Math.max(0, product.likes - 1);
+                product.isLiked = false;
+            } else {
+                // Tambah ke favorit
+                favoriteProducts.push(product);
+                product.likes++;
+                product.isLiked = true;
+            }
+            
+            renderDiscover(); 
+            renderProfileFavorites(); 
+            
+            // TAMBAHKAN BARIS INI: Simpan perubahan ke LocalStorage
+            saveFavoritesToStorage(); 
+        }
+
+
+
+        // --- 4. ANALYZE SYSTEM (COMPATIBILITY MATCHING) ---
+        function checkCompatibility() {
+            const input = document.getElementById('ingredients-input').value.toLowerCase();
+            const resultBox = document.getElementById('analysis-result-box');
+            const feedbackContainer = document.getElementById('ingredients-feedback');
+
+            if (!input.trim()) { alert('Masukkan setidaknya satu bahan aktif!'); return; }
+
+            resultBox.classList.remove('hidden');
+            let feedbackHtml = '';
+
+            if (input.includes('niacinamide')) {
+                feedbackHtml += `
+                    <div class="flex gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="w-8 h-8 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-check"></i></div>
+                        <div><p class="text-sm font-bold text-gray-800">Niacinamide</p><p class="text-xs text-gray-500 mt-0.5">Sangat cocok! Membantu memperkuat barier kulit dan menyamarkan noda hitam.</p></div>
+                    </div>`;
+            }
+            if (input.includes('coconut oil') || input.includes('minyak kelapa')) {
+                feedbackHtml += `
+                    <div class="flex gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="w-8 h-8 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div><p class="text-sm font-bold text-gray-800">Coconut Oil</p><p class="text-xs text-gray-500 mt-0.5">Peringatan: Bersifat komedogenik tinggi, berisiko menyumbat pori-pori tipe kulit Acne/Oily.</p></div>
+                    </div>`;
+            }
+
+            if (!feedbackHtml) {
+                feedbackHtml = `
+                    <div class="flex gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-circle-info"></i></div>
+                        <div><p class="text-sm font-bold text-gray-800">Bahan Aktif Aman / Netral</p><p class="text-xs text-gray-500 mt-0.5">Komposisi yang dimasukkan aman untuk digunakan secara umum oleh jenis kulitmu.</p></div>
+                    </div>`;
+            }
+
+            feedbackContainer.innerHTML = feedbackHtml;
+        }
+
+        // --- 5. LOGOUT & MODAL UTILITIES ---
+        function logout() {
+            if(confirm("Apakah Anda yakin ingin keluar dari akun?")) {
+                localStorage.setItem('glowdiary_logged_in', 'false');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle('hidden');
+                modal.classList.toggle('flex');
+            }
+        }
+
+        // --- 6. GLOBAL HOME ROUTINE WORKER (BACKUP SCRIPTS INTEGRATION) ---
+        function handleCategoryChange() {
+            const select = document.getElementById('productCategory');
+            const container = document.getElementById('customCategoryContainer');
+            if (select.value === 'Lainnya') container.classList.remove('hidden');
+            else container.classList.add('hidden');
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-routine-title').innerText = "Tambah Produk";
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = "";
+            document.getElementById('customCategoryContainer').classList.add('hidden');
             toggleModal('modal-routine');
         }
 
-        // --- 5. PRODUCT REVIEW LOGIC ---
-        function openReview(productName, brandName, icon) {
-            document.getElementById('review-title').innerText = productName;
-            document.getElementById('review-brand').innerText = brandName;
-            document.getElementById('review-icon').innerText = icon;
-            setRating(0); 
-            document.getElementById('review-text').value = '';
-            toggleModal('modal-review');
+        function saveProduct(e) {
+            e.preventDefault();
+            let products = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
+            const idInput = document.getElementById('productId').value;
+            const selectedTimes = [];
+            document.querySelectorAll('input[name="productTime"]:checked').forEach(cb => selectedTimes.push(cb.value));
+
+            if (selectedTimes.length === 0) { alert("Pilih minimal satu waktu pemakaian!"); return; }
+
+            let cat = document.getElementById('productCategory').value;
+            if (cat === 'Lainnya') cat = document.getElementById('customCategory').value.trim() || 'Lainnya';
+
+            const data = {
+                id: idInput ? parseInt(idInput) : Date.now(),
+                name: document.getElementById('productName').value,
+                category: cat,
+                time: selectedTimes,
+                isDone: false
+            };
+
+            if (idInput) {
+                const idx = products.findIndex(p => p.id === data.id);
+                if (idx !== -1) { data.isDone = products[idx].isDone; products[idx] = data; }
+            } else { products.push(data); }
+
+            localStorage.setItem('glowdiary_products', JSON.stringify(products));
+            toggleModal('modal-routine');
+            renderProducts();
         }
 
-        function setRating(rating) {
-            document.getElementById('current-rating').value = rating;
-            const stars = document.getElementById('star-rating').children;
-            for (let i = 0; i < stars.length; i++) {
-                if (i < rating) {
-                    stars[i].classList.remove('text-gray-300');
-                    stars[i].classList.add('text-yellow-400');
-                } else {
-                    stars[i].classList.remove('text-yellow-400');
-                    stars[i].classList.add('text-gray-300');
+        // --- LOGIKA DAFTAR RUTINITAS (HOME) ---
+        function renderProducts() {
+            const box = document.getElementById('routine-list');
+            const items = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
+            if (!box) return;
+
+            // Jika belum ada rutinitas
+            if (items.length === 0) {
+                box.className = "flex flex-col items-center justify-center p-8 mt-2 bg-gray-50 border-2 border-dashed rounded-2xl text-center";
+                box.innerHTML = `<p class="text-sm font-semibold text-gray-500">Belum ada rutinitas tercatat hari ini.</p>`;
+                return;
+            }
+
+            // Hitung Progres Harian
+            const doneCount = items.filter(p => p.isDone).length;
+            const progressPercentage = Math.round((doneCount / items.length) * 100);
+
+            // Tampilan Progress Bar
+            const progressBarHTML = `
+                <div class="col-span-full mb-2 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-xs font-bold text-gray-500"><i class="fa-solid fa-tasks mr-1"></i> Progres Skincare Hari Ini</span>
+                        <span class="text-sm font-black ${progressPercentage === 100 ? 'text-green-500' : 'text-brand'}">${progressPercentage}%</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                        <div class="${progressPercentage === 100 ? 'bg-green-500' : 'bg-brand'} h-2.5 rounded-full transition-all duration-700 ease-out" style="width: ${progressPercentage}%"></div>
+                    </div>
+                    ${progressPercentage === 100 ? '<p class="text-[10px] text-green-500 mt-2 text-center font-bold animate-bounce">Yeay! Kamu sudah menyelesaikan rutinitasmu hari ini! ✨</p>' : ''}
+                </div>
+            `;
+
+            // Tampilan Grid Kartu Rutinitas
+            box.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2";
+            box.innerHTML = progressBarHTML + items.map(p => `
+                <div onclick="toggleProductDone(${p.id})" class="flex items-center justify-between p-3 bg-white border-2 ${p.isDone ? 'border-green-400 bg-green-50/50' : 'border-transparent hover:border-purple-100'} rounded-xl shadow-sm cursor-pointer transition-all duration-300">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 shrink-0 rounded-full border-2 flex items-center justify-center transition-colors duration-300 ${p.isDone ? 'border-green-500 bg-green-500 text-white' : 'border-gray-200 text-transparent'}">
+                            <i class="fa-solid fa-check text-xs"></i>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-bold text-sm transition-all duration-300 ${p.isDone ? 'text-gray-400 line-through' : 'text-gray-800'}">${p.name}</h4>
+                            <p class="text-[10px] uppercase font-bold tracking-wider mt-0.5 ${p.isDone ? 'text-gray-400' : 'text-brand'}">${p.category} • ${p.time.join(', ')}</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="event.stopPropagation(); deleteProduct(${p.id})" class="text-red-300 hover:text-red-500 hover:bg-red-50 w-8 h-8 rounded-full flex items-center justify-center transition-colors" title="Hapus dari rutinitas">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // FUNGSI BARU: Mengubah status Checklist (Selesai/Belum) dan Mencatat Riwayat
+        function toggleProductDone(id) {
+            let products = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
+            const index = products.findIndex(p => p.id === id);
+            
+            if (index > -1) {
+                // 1. Balikkan statusnya (Belum -> Selesai, atau sebaliknya)
+                products[index].isDone = !products[index].isDone;
+                
+                // 2. Simpan status checklist ke localStorage
+                localStorage.setItem('glowdiary_products', JSON.stringify(products));
+                
+                // 3. Render ulang tampilan progress bar dan coretan produk
+                renderProducts(); 
+                
+                // 4. SANGAT PENTING: Perbarui dan simpan riwayat hari ini!
+                if (typeof updateHistory === 'function') {
+                    updateHistory(); 
                 }
             }
         }
 
-        function submitReview() {
-            const rating = document.getElementById('current-rating').value;
-            if (rating === "0") {
-                alert("Silakan berikan rating bintang terlebih dahulu!");
-                return;
+        // FUNGSI LAMA (Diperbarui sedikit agar tombol hapusnya lebih mulus)
+        function deleteProduct(id) {
+            if(confirm('Yakin ingin menghapus produk ini dari rutinitasmu?')) {
+                let products = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('glowdiary_products', JSON.stringify(products));
+                renderProducts();
             }
-            toggleModal('modal-review');
-            alert("Terima kasih! Review berhasil dikirim. Kamu mendapatkan +10 GlowPoints! ✨");
         }
-    </script>
 
-    <script>
-        // --- AUTO OPEN TAB BERDASARKAN URL ---
-        document.addEventListener("DOMContentLoaded", function() {
-            // Ambil kata setelah tanda # di URL (misal dari glowdiary.html#discover)
-            let hash = window.location.hash.replace('#', '');
+        // --- LOGIKA RIWAYAT HARIAN (HISTORY) ---
+        // Fungsi untuk menyimpan riwayat harian ke LocalStorage    
+        function updateHistory() {
+            const today = new Date().toDateString();
+            let history = JSON.parse(localStorage.getItem('glowdiary_history')) || {};
+            let products = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
             
-            // Jika ada perintah buka tab discover atau analyze
-            if (hash === 'discover' || hash === 'analyze') {
-                switchTab(hash);
+            // Ambil nama produk yang sudah selesai (isDone: true) hari ini
+            let doneToday = products.filter(p => p.isDone).map(p => p.name);
+            
+            if (doneToday.length > 0) {
+                history[today] = doneToday; // Simpan ke catatan hari ini
             } else {
-                // Default buka home
-                switchTab('home');
+                delete history[today]; // Hapus jika semua centang dibatalkan
             }
-        });
+            
+            // Simpan perubahan ke memori (LocalStorage)
+            localStorage.setItem('glowdiary_history', JSON.stringify(history));
+            
+            // Render ulang tampilannya
+            renderHistory();
+        }
+        // Fungsi untuk MENAMPILKAN riwayat ke layar (Home & Profile)
+        function renderHistory() {
+            let history = JSON.parse(localStorage.getItem('glowdiary_history')) || {};
+            const today = new Date().toDateString();
+            
+            // Urutkan tanggal dari yang paling baru ke terlama
+            const historyDates = Object.keys(history).sort((a,b) => new Date(b) - new Date(a));
+
+            let html = '';
+            if (historyDates.length === 0) {
+                html = '<p class="text-xs text-gray-400 italic py-2">Belum ada riwayat pemakaian produk.</p>';
+            } else {
+                // Tampilkan maksimal 7 hari terakhir
+                html = historyDates.slice(0, 7).map(date => `
+                    <div class="border-l-2 border-brand pl-3 py-1">
+                        <p class="text-xs font-bold ${date === today ? 'text-brand' : 'text-gray-700'}">${date === today ? 'Hari Ini' : date}</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">${history[date].join(', ')}</p>
+                    </div>
+                `).join('');
+            }
+
+            const homeContainer = document.getElementById('product-history-list');
+            const profileContainer = document.getElementById('profile-history-list');
+
+            if (homeContainer) homeContainer.innerHTML = html;
+            if (profileContainer) profileContainer.innerHTML = html;
+        }
+
+        // --- LOGIKA RESET RUTINITAS HARIAN ---
+        function checkAndResetDailyRoutine() {
+            // Dapatkan tanggal hari ini (Contoh format: "Sun Jun 07 2026")
+            const today = new Date().toDateString(); 
+            const lastSavedDate = localStorage.getItem('glowdiary_lastDate');
+
+            // Jika tanggal yang tersimpan di memori BEDA dengan tanggal hari ini
+            // Artinya: Ini adalah hari yang baru!
+            if (lastSavedDate !== today) {
+                let products = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
+                
+                // Ubah semua status 'isDone' kembali menjadi false (belum diceklis)
+                if (products.length > 0) {
+                    products.forEach(p => p.isDone = false);
+                    localStorage.setItem('glowdiary_products', JSON.stringify(products));
+                }
+                
+                // Simpan tanggal hari ini ke memori agar besok bisa dicek lagi
+                localStorage.setItem('glowdiary_lastDate', today);
+            }
+        }
+
+        // --- 7. PERIOD TRACKER LOGIC ---
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        let userPeriodData = { lastStart: '', duration: 5, cycleLength: 28 };
+        let periodDates = []; let fertileDates = [];
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        function togglePeriodFeature() {
+            const hide = localStorage.getItem('glowdiary_hide_period') === 'true';
+            localStorage.setItem('glowdiary_hide_period', !hide);
+            applyPeriodFeatureState();
+        }
+
+        function applyPeriodFeatureState() {
+            const hide = localStorage.getItem('glowdiary_hide_period') === 'true';
+            const content = document.getElementById('period-log-content');
+            const off = document.getElementById('period-log-off');
+            if(hide) { content.classList.add('hidden'); off.classList.remove('hidden'); }
+            else { content.classList.remove('hidden'); off.classList.add('hidden'); }
+        }
+
+        function calculatePeriodDates() {
+            if (!userPeriodData.lastStart) return;
+            periodDates = []; fertileDates = [];
+            let base = new Date(userPeriodData.lastStart);
+            for (let i = 0; i < 2; i++) {
+                for (let d = 0; d < userPeriodData.duration; d++) {
+                    let p = new Date(base); p.setDate(base.getDate() + d);
+                    periodDates.push(p.toDateString());
+                }
+                base.setDate(base.getDate() + userPeriodData.cycleLength);
+            }
+        }
+
+        function renderCalendar() {
+            const daysContainer = document.getElementById('calendar-days');
+            if(!daysContainer) return;
+            document.getElementById('calendar-month-year').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            daysContainer.innerHTML = '';
+            
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            for(let i=0; i<firstDay; i++) daysContainer.innerHTML += '<div></div>';
+            
+            for(let d=1; d<=totalDays; d++) {
+                let cur = new Date(currentYear, currentMonth, d);
+                let cls = "hover:bg-gray-100 rounded-lg py-1 transition-colors cursor-pointer";
+                
+                if(periodDates.includes(cur.toDateString())) cls = "bg-rose-500 text-white rounded-lg py-1 font-bold shadow-sm";
+                daysContainer.innerHTML += `<div class="${cls}">${d}</div>`;
+            }
+        }
+
+        function changeMonth(step) {
+            currentMonth += step;
+            if(currentMonth > 11) { currentMonth = 0; currentYear++; }
+            if(currentMonth < 0) { currentMonth = 11; currentYear--; }
+            renderCalendar();
+        }
+
+        function savePeriodData() {
+            userPeriodData = {
+                lastStart: document.getElementById('period-start-input').value,
+                duration: parseInt(document.getElementById('period-duration-input').value) || 5,
+                cycleLength: parseInt(document.getElementById('period-cycle-input').value) || 28
+            };
+            localStorage.setItem('glowdiary_periodData', JSON.stringify(userPeriodData));
+            calculatePeriodDates(); renderCalendar(); toggleModal('modal-period');
+        }
+
+        // --- LOGIKA SIMULASI AI FACE SCAN ---
+        function startFaceScan() {
+            const btn = document.getElementById('btn-scan');
+            const scannerLaser = document.getElementById('scanner-laser');
+            const overlay = document.getElementById('scan-overlay');
+            const results = document.getElementById('scan-results');
+            const image = document.getElementById('scan-image');
+
+            // 1. Reset tampilan awal
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> AI Sedang Menganalisis...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            results.classList.add('hidden');
+            
+            // Beri efek abu-abu pada foto seolah-olah kamera infrared aktif
+            image.classList.add('grayscale', 'contrast-125'); 
+            
+            // 2. Munculkan Laser & Overlay
+            scannerLaser.classList.remove('hidden');
+            overlay.classList.remove('hidden');
+            
+            // 3. Gerakkan Laser Naik-Turun (Animasi Native API)
+            scannerLaser.animate([
+                { top: '0%', opacity: 0.8 },
+                { top: '98%', opacity: 1 },
+                { top: '0%', opacity: 0.8 }
+            ], {
+                duration: 2000,       // Kecepatan 2 detik
+                iterations: 2,        // Bolak balik 2 kali
+                easing: 'ease-in-out' // Efek pergerakan natural
+            });
+
+            // 4. Proses Selesai (Setelah 4 Detik)
+            setTimeout(() => {
+                // Sembunyikan laser
+                scannerLaser.classList.add('hidden');
+                overlay.classList.add('hidden');
+                image.classList.remove('grayscale', 'contrast-125');
+                
+                // Tampilkan Kotak Hasil
+                results.classList.remove('hidden');
+                
+                // Kembalikan Tombol ke Mode "Pindai Ulang"
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                btn.innerHTML = '<i class="fa-solid fa-rotate-right mr-2"></i> Pindai Ulang Wajah';
+                
+            }, 4000); // 4000 ms = 4 detik (2 iterasi x 2000ms)
+        }
+
+        // --- LOGIKA INGREDIENT COMPATIBILITY CHECKER ---
+        function checkCompatibility() {
+            const inputField = document.getElementById('ingredients-input');
+            const input = inputField.value.toLowerCase();
+            const resultBox = document.getElementById('analysis-result-box');
+            const feedbackContainer = document.getElementById('ingredients-feedback');
+
+            // Validasi Input Kosong
+            if (!input.trim()) { 
+                alert('Silakan ketik atau paste daftar komposisi (ingredients) terlebih dahulu!'); 
+                inputField.focus();
+                return; 
+            }
+
+            // 1. Tampilkan Box Hasil dengan Animasi Loading (Biar terasa seperti AI sungguhan)
+            resultBox.classList.remove('hidden');
+            feedbackContainer.innerHTML = `
+                <div class="text-center py-6">
+                    <i class="fa-solid fa-microchip fa-spin text-brand text-3xl mb-3"></i>
+                    <p class="text-sm font-bold text-gray-700">Menganalisis Komposisi...</p>
+                    <p class="text-xs text-gray-400">Mencocokkan dengan database dermatologi.</p>
+                </div>
+            `;
+
+            // 2. Simulasi Proses Analisis (Jeda 1.2 detik)
+            setTimeout(() => {
+                let feedbackHtml = '';
+                let isSafe = true; // Status keseluruhan
+
+                // Cek Bentrokan Parah (Retinol + Eksfoliator Asam)
+                if (input.includes('retinol') && (input.includes('aha') || input.includes('bha') || input.includes('salicylic') || input.includes('glycolic'))) {
+                    isSafe = false;
+                    feedbackHtml += `
+                        <div class="flex gap-3 bg-red-50 p-4 rounded-xl border border-red-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-red-800">Peringatan Bentrokan Bahan!</p>
+                                <p class="text-xs text-red-600 mt-1 leading-relaxed">Penggabungan <b>Retinol</b> dengan <b>AHA/BHA</b> secara bersamaan sangat berisiko merusak skin barrier dan menyebabkan iritasi parah. Gunakan di hari yang berbeda.</p>
+                            </div>
+                        </div>`;
+                }
+
+                // Cek Bahan Komedogenik (Penyumbat Pori)
+                if (input.includes('coconut oil') || input.includes('minyak kelapa')) {
+                    isSafe = false;
+                    feedbackHtml += `
+                        <div class="flex gap-3 bg-amber-50 p-3 rounded-xl border border-amber-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-clog"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-amber-800">Kandungan Komedogenik</p>
+                                <p class="text-xs text-amber-700 mt-1">Ditemukan <b>Coconut Oil</b>. Bahan ini berisiko tinggi menyumbat pori-pori (komedogenik) bagi pemilik kulit berminyak/acne-prone.</p>
+                            </div>
+                        </div>`;
+                }
+
+                // Cek Potensi Iritasi (Alkohol/Pewangi)
+                if (input.includes('alcohol') || input.includes('fragrance') || input.includes('parfum')) {
+                    isSafe = false;
+                    feedbackHtml += `
+                        <div class="flex gap-3 bg-orange-50 p-3 rounded-xl border border-orange-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-spray-can"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-orange-800">Potensi Penyebab Sensitivitas</p>
+                                <p class="text-xs text-orange-700 mt-1">Produk ini mengandung <b>Alkohol/Fragrance</b>. Jika kulitmu sensitif, perhatikan apakah memicu kemerahan atau rasa panas.</p>
+                            </div>
+                        </div>`;
+                }
+
+                // Cek Bahan Bintang (Aman & Bagus)
+                if (input.includes('niacinamide') || input.includes('vitamin c')) {
+                    feedbackHtml += `
+                        <div class="flex gap-3 bg-white p-3 rounded-xl border border-green-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-green-50 text-green-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-star"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">Brightening Agent Terdeteksi</p>
+                                <p class="text-xs text-gray-500 mt-1">Terdapat <b>Niacinamide/Vit C</b>. Sangat baik untuk mencerahkan noda hitam dan meratakan warna kulit.</p>
+                            </div>
+                        </div>`;
+                }
+
+                if (input.includes('ceramide') || input.includes('hyaluronic') || input.includes('centella') || input.includes('panthenol')) {
+                    feedbackHtml += `
+                        <div class="flex gap-3 bg-white p-3 rounded-xl border border-blue-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-droplet"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">Hydration & Soothing</p>
+                                <p class="text-xs text-gray-500 mt-1">Bahan yang sangat aman! Membantu mengunci kelembapan dan menenangkan kemerahan (Skin Barrier Friendly).</p>
+                            </div>
+                        </div>`;
+                }
+
+                // Default jika pengguna memasukkan bahan yang tidak ada di daftar kita
+                if (!feedbackHtml) {
+                    feedbackHtml = `
+                        <div class="flex gap-3 bg-white p-3 rounded-xl border border-purple-100 shadow-sm">
+                            <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-leaf"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">Komposisi Secara Umum Aman</p>
+                                <p class="text-xs text-gray-500 mt-1">Sistem tidak mendeteksi bentrokan bahan yang berbahaya. Namun, selalu lakukan <i>patch test</i> sebelum menggunakan produk baru.</p>
+                            </div>
+                        </div>`;
+                }
+
+                // 3. Update Label Status di atas box hasil (Aman vs Perlu Perhatian)
+                const statusBadge = resultBox.querySelector('h4 + span'); // Mencari span di sebelah <h4>Analysis Result</h4>
+                if (statusBadge) {
+                    if (isSafe) {
+                        statusBadge.className = "bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200";
+                        statusBadge.innerHTML = "<i class='fa-solid fa-check mr-1'></i> Aman Digunakan";
+                    } else {
+                        statusBadge.className = "bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200";
+                        statusBadge.innerHTML = "<i class='fa-solid fa-triangle-exclamation mr-1'></i> Perlu Perhatian";
+                    }
+                }
+
+                // 4. Render HTML ke layar
+                feedbackContainer.innerHTML = feedbackHtml;
+
+            }, 1200); // 1200ms (1.2 detik) jeda loading
+        }
+        
     </script>
+    <script src="skin_update.js"></script>
 </body>
 </html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GlowDiary</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            title: '#5c5296',
+                            subtitle: '#988aef',
+                            card: '#f4e6f1',
+                            button: '#7781ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(180deg, #fdf6fb 0%, #e2cae7 50%, #d8b8df 100%);
+            min-height: 100vh;
+        }
+        .custom-shadow { box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.08); }
+    </style>
+</head>
+<body class="flex flex-col justify-center items-center px-6 font-sans text-gray-800 antialiased">
+
+    <main class="w-full flex flex-col items-center">
+        
+        <div class="text-center mb-6 mt-10">
+            <h1 class="text-[32px] md:text-4xl font-extrabold text-brand-title tracking-tight mb-1">Welcome Back</h1>
+            <p class="text-brand-subtitle font-medium text-sm md:text-base">Login to continue your skin journey</p>
+        </div>
+
+        <div class="w-full max-w-sm bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8">
+            <form onsubmit="prosesLogin(event)" class="space-y-5">
+                
+                <div class="flex flex-col gap-1.5">
+                    <label for="loginIdentifier" class="text-sm font-medium text-gray-800 ml-1">Username or Email</label>
+                    <input type="text" id="loginIdentifier" required placeholder="Masukkan Username/Email"
+                        class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors placeholder:text-gray-400">
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label for="loginPassword" class="text-sm font-medium text-gray-800 ml-1">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Masukkan Password"
+                        class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors placeholder:text-gray-400">
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <button type="submit" id="submit-btn"
+                        class="w-full bg-brand-button hover:bg-[#6872b8] text-white font-semibold rounded-full py-3.5 shadow-md transition-all active:scale-95">
+                        Login
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="text-center flex flex-col gap-2 mb-6">
+            <p class="text-gray-600 text-sm font-medium">
+                Don't have an account? 
+                <a href="landing.html" class="text-brand-title font-bold hover:underline">Sign Up</a>
+            </p>
+        </div>
+
+    </main>
+
+    <script>
+        function prosesLogin(event) {
+            event.preventDefault();
+
+            const inputUser = document.getElementById('loginIdentifier').value.trim();
+            const inputPass = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('submit-btn');
+
+            // 1. Ambil data asli yang terdaftar di localStorage
+            const registeredUsername = localStorage.getItem('glowdiary_username');
+            const registeredEmail = localStorage.getItem('glowdiary_email');
+            const registeredPassword = localStorage.getItem('glowdiary_password');
+            const isOnboardingDone = localStorage.getItem('glowdiary_onboarding_done');
+
+            // 2. Validasi kecocokan data
+            if (!registeredUsername) {
+                alert('Belum ada akun yang terdaftar. Silakan Sign Up terlebih dahulu.');
+                window.location.href = 'landing.html'; // ganti sesuai nama file registermu
+                return;
+            }
+
+            // Memeriksa apakah input sesuai dengan username ATAU email, dan password-nya benar
+            if ((inputUser === registeredUsername || inputUser === registeredEmail) && inputPass === registeredPassword) {
+                
+                localStorage.setItem('glowdiary_logged_in', 'true');
+
+                // Efek loading tombol sukses
+                btn.disabled = true;
+                btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>';
+
+                setTimeout(() => {
+                    alert('Login Berhasil! Selamat datang kembali.');
+                    // Jika sudah pernah isi kuesioner ke halaman utama, jika belum ke kuesioner
+                    window.location.href = (isOnboardingDone === 'true') ? 'glowdiary.html' : 'kuesioner.html';
+                }, 600);
+
+            } else {
+                alert('Username/Email atau Password yang Anda masukkan salah!');
+            }
+        }
+    </script>
+
+</body>
+</html>

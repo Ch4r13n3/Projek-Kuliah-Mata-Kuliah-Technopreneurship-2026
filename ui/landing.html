@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your GlowDiary account to start tracking your skincare routine and skin health journey.">
     <title>Create Account - GlowDiary</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        // PENTING: Hanya auto-redirect jika pengguna MEMANG sudah login (bukan baru sekadar daftar)
+        if (localStorage.getItem('glowdiary_logged_in') === 'true') {
+            const done = localStorage.getItem('glowdiary_onboarding_done');
+            window.location.href = (done === 'true') ? 'glowdiary.html' : 'kuesioner.html';
+        }
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -27,56 +36,132 @@
     </script>
     <style>
         body {
-            /* Gradasi background persis seperti gambar */
             background: linear-gradient(180deg, #fdf6fb 0%, #e2cae7 50%, #d8b8df 100%);
             min-height: 100vh;
         }
         .custom-shadow {
-            /* Shadow khusus untuk kotak form agar terlihat sedikit mengambang */
             box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.08);
         }
     </style>
 </head>
 <body class="flex flex-col justify-center items-center px-6 font-sans text-gray-800 antialiased overflow-x-hidden">
 
-    <div class="text-center mb-6 mt-10">
-        <h1 class="text-[32px] md:text-4xl font-extrabold text-brand-title tracking-tight mb-1">Create Account</h1>
-        <p class="text-brand-subtitle font-medium text-sm md:text-base">Start your skin journey here</p>
-    </div>
+    <main class="w-full flex flex-col items-center">
+        
+        <div class="text-center mb-6 mt-10">
+            <h1 class="text-[32px] md:text-4xl font-extrabold text-brand-title tracking-tight mb-1">Create Account</h1>
+            <p class="text-brand-subtitle font-medium text-sm md:text-base">Start your skin journey here</p>
+        </div>
 
-    <div class="w-full max-w-sm bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
-        <form action="kuesioner.html" class="space-y-5">
+        <div class="w-full max-w-sm bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
+            <form onsubmit="prosesDaftar(event)" class="space-y-5">
+                
+                <div class="flex flex-col gap-1.5">
+                    <label for="username" class="text-sm font-medium text-gray-800 ml-1">Username</label>
+                    <input type="text" id="username" required placeholder="GlowBeauty"
+                        class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors placeholder:text-gray-400">
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label for="email" class="text-sm font-medium text-gray-800 ml-1">Email</label>
+                    <input type="email" id="email" required placeholder="user@email.com"
+                        class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors placeholder:text-gray-400">
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label for="password" class="text-sm font-medium text-gray-800 ml-1">Password</label>
+                    <input type="password" id="password" required minlength="8" placeholder="Minimal 8 karakter"
+                        class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors placeholder:text-gray-400">
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <button type="submit" 
+                        class="w-full bg-brand-button hover:bg-[#6872b8] text-white font-semibold rounded-full py-3.5 shadow-md transition-all active:scale-95">
+                        Sign Up
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="text-center flex flex-col gap-2 mb-6">
+            <p class="text-gray-600 text-sm font-medium">
+                Already have an account? 
+                <a href="login.html" class="text-brand-title font-bold hover:underline">Login</a>
+            </p>
             
-            <div class="flex flex-col gap-1.5">
-                <label for="username" class="text-sm font-medium text-gray-800 ml-1">Username</label>
-                <input type="text" id="username" required
-                    class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
-            </div>
+            <p class="text-gray-600 text-sm font-medium mt-1">
+                <a href="#" onclick="alert('Instruksi reset password telah dikirim ke email Anda.')" class="text-brand-title hover:underline opacity-80 hover:opacity-100 transition-opacity">
+                    Forgot Password?
+                </a>
+            </p>
+        </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label for="email" class="text-sm font-medium text-gray-800 ml-1">Email</label>
-                <input type="email" id="email" required
-                    class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
-            </div>
+    </main>
 
-            <div class="flex flex-col gap-1.5">
-                <label for="password" class="text-sm font-medium text-gray-800 ml-1">Password</label>
-                <input type="password" id="password" required
-                    class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
-            </div>
+    <script>
+        function prosesDaftar(event) {
+            event.preventDefault();
 
-        </form>
-    </div>
+            const username = document.getElementById('username').value.trim();
+            const email    = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const btn      = event.submitter || document.querySelector('button[type="submit"]');
 
-    <button onclick="window.location.href='kuesioner.html'" 
-        class="w-full max-w-[280px] bg-brand-button hover:bg-[#6872b8] text-white font-semibold rounded-full py-3.5 mb-6 shadow-md transition-all active:scale-95">
-        Sign Up
-    </button>
+            // --- 1. Validasi Tambahan (diambil dari kecanggihan Kode Kedua) ---
+            if (username.length < 3) {
+                showError('username', 'Username minimal 3 karakter.');
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('email', 'Format email tidak valid.');
+                return;
+            }
+            if (password.length < 8) {
+                showError('password', 'Password minimal 8 karakter.');
+                return;
+            }
 
-    <p class="text-gray-600 text-sm font-medium">
-        Already have an account? 
-        <a href="glowdiary.html" class="text-brand-title font-bold hover:underline">Login</a>
-    </p>
+            // --- 2. Penyimpanan Data ke LocalStorage ---
+            // Menggunakan key individual agar sinkron dengan file login.html Anda
+            localStorage.setItem('glowdiary_username', username);
+            localStorage.setItem('glowdiary_email', email);
+            localStorage.setItem('glowdiary_password', password); // Password disimpan!
+            localStorage.setItem('glowdiary_onboarding_done', 'false');
+            localStorage.setItem('glowdiary_logged_in', 'false'); // Pengguna belum menekan tombol login resmi
+
+            // --- 3. Animasi Loading State pada Tombol ---
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>';
+
+            // --- 4. Alur Pengalihan Sesuai Keinginan (Sign Up -> Login) ---
+            setTimeout(() => { 
+                alert('Pendaftaran akun berhasil! Silakan masuk menggunakan akun baru Anda.');
+                window.location.href = 'login.html'; 
+            }, 1000);
+        }
+
+        // Fungsi pembuat pesan error dinamis di bawah input field
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            field.classList.add('border-red-400', 'ring-1', 'ring-red-300');
+            field.focus();
+            
+            const old = field.parentElement.querySelector('.error-msg');
+            if (old) old.remove();
+            
+            const msg = document.createElement('p');
+            msg.className = 'error-msg text-xs text-red-500 mt-1 ml-2';
+            msg.textContent = message;
+            field.parentElement.appendChild(msg);
+            
+            field.addEventListener('input', () => {
+                field.classList.remove('border-red-400', 'ring-1', 'ring-red-300');
+                msg.remove();
+            }, { once: true });
+        }
+    </script>
 
 </body>
 </html>
