@@ -621,6 +621,8 @@
         </div>
     </div>
 
+    <script src="rewards.js"></script>
+
     <!-- MAIN CORE LOGIC JAVASCRIPT -->
     <script>
         // --- DATA MOCKUP / SEEDERS ---
@@ -843,14 +845,9 @@
             // Render rutinitas (checklist)
             renderProducts();
             
-            // PERBAIKAN: Langsung cek dan panggil renderHistory
+            // Langsung cek dan panggil renderHistory
             if (typeof renderHistory === "function") {
                 renderHistory();
-            }
-
-            // TAMBAHAN: Munculkan GlowPoints saat web di-reload (dari features.js)
-            if (typeof renderGlowPoints === "function") {
-                renderGlowPoints();
             }
 
             // Period Treacker
@@ -1187,9 +1184,33 @@
                 return;
             }
             
-            // Di sini Anda bisa menyimpan review ke database/array
+            // 1. Proses simpan review bawaan Anda
             alert("Terima kasih! Ulasan Anda telah berhasil disimpan.");
-            document.getElementById('reviewModal').remove();
+
+            // 2. --- PROSES PENYIMPANAN POIN LANGSUNG KE PROFILE_2 ---
+            // Menggunakan key 'glowdiary_glowPoints' agar SAMA PERSIS dengan yang dibaca profile_2.html
+            let totalPoin = parseInt(localStorage.getItem('glowdiary_glowPoints')) || 0;
+            
+            // Tambahkan 10 poin baru
+            totalPoin += 10;
+            
+            // Simpan kembali nilai ter-update ke localStorage
+            localStorage.setItem('glowdiary_glowPoints', totalPoin);
+            // --------------------------------------------------------
+
+            // 3. --- PEMICU NOTIFIKASI VISUAL ---
+            // Memanggil fungsi dari rewards.js jika file tersebut berhasil dimuat
+            if (typeof showPointToast === "function") {
+                showPointToast(10); // Menampilkan efek toast +10 poin saja karena datanya sudah disimpan di atas
+            } else if (typeof addUserPoints === "function") {
+                // Jika Anda menggunakan rewards.js versi alternatif, jalankan ini
+                // (Pastikan key di dalam rewards.js juga sudah diubah ke 'glowdiary_glowPoints')
+                // addUserPoints(10); 
+            }
+            
+            // Hapus modal ulasan dari layar
+            const reviewModal = document.getElementById('reviewModal');
+            if (reviewModal) reviewModal.remove();
         }
 
         // --- FUNGSI BARU: Integrasi Tombol Rutinitas Tab Discover & Home ---
