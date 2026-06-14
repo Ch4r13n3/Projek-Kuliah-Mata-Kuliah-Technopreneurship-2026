@@ -6,6 +6,7 @@
     <title>GlowDiary - Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -15,9 +16,11 @@
                         brand: {
                             light: '#e9d5ff',
                             DEFAULT: '#c084fc',
+                            mid: '#a855f7',
                             dark: '#9333ea',
                         }
-                    }
+                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }
                 }
             }
         }
@@ -29,11 +32,10 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
         
-        .animate-fade-in-up { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(100px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn  { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: scale(1); } }
+        .animate-fade-up  { animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-pop-in   { animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
         body {
             height: 100vh;
@@ -41,18 +43,22 @@
             height: 100dvh;
             margin: 0;
             overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         
-        .pb-safe {
-            padding-bottom: max(16px, env(safe-area-inset-bottom));
-        }
+        .pb-safe { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+        .gradient-btn { background: linear-gradient(135deg, #d8b4fe 0%, #a855f7 100%); }
+        .gradient-bg { background: linear-gradient(175deg, #fdf4ff 0%, #faf5ff 40%, #f8f0fe 100%); }
+        .modal-backdrop { background: rgba(15,5,30,.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .nav-pill { background: rgba(255,255,255,0.94); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .nav-active-bg { background: linear-gradient(135deg, #f3e8ff, #ede9fe); }
 
         /* =========================================
            BINGKAI HP CSS
            ========================================= */
         @media (min-width: 641px) {
             body {
-                background-color: #1a1a1a !important; /* Warna luar HP saat di Desktop */
+                background: radial-gradient(ellipse at 60% 40%, #2d1b4e, #1a0a2e 50%, #0d0314) !important;
                 display: flex !important;
                 justify-content: center !important;
                 align-items: center !important;
@@ -60,27 +66,25 @@
             .iphone-frame {
                 width: 390px;
                 height: 844px;
-                border: 14px solid #111;
-                border-radius: 40px;
+                border: 13px solid #1c1c1e;
+                border-radius: 50px;
                 position: relative;
-                box-shadow: 0 0 0 2px #333, 0 20px 40px rgba(0,0,0,0.5);
+                box-shadow: 0 0 0 1px #3a3a3c, 0 30px 80px rgba(0,0,0,.7);
                 background: #fff;
                 overflow: hidden;
                 display: flex;
-                transform: translateZ(0); /* Kunci untuk absolute modal & nav */
             }
-            /* Notch iPhone */
             .iphone-frame::before {
                 content: '';
                 position: absolute;
                 top: 0;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 150px;
-                height: 28px;
-                background: #111;
-                border-bottom-left-radius: 18px;
-                border-bottom-right-radius: 18px;
+                width: 126px;
+                height: 34px;
+                background: #1c1c1e;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
                 z-index: 9999;
             }
             .iphone-screen aside { display: none !important; } 
@@ -98,373 +102,403 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800 flex h-screen w-screen">
+<body class="bg-gray-50 text-gray-800 flex h-screen w-screen overflow-hidden">
 
-    <!-- BINGKAI HP -->
     <div class="iphone-frame">
-        <div class="iphone-screen bg-gray-50 flex flex-col w-full h-full relative overflow-hidden">
+        <div class="iphone-screen flex flex-col w-full h-full relative overflow-hidden bg-gray-50">
 
-            <!-- Sidebar Desktop (Disembunyikan) -->
             <aside class="hidden flex-col w-64 bg-white border-r border-gray-100 p-6 z-20 shadow-sm">
-                <div class="flex items-center gap-3 text-2xl font-bold text-brand-dark mb-10">
-                    <div class="w-10 h-10 bg-brand-light rounded-xl flex items-center justify-center text-xl">✨</div>
+                <div class="flex items-center gap-3 text-xl font-extrabold text-brand-dark mb-10">
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,#f3e8ff,#d8b4fe)">
+                        <i class="fa-solid fa-sparkles text-brand-dark"></i>
+                    </div>
                     GlowDiary
                 </div>
-                
-                <div class="flex flex-col gap-2 flex-1">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">Menu Utama</p>
-                    <button onclick="window.location.href='glowdiary.html'" class="nav-btn text-gray-400 hover:bg-gray-50 flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                        <i class="fa-solid fa-house w-5 text-center"></i> Home
-                    </button>
-                    <button onclick="window.location.href='glowdiary.html'" class="nav-btn text-gray-400 hover:bg-gray-50 flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                        <i class="fa-solid fa-magnifying-glass w-5 text-center"></i> Discover
-                    </button>
-                    <button onclick="window.location.href='analyze.html'" class="nav-btn text-gray-400 hover:bg-gray-50 flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                        <i class="fa-solid fa-clipboard-check w-5 text-center"></i> Analyze
-                    </button>
-                    <button class="nav-btn bg-purple-50 text-brand-dark flex items-center gap-4 px-4 py-3 rounded-xl transition-all font-medium text-left">
-                        <i class="fa-solid fa-user w-5 text-center"></i> Profile
-                    </button>
+                <div class="flex flex-col gap-1 flex-1">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-3">Menu Utama</p>
+                    <button onclick="window.location.href='home.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm text-gray-400 hover:bg-brand-light hover:text-brand-dark"><i class="fa-solid fa-house w-5 text-center"></i> Home</button>
+                    <button onclick="window.location.href='discover.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm text-gray-400 hover:bg-brand-light hover:text-brand-dark"><i class="fa-solid fa-magnifying-glass w-5 text-center"></i> Discover</button>
+                    <button onclick="window.location.href='analyze.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm text-gray-400 hover:bg-brand-light hover:text-brand-dark"><i class="fa-solid fa-clipboard-check w-5 text-center"></i> Analyze</button>
+                    <button onclick="window.location.href='profile.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm bg-brand-light text-brand-dark"><i class="fa-solid fa-user w-5 text-center"></i> Profile</button>
                 </div>
             </aside>
 
-            <!-- Main Content Area -->
-            <!-- pt-[36px] untuk turun dari notch, pb-[90px] agar tidak tertutup nav bottom -->
-            <main class="flex-1 overflow-y-auto bg-gray-50 pt-[40px] pb-[90px]" style="height: 100%; -webkit-overflow-scrolling: touch;">
+            <main class="flex-1 overflow-y-auto gradient-bg pb-[90px]" style="height: 100%; -webkit-overflow-scrolling: touch;">
                 
-                <!-- Diubah dari md:flex-row agar selalu tersusun ke bawah di HP/Bingkai HP -->
-                <div class="w-full mx-auto flex flex-col gap-6 p-4">
+                <!-- Spacer atas diperbesar agar card tidak terlalu menempel ke atas bingkai -->
+                <div class="w-full h-16"></div>
+
+                <div class="px-4 pb-6 space-y-6">
                         
                     <!-- Bagian Foto Profil & Points -->
-                    <div class="w-full flex flex-col items-center bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
-                        <div class="w-24 h-24 bg-gradient-to-tr from-purple-200 to-pink-200 rounded-full flex items-center justify-center text-brand-dark text-4xl mb-4 border-4 border-white shadow-lg">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <h1 id="profile-name" class="text-xl font-bold text-gray-800"></h1>
-                        <p id="profile-email" class="text-sm text-gray-500 mb-6"></p>
+                    <div class="w-full flex flex-col items-center bg-white p-6 rounded-3xl shadow-sm border border-purple-50 h-fit relative animate-fade-up">
+                        <button onclick="toggleModal('modal-edit-profile')" class="absolute top-4 right-4 w-9 h-9 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center hover:bg-brand hover:text-white transition-colors shadow-sm" title="Edit Profil">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                        </button>
 
-                        <div class="w-full grid grid-cols-2 gap-3 text-center mb-6">
-                            <div class="bg-gray-50 p-4 rounded-2xl">
-                                <h3 class="font-bold text-2xl text-brand-dark">45</h3>
-                                <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider font-bold">Days Active</p>
+                        <div class="w-20 h-20 bg-gradient-to-tr from-purple-200 to-pink-200 rounded-full flex items-center justify-center text-brand-dark text-3xl mb-3 border-4 border-white shadow-md">
+                            <i class="fa-solid fa-user-astronaut"></i>
+                        </div>
+                        
+                        <h1 id="profile-name" class="text-xl font-extrabold text-gray-800 text-center">User Name</h1>
+                        <p id="profile-username" class="text-xs font-medium text-gray-400 mb-5">@username</p>
+
+                        <div class="w-full grid grid-cols-2 gap-3 text-center mb-5">
+                            <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                                <h3 class="font-extrabold text-xl text-brand-dark">Aktif</h3>
+                                <p class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Status</p>
                             </div>
-                            <div class="bg-gray-50 p-4 rounded-2xl">
-                                <h3 class="font-bold text-2xl text-brand-dark">12</h3>
-                                <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider font-bold">Reviews</p>
+                            <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                                <h3 class="font-extrabold text-xl text-brand-dark">Pro</h3>
+                                <p class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Level</p>
                             </div>
                         </div>
 
                         <!-- Banner GlowPoints -->
                         <div class="w-full bg-gradient-to-br from-orange-50 to-yellow-50 border border-orange-100 rounded-2xl p-4 flex items-center justify-between shadow-sm relative overflow-hidden group cursor-pointer hover:border-orange-200 transition-colors">
-                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/40 rounded-full blur-xl"></div>
+                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/50 rounded-full blur-xl"></div>
                             <div class="flex items-center gap-3 relative z-10">
-                                <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-white shadow-inner flex-shrink-0">
+                                <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center text-white shadow-sm flex-shrink-0">
                                     <i class="fa-solid fa-star"></i>
                                 </div>
                                 <div class="text-left">
-                                    <h4 class="font-bold text-gray-800 text-base">450 <span class="text-xs font-medium text-gray-500">pts</span></h4>
-                                    <p class="text-[9px] text-orange-600 font-bold uppercase tracking-wider">GlowPoints</p>
+                                    <h4 class="font-extrabold text-gray-800 text-base"><span id="profile-glowpoints-text">0</span> <span class="text-[10px] font-semibold text-gray-500">pts</span></h4>
+                                    <p class="text-[9px] text-orange-500 font-extrabold uppercase tracking-widest">GlowPoints</p>
                                 </div>
                             </div>
-                            <button class="relative z-10 bg-white text-orange-500 border border-orange-200 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm hover:bg-orange-50 transition-colors flex-shrink-0">
+                            <button onclick="showCustomAlert('Fitur tukar poin segera hadir! Kumpulkan terus point-mu.', 'Coming Soon', 'brand')" class="relative z-10 bg-white text-orange-500 border border-orange-200 text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm hover:bg-orange-50 transition-colors flex-shrink-0">
                                 Tukar
                             </button>
                         </div>
                     </div>
 
-                    <!-- Bagian Menu Navigasi -->
-                    <div class="w-full space-y-4">
-                        
-                        <h2 class="text-lg font-bold text-gray-800 mb-1 ml-1">My Skincare Data</h2>
+                    <div class="w-full space-y-4 animate-fade-up delay-200">
+                        <h2 class="text-sm font-extrabold text-gray-900 ml-1">My Skincare Data</h2>
 
-                        <!-- Dipaksa 1 kolom grid-cols-1 agar tidak gepeng di HP -->
-                        <div class="grid grid-cols-1 gap-4">
-                            <button onclick="window.location.href='dashboard.html'" class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 hover:border-purple-200 hover:shadow-md transition-all text-left flex items-center gap-4 group">
-                                <div class="w-12 h-12 bg-purple-50 text-brand rounded-2xl flex items-center justify-center text-xl group-hover:scale-105 transition-transform flex-shrink-0"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="toggleModal('modal-basic-dashboard')" class="bg-white p-4 rounded-[24px] shadow-sm border border-gray-100 hover:border-purple-200 transition-all text-left flex flex-col h-full group">
+                                <div class="w-12 h-12 bg-purple-50 text-brand-mid rounded-[16px] flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition-transform">
+                                    <i class="fa-solid fa-chart-pie"></i>
+                                </div>
                                 <div>
-                                    <h4 class="font-bold text-gray-800 text-sm mb-0.5">Basic Dashboard</h4>
-                                    <p class="text-xs text-gray-400 leading-relaxed">Lihat statistik dasar rutinitas harianmu.</p>
+                                    <h4 class="font-extrabold text-gray-800 text-[13px] mb-1">Dashboard</h4>
+                                    <p class="text-[10px] text-gray-400 leading-snug font-medium">Statistik dasar rutinitas.</p>
                                 </div>
                             </button>
 
-                            <button onclick="window.location.href='skin_report.html'" class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 hover:border-pink-200 hover:shadow-md transition-all text-left flex items-center gap-4 group">
-                                <div class="w-12 h-12 bg-pink-50 text-pink-400 rounded-2xl flex items-center justify-center text-xl group-hover:scale-105 transition-transform flex-shrink-0"><i class="fa-solid fa-file-pdf"></i></div>
+                            <button onclick="window.location.href='skin_report.html'" class="bg-white p-4 rounded-[24px] shadow-sm border border-gray-100 hover:border-pink-200 transition-all text-left flex flex-col h-full group">
+                                <div class="w-12 h-12 bg-pink-50 text-pink-400 rounded-[16px] flex items-center justify-center text-xl mb-3 group-hover:scale-105 transition-transform">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
                                 <div>
-                                    <h4 class="font-bold text-gray-800 text-sm mb-0.5">Export Report</h4>
-                                    <p class="text-xs text-gray-400 leading-relaxed">Unduh data historis kulit untuk Dokter.</p>
+                                    <div class="flex items-center gap-1.5 mb-1">
+                                        <h4 class="font-extrabold text-gray-800 text-[13px]">Report</h4>
+                                        <span class="bg-yellow-100 text-yellow-700 text-[8px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider">Pro</span>
+                                    </div>
+                                    <p class="text-[10px] text-gray-400 leading-snug font-medium">Unduh data untuk dokter.</p>
                                 </div>
                             </button>
                         </div>
 
-                        <!-- Banner Pro Analytics -->
-                        <!-- flex-row diubah sedikit agar rapi, layout dimampatkan -->
-                        <button onclick="toggleModal('modal-analytics')" class="w-full bg-gradient-to-br from-gray-900 to-gray-800 p-[3px] rounded-3xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all text-left group relative overflow-hidden mt-2">
-                            <div class="absolute -right-10 -top-10 w-32 h-32 bg-yellow-500/20 rounded-full blur-3xl group-hover:bg-yellow-500/30 transition-all"></div>
-                            <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-all"></div>
+                        <!-- Banner Hitam Advanced Analytics -->
+                        <button onclick="toggleModal('modal-analytics')" class="w-full bg-[#1e2029] rounded-[24px] shadow-md hover:shadow-lg transition-all text-left group relative overflow-hidden flex items-center p-4 gap-4">
+                            <!-- Efek cahaya tipis di background -->
+                            <div class="absolute -right-6 -top-6 w-24 h-24 bg-yellow-500/10 rounded-full blur-2xl group-hover:bg-yellow-500/20 transition-all"></div>
                             
-                            <div class="bg-white/10 backdrop-blur-md rounded-[20px] p-5 flex flex-col gap-4 relative z-10 border border-white/10">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-gradient-to-tr from-yellow-400 to-orange-500 text-white rounded-2xl flex items-center justify-center text-xl shadow-inner shrink-0">
-                                        <i class="fa-solid fa-crown"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-white text-base flex items-center gap-2 mb-1">
-                                            Advanced Analytics 
-                                            <span class="bg-yellow-400 text-yellow-900 text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">Pro</span>
-                                        </h4>
-                                        <p class="text-[11px] text-gray-300 leading-snug">AI Skin Pattern, Hormonal Insight & Prediksi Detail.</p>
-                                    </div>
-                                </div>
-                                <div class="text-white text-xs font-medium flex items-center justify-center gap-2 bg-white/10 px-4 py-2.5 rounded-xl group-hover:bg-white/20 transition-colors w-full">
-                                    Buka Insight <i class="fa-solid fa-arrow-right text-xs"></i>
-                                </div>
+                            <div class="w-12 h-12 bg-gradient-to-tr from-yellow-400 to-orange-500 text-white rounded-[16px] flex items-center justify-center text-xl shadow-inner shrink-0 relative z-10 group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-crown"></i>
                             </div>
-                        </button>
-
-                        <!-- Settings & Notifications -->
-                        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mt-4">
-                            <div class="p-4 flex justify-between items-center border-b border-gray-50">
-                                <span class="font-bold text-gray-700 text-sm">Notifications</span>
-                                <div class="w-10 h-5 bg-brand rounded-full relative cursor-pointer shadow-inner">
-                                    <div class="w-4 h-4 bg-white rounded-full absolute right-0.5 top-0.5 shadow-sm"></div>
-                                </div>
+                            
+                            <div class="relative z-10 flex-1">
+                                <h4 class="font-extrabold text-white text-[13px] flex items-center gap-1.5 mb-1">
+                                    Advanced Analytics <span class="bg-yellow-400 text-yellow-900 text-[8px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider">Pro</span>
+                                </h4>
+                                <p class="text-[10px] text-gray-400 leading-snug font-medium">AI Skin Pattern & Hormonal Insight.</p>
                             </div>
-                            <div class="p-4 flex justify-between items-center">
-                                <span class="font-bold text-gray-700 text-sm">Dark Mode</span>
-                                <div class="w-10 h-5 bg-gray-200 rounded-full relative cursor-pointer shadow-inner">
-                                    <div class="w-4 h-4 bg-white rounded-full absolute left-0.5 top-0.5 shadow-sm"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Logout Button -->
-                        <button onclick="handleLogout()" class="w-full flex items-center justify-center gap-2 px-6 py-3 mt-4 text-pink-600 bg-white border border-pink-100 hover:bg-pink-50 hover:border-pink-200 rounded-2xl transition-all font-bold shadow-sm text-sm">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
                         </button>
                     </div>
 
+                    <div class="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm animate-fade-up delay-300">
+                        <div class="flex justify-between items-center mb-4 border-b border-gray-50 pb-3">
+                            <h3 class="text-sm font-extrabold text-gray-900 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-rose-50 text-rose-500 rounded-lg flex items-center justify-center text-[10px]"><i class="fa-solid fa-heart"></i></span>
+                                Favorit
+                            </h3>
+                            <span id="fav-count" class="text-[10px] font-bold bg-gray-50 text-gray-500 px-2 py-1 rounded-lg border border-gray-100">0 Produk</span>
+                        </div>
+                        <div id="profile-favorites-container" class="grid grid-cols-2 gap-3">
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm animate-fade-up delay-400">
+                        <h3 class="text-sm font-extrabold text-gray-900 flex items-center gap-2 mb-4 border-b border-gray-50 pb-3">
+                            <span class="w-6 h-6 bg-purple-50 text-brand-mid rounded-lg flex items-center justify-center text-[10px]"><i class="fa-solid fa-calendar-check"></i></span>
+                            Catatan Harian
+                        </h3>
+                        <div id="profile-history-list" class="space-y-3 max-h-48 overflow-y-auto pr-1 no-scrollbar">
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm animate-fade-up delay-500">
+                        <h3 class="text-sm font-extrabold text-gray-900 flex items-center gap-2 mb-4 border-b border-gray-50 pb-3">
+                            <span class="w-6 h-6 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-[10px]"><i class="fa-solid fa-bottle-droplet"></i></span>
+                            Empties Progress
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-xl bg-purple-50 text-brand-mid flex items-center justify-center shrink-0"><i class="fa-solid fa-pump-soap text-xs"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-[10px] font-bold mb-1.5"><span class="text-gray-700">Toner BHA</span><span class="text-brand-mid">Hampir Habis</span></div>
+                                    <div class="w-full bg-gray-50 border border-gray-100 rounded-full h-1.5 overflow-hidden"><div class="bg-gradient-to-r from-brand-light to-brand-mid h-full rounded-full" style="width: 85%"></div></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-jar text-xs"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-[10px] font-bold mb-1.5"><span class="text-gray-700">Moisturizer Gel</span><span class="text-blue-500">50%</span></div>
+                                    <div class="w-full bg-gray-50 border border-gray-100 rounded-full h-1.5 overflow-hidden"><div class="bg-gradient-to-r from-blue-200 to-blue-400 h-full rounded-full" style="width: 50%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden animate-fade-up delay-500">
+                        <div class="p-4 flex justify-between items-center border-b border-gray-50">
+                            <span class="font-bold text-gray-700 text-xs">Notifications</span>
+                            <div class="w-9 h-5 bg-brand-mid rounded-full relative cursor-pointer shadow-inner">
+                                <div class="w-3.5 h-3.5 bg-white rounded-full absolute right-1 top-[3px] shadow-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="handleLogout()" class="w-full flex items-center justify-center gap-2 px-6 py-3.5 mt-2 text-rose-500 bg-white border border-rose-100 hover:bg-rose-50 rounded-2xl transition-all font-bold shadow-sm text-sm animate-fade-up delay-500">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                    </button>
+                    
                 </div>
             </main>
             
-            <!-- Bottom Nav Mobile: ABSOLUTE -->
-            <nav class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 pt-3 flex justify-between items-center text-[10px] font-medium text-gray-400 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] pb-safe">
-                <button onclick="window.location.href='glowdiary.html'" class="nav-btn flex flex-col items-center gap-1 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-house text-lg"></i>
-                    <span>Home</span>
-                </button>
-                <button onclick="window.location.href='glowdiary.html#discover'" class="nav-btn flex flex-col items-center gap-1 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
-                    <span>Search</span>
-                </button>
-                <button onclick="window.location.href='analyze.html'" class="nav-btn flex flex-col items-center gap-1 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-clipboard-check text-lg"></i>
-                    <span>Analyze</span>
-                </button>
-                <button class="nav-btn text-brand-dark flex flex-col items-center gap-1 transition-colors">
-                    <i class="fa-solid fa-user text-lg"></i>
-                    <span>Profile</span>
-                </button>
+            <nav class="absolute bottom-0 left-0 w-full z-50 px-3 pb-safe pt-2">
+                <div class="nav-pill rounded-[28px] border border-gray-100 shadow-lg shadow-gray-200/60 px-2 py-2 flex justify-between items-center">
+                    <button onclick="window.location.href='home.html'" class="flex-1 flex flex-col items-center gap-0.5">
+                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-house text-gray-400 text-base"></i></div>
+                        <span class="text-[9px] font-semibold text-gray-400">Home</span>
+                    </button>
+                    <button onclick="window.location.href='discover.html'" class="flex-1 flex flex-col items-center gap-0.5">
+                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-magnifying-glass text-gray-400 text-base"></i></div>
+                        <span class="text-[9px] font-semibold text-gray-400">Search</span>
+                    </button>
+                    <button onclick="window.location.href='analyze.html'" class="flex-1 flex flex-col items-center gap-0.5">
+                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-clipboard-check text-gray-400 text-base"></i></div>
+                        <span class="text-[9px] font-semibold text-gray-400">Analyze</span>
+                    </button>
+                    <button class="flex-1 flex flex-col items-center gap-0.5">
+                        <div class="nav-active-bg w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-user text-brand-mid text-base"></i></div>
+                        <span class="text-[9px] font-bold text-brand-mid">Profile</span>
+                    </button>
+                </div>
             </nav>
             
-            <!-- MODALS (Absolute) -->
-            <!-- Modal Advanced Analytics -->
-            <div id="modal-analytics" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex-col justify-end">
-                <div class="bg-gray-50 w-full h-[85%] rounded-t-[30px] flex flex-col shadow-2xl overflow-hidden animate-fade-in-up pb-safe">
-                    
-                    <div class="bg-white p-5 border-b border-gray-100 flex justify-between items-center z-10 shadow-sm sticky top-0">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <h2 class="text-lg font-bold text-gray-800">Advanced Analytics</h2>
-                                <span class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm"><i class="fa-solid fa-crown mr-1"></i> Pro</span>
-                            </div>
-                            <p class="text-[10px] text-gray-400 mt-0.5">Deep AI insight for your skin journey</p>
-                        </div>
-                        <button onclick="toggleModal('modal-analytics')" class="w-8 h-8 bg-gray-50 rounded-full text-gray-500 hover:bg-gray-200 transition-colors flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-xmark text-sm"></i>
-                        </button>
+            <div id="modal-edit-profile" class="absolute inset-0 modal-backdrop z-[100] hidden flex-col justify-end items-center">
+                <div class="bg-white w-full max-w-sm rounded-t-[32px] p-6 shadow-2xl animate-pop-in pb-safe">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-base font-extrabold text-gray-900">Edit Profil</h2>
+                        <button onclick="toggleModal('modal-edit-profile')" class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all"><i class="fa-solid fa-xmark text-sm"></i></button>
                     </div>
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Lengkap</label>
+                            <input type="text" id="edit-profile-name" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand-mid transition-all font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tipe Kulit (Skin Type)</label>
+                            <div class="p-3.5 bg-purple-50 rounded-2xl border border-purple-100 flex justify-between items-center">
+                                <span class="text-xs text-brand-dark font-bold"><i class="fa-solid fa-face-smile mr-1"></i> Diatur dari Kuesioner</span>
+                                <button onclick="window.location.href='kuesioner.html'" class="text-[9px] font-extrabold text-brand-dark bg-white border border-purple-200 px-3 py-1.5 rounded-lg hover:bg-purple-100 transition-colors shadow-sm">Tes Ulang</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="saveProfileChanges()" class="w-full gradient-btn text-white font-bold py-3.5 rounded-2xl shadow-md shadow-purple-200 transition-all active:scale-[.98] text-sm">Simpan Perubahan</button>
+                </div>
+            </div>
 
-                    <div class="flex-1 overflow-y-auto p-4 space-y-4">
-                        
-                        <div class="bg-white p-4 rounded-2xl border border-purple-100 shadow-sm">
-                            <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2">
-                                <i class="fa-solid fa-wand-magic-sparkles text-brand"></i> AI Product Impact
+            <div id="modal-analytics" class="absolute inset-0 modal-backdrop z-[100] hidden flex-col justify-end items-center">
+                <div class="bg-gray-50 w-full max-w-sm h-[85%] rounded-t-[32px] flex flex-col shadow-2xl overflow-hidden animate-pop-in pb-safe">
+                    <div class="bg-white p-5 border-b border-gray-100 flex justify-between items-center sticky top-0 z-10">
+                        <div>
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <h2 class="text-base font-extrabold text-gray-900">Advanced Analytics</h2>
+                                <span class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm"><i class="fa-solid fa-crown mr-0.5"></i> Pro</span>
+                            </div>
+                            <p class="text-[10px] text-gray-400 font-medium">Deep AI insight for your skin journey</p>
+                        </div>
+                        <button onclick="toggleModal('modal-analytics')" class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all shrink-0"><i class="fa-solid fa-xmark text-sm"></i></button>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
+                        <div class="bg-white p-5 rounded-3xl border border-purple-100 shadow-sm">
+                            <h3 class="font-extrabold text-gray-900 text-xs mb-3 flex items-center gap-2">
+                                <div class="w-6 h-6 bg-purple-50 text-brand-mid rounded-lg flex items-center justify-center"><i class="fa-solid fa-wand-magic-sparkles"></i></div> AI Product Impact
                             </h3>
-                            <div class="bg-gradient-to-r from-brand to-brand-dark p-4 rounded-xl text-white shadow-lg shadow-purple-200/50 relative overflow-hidden">
+                            <div class="bg-gradient-to-br from-brand-mid to-brand-dark p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
                                 <div class="absolute -right-4 -bottom-4 text-6xl opacity-10"><i class="fa-solid fa-flask"></i></div>
                                 <div class="relative z-10">
-                                    <span class="bg-white/20 text-white text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider mb-2 inline-block">Insight #1</span>
-                                    <p class="text-xs font-medium leading-relaxed">
-                                        <span class="font-bold text-sm text-yellow-300">Produk A (Gentle Cleanser)</span> secara konsisten menurunkan intensitas kemerahan jerawat Anda sebesar <span class="font-bold text-base underline decoration-wavy decoration-yellow-300">40%</span> dalam 3 minggu terakhir.
+                                    <span class="bg-white/20 text-white text-[9px] font-extrabold px-2 py-1 rounded-lg uppercase tracking-wider mb-2 inline-block">Insight #1</span>
+                                    <p class="text-[11px] font-medium leading-relaxed">
+                                        <span class="font-extrabold text-yellow-300">Gentle Cleanser</span> secara konsisten menurunkan kemerahan jerawat Anda sebesar <span class="font-extrabold text-sm underline decoration-wavy decoration-yellow-300">40%</span> dalam 3 minggu terakhir.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                            <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-line text-blue-500"></i> Breakout Pattern Analysis
+                        <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm">
+                            <h3 class="font-extrabold text-gray-900 text-xs mb-4 flex items-center gap-2">
+                                <div class="w-6 h-6 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></div> Breakout Pattern
                             </h3>
-                            <div class="relative h-32 border-b border-l border-gray-200 mb-3 ml-5 mt-2">
-                                <div class="absolute -left-6 top-0 text-[9px] text-gray-400">High</div>
-                                <div class="absolute -left-6 bottom-0 text-[9px] text-gray-400">Low</div>
-                                <svg class="absolute w-full h-full" preserveAspectRatio="none"><path d="M0,64 Q50,16 100,48 T200,72 T300,24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/></svg>
-                                <svg class="absolute w-full h-full opacity-20" preserveAspectRatio="none"><path d="M0,100 L0,50 Q50,70 100,40 T200,30 T300,80 L300,100 Z" fill="#3b82f6"/></svg>
+                            <div class="relative h-28 border-b border-l border-gray-100 mb-3 ml-5 mt-2">
+                                <div class="absolute -left-6 top-0 text-[8px] font-bold text-gray-400">High</div>
+                                <div class="absolute -left-6 bottom-0 text-[8px] font-bold text-gray-400">Low</div>
+                                <svg class="absolute w-full h-full" preserveAspectRatio="none"><path d="M0,64 Q50,16 100,48 T200,72 T300,24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/></svg>
+                                <svg class="absolute w-full h-full opacity-10" preserveAspectRatio="none"><path d="M0,100 L0,50 Q50,70 100,40 T200,30 T300,80 L300,100 Z" fill="#3b82f6"/></svg>
                             </div>
-                            <div class="flex justify-between items-center text-[9px] font-bold text-gray-400 px-2 ml-5">
+                            <div class="flex justify-between items-center text-[8px] font-extrabold text-gray-400 px-2 ml-5 uppercase tracking-wider">
                                 <span>Minggu 1</span><span>Minggu 2</span><span>Minggu 3</span><span>Minggu 4</span>
                             </div>
                             <div class="mt-4 grid grid-cols-2 gap-2">
-                                <div class="bg-red-50 p-2.5 rounded-xl border border-red-100">
-                                    <p class="text-[9px] text-red-500 font-bold uppercase mb-1">Trigger Utama</p>
-                                    <p class="text-[10px] font-medium text-gray-700 leading-tight"><i class="fa-solid fa-bed text-gray-400 w-3"></i> Tidur < 6 Jam (60%)</p>
-                                    <p class="text-[10px] font-medium text-gray-700 mt-1 leading-tight"><i class="fa-solid fa-cloud-sun text-gray-400 w-3"></i> Cuaca Panas (40%)</p>
+                                <div class="bg-red-50 p-3 rounded-2xl border border-red-100">
+                                    <p class="text-[9px] text-red-500 font-extrabold uppercase mb-1.5">Trigger Utama</p>
+                                    <p class="text-[9px] font-bold text-gray-700 leading-tight mb-1"><i class="fa-solid fa-bed text-red-300 w-3"></i> Tidur < 6 Jam (60%)</p>
+                                    <p class="text-[9px] font-bold text-gray-700 leading-tight"><i class="fa-solid fa-cloud-sun text-red-300 w-3"></i> Cuaca Panas (40%)</p>
                                 </div>
-                                <div class="bg-green-50 p-2.5 rounded-xl border border-green-100">
-                                    <p class="text-[9px] text-green-600 font-bold uppercase mb-1">Saran AI</p>
-                                    <p class="text-[10px] font-medium text-gray-700 leading-tight">Gunakan <b>Soothing Toner</b> pada hari dengan kelembapan rendah.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-4 rounded-2xl border border-rose-100 shadow-sm relative overflow-hidden">
-                            <div class="absolute -right-4 top-0 w-20 h-20 bg-rose-50 rounded-full blur-xl"></div>
-                            <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2 relative z-10">
-                                <i class="fa-solid fa-droplet text-rose-500"></i> Hormonal Insight
-                            </h3>
-                            <div class="flex items-center justify-between bg-rose-50 p-3 rounded-xl border border-rose-100 mb-3">
-                                <div>
-                                    <p class="text-[9px] font-bold text-rose-500 uppercase tracking-wider mb-0.5">Fase Saat Ini</p>
-                                    <h4 class="font-bold text-gray-800 text-sm">Luteal Phase</h4>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-[10px] text-gray-500">Mens berikutnya</p>
-                                    <p class="font-bold text-rose-600 text-base">H-3</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-bell text-sm"></i></div>
-                                <div>
-                                    <p class="text-xs font-bold text-gray-800">Siaga Jerawat Hormonal!</p>
-                                    <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Progesteron tinggi. Produksi sebum meningkat. Disarankan double cleansing ekstra malam ini.</p>
+                                <div class="bg-green-50 p-3 rounded-2xl border border-green-100">
+                                    <p class="text-[9px] text-green-600 font-extrabold uppercase mb-1.5">Saran AI</p>
+                                    <p class="text-[9px] font-medium text-gray-700 leading-relaxed">Gunakan <b>Soothing Toner</b> pada hari dengan kelembapan rendah.</p>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Basic Dashboard -->
-            <div id="modal-basic-dashboard" class="absolute inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex-col justify-end">
-                <div class="bg-gray-50 w-full h-[85%] rounded-t-[30px] flex flex-col shadow-2xl overflow-hidden animate-fade-in-up pb-safe">
-                    
-                    <div class="bg-white p-5 border-b border-gray-100 flex justify-between items-center z-10 shadow-sm sticky top-0">
+            <div id="modal-basic-dashboard" class="absolute inset-0 modal-backdrop z-[100] hidden flex-col justify-end items-center">
+                <div class="bg-gray-50 w-full max-w-sm h-[85%] rounded-t-[32px] flex flex-col shadow-2xl overflow-hidden animate-pop-in pb-safe">
+                    <div class="bg-white p-5 border-b border-gray-100 flex justify-between items-center sticky top-0 z-10">
                         <div>
-                            <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-pie text-brand"></i> Basic Dashboard
+                            <h2 class="text-base font-extrabold text-gray-900 flex items-center gap-2 mb-0.5">
+                                <div class="w-6 h-6 bg-purple-50 text-brand-mid rounded-lg flex items-center justify-center text-xs"><i class="fa-solid fa-chart-pie"></i></div> Basic Dashboard
                             </h2>
-                            <p class="text-[10px] text-gray-400 mt-0.5">Statistik rutinitas dan kulitmu bulan ini</p>
+                            <p class="text-[10px] text-gray-400 font-medium">Statistik rutinitas bulan ini</p>
                         </div>
-                        <button onclick="toggleModal('modal-basic-dashboard')" class="w-8 h-8 bg-gray-50 rounded-full text-gray-500 hover:bg-gray-200 transition-colors flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-xmark text-sm"></i>
-                        </button>
+                        <button onclick="toggleModal('modal-basic-dashboard')" class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all shrink-0"><i class="fa-solid fa-xmark text-sm"></i></button>
                     </div>
-
-                    <div class="flex-1 overflow-y-auto p-4 space-y-4">
-                        
-                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                            <h3 class="font-bold text-gray-800 mb-4 text-xs uppercase tracking-wider text-gray-500">Konsistensi Rutinitas</h3>
+                    <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
+                        <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm">
+                            <h3 class="font-extrabold text-gray-400 mb-4 text-[10px] uppercase tracking-widest">Konsistensi Rutinitas</h3>
                             <div class="flex items-center gap-5">
-                                <div class="relative w-20 h-20 flex items-center justify-center shrink-0">
+                                <div class="relative w-16 h-16 flex items-center justify-center shrink-0">
                                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                                         <path stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f3f4f6" stroke-width="3.5"></path>
                                         <path stroke-dasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#c084fc" stroke-width="3.5" stroke-linecap="round"></path>
                                     </svg>
-                                    <div class="absolute text-lg font-bold text-gray-800">85%</div>
+                                    <div class="absolute text-sm font-extrabold text-gray-800">85%</div>
                                 </div>
                                 <div class="w-full space-y-3">
                                     <div>
-                                        <div class="flex justify-between text-[10px] font-bold mb-1">
+                                        <div class="flex justify-between text-[10px] font-bold mb-1.5">
                                             <span class="text-gray-600"><i class="fa-solid fa-sun text-yellow-400 mr-1"></i> Pagi</span>
                                             <span class="text-gray-800">90%</span>
                                         </div>
-                                        <div class="w-full bg-gray-100 rounded-full h-1.5"><div class="bg-yellow-400 h-1.5 rounded-full" style="width: 90%"></div></div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5"><div class="bg-gradient-to-r from-yellow-300 to-yellow-400 h-1.5 rounded-full" style="width: 90%"></div></div>
                                     </div>
                                     <div>
-                                        <div class="flex justify-between text-[10px] font-bold mb-1">
-                                            <span class="text-gray-600"><i class="fa-solid fa-moon text-blue-400 mr-1"></i> Malam</span>
+                                        <div class="flex justify-between text-[10px] font-bold mb-1.5">
+                                            <span class="text-gray-600"><i class="fa-solid fa-moon text-indigo-400 mr-1"></i> Malam</span>
                                             <span class="text-gray-800">80%</span>
                                         </div>
-                                        <div class="w-full bg-gray-100 rounded-full h-1.5"><div class="bg-blue-400 h-1.5 rounded-full" style="width: 80%"></div></div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5"><div class="bg-gradient-to-r from-indigo-300 to-indigo-400 h-1.5 rounded-full" style="width: 80%"></div></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                            <h3 class="font-bold text-gray-800 mb-3 text-xs uppercase tracking-wider text-gray-500">Rekap Kondisi Kulit (30 Hari)</h3>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 text-center">
-                                    <i class="fa-solid fa-droplet text-blue-500 text-lg mb-1"></i>
-                                    <h4 class="font-bold text-gray-800 text-base">14 <span class="text-[9px] font-medium text-gray-500">hari</span></h4>
-                                    <p class="text-[9px] text-blue-600 font-bold uppercase mt-0.5">Berminyak</p>
+                        <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm">
+                            <h3 class="font-extrabold text-gray-400 mb-3 text-[10px] uppercase tracking-widest">Rekap Kondisi (30 Hari)</h3>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div class="bg-blue-50 p-3.5 rounded-2xl border border-blue-100 text-center">
+                                    <i class="fa-solid fa-droplet text-blue-500 text-lg mb-1.5"></i>
+                                    <h4 class="font-extrabold text-gray-900 text-base">14 <span class="text-[9px] font-semibold text-gray-500">hari</span></h4>
+                                    <p class="text-[9px] text-blue-600 font-extrabold uppercase mt-0.5">Berminyak</p>
                                 </div>
-                                <div class="bg-red-50 p-3 rounded-xl border border-red-100 text-center">
-                                    <i class="fa-solid fa-bolt text-red-500 text-lg mb-1"></i>
-                                    <h4 class="font-bold text-gray-800 text-base">5 <span class="text-[9px] font-medium text-gray-500">hari</span></h4>
-                                    <p class="text-[9px] text-red-600 font-bold uppercase mt-0.5">Jerawat</p>
+                                <div class="bg-red-50 p-3.5 rounded-2xl border border-red-100 text-center">
+                                    <i class="fa-solid fa-bolt text-red-500 text-lg mb-1.5"></i>
+                                    <h4 class="font-extrabold text-gray-900 text-base">5 <span class="text-[9px] font-semibold text-gray-500">hari</span></h4>
+                                    <p class="text-[9px] text-red-600 font-extrabold uppercase mt-0.5">Jerawat</p>
                                 </div>
-                                <div class="bg-orange-50 p-3 rounded-xl border border-orange-100 text-center">
-                                    <i class="fa-solid fa-sun-plant-wilt text-orange-500 text-lg mb-1"></i>
-                                    <h4 class="font-bold text-gray-800 text-base">3 <span class="text-[9px] font-medium text-gray-500">hari</span></h4>
-                                    <p class="text-[9px] text-orange-600 font-bold uppercase mt-0.5">Kering</p>
+                                <div class="bg-orange-50 p-3.5 rounded-2xl border border-orange-100 text-center">
+                                    <i class="fa-solid fa-sun-plant-wilt text-orange-500 text-lg mb-1.5"></i>
+                                    <h4 class="font-extrabold text-gray-900 text-base">3 <span class="text-[9px] font-semibold text-gray-500">hari</span></h4>
+                                    <p class="text-[9px] text-orange-600 font-extrabold uppercase mt-0.5">Kering</p>
                                 </div>
-                                <div class="bg-green-50 p-3 rounded-xl border border-green-100 text-center">
-                                    <i class="fa-solid fa-face-smile text-green-500 text-lg mb-1"></i>
-                                    <h4 class="font-bold text-gray-800 text-base">8 <span class="text-[9px] font-medium text-gray-500">hari</span></h4>
-                                    <p class="text-[9px] text-green-600 font-bold uppercase mt-0.5">Normal</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                            <h3 class="font-bold text-gray-800 mb-4 text-xs uppercase tracking-wider text-gray-500">Frekuensi Kategori Produk</h3>
-                            <div class="space-y-3.5">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-7 h-7 rounded-md bg-pink-50 text-pink-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-pump-soap text-[10px]"></i></div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between text-[10px] font-bold mb-1"><span class="text-gray-700">Cleanser</span><span class="text-gray-500">30x Pakai</span></div>
-                                        <div class="w-full bg-gray-100 rounded-full h-1.5"><div class="bg-pink-400 h-1.5 rounded-full" style="width: 100%"></div></div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-7 h-7 rounded-md bg-yellow-50 text-yellow-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-flask text-[10px]"></i></div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between text-[10px] font-bold mb-1"><span class="text-gray-700">Serum</span><span class="text-gray-500">24x Pakai</span></div>
-                                        <div class="w-full bg-gray-100 rounded-full h-1.5"><div class="bg-yellow-400 h-1.5 rounded-full" style="width: 80%"></div></div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-7 h-7 rounded-md bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-jar text-[10px]"></i></div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between text-[10px] font-bold mb-1"><span class="text-gray-700">Moisturizer</span><span class="text-gray-500">20x Pakai</span></div>
-                                        <div class="w-full bg-gray-100 rounded-full h-1.5"><div class="bg-blue-400 h-1.5 rounded-full" style="width: 65%"></div></div>
-                                    </div>
+                                <div class="bg-green-50 p-3.5 rounded-2xl border border-green-100 text-center">
+                                    <i class="fa-solid fa-face-smile text-green-500 text-lg mb-1.5"></i>
+                                    <h4 class="font-extrabold text-gray-900 text-base">8 <span class="text-[9px] font-semibold text-gray-500">hari</span></h4>
+                                    <p class="text-[9px] text-green-600 font-extrabold uppercase mt-0.5">Normal</p>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-        </div> <!-- End iphone-screen -->
-    </div> <!-- End iphone-frame -->
+            <div id="custom-alert" class="absolute inset-0 modal-backdrop z-[200] hidden items-center justify-center p-6">
+                <div class="bg-white rounded-3xl w-full max-w-[300px] overflow-hidden shadow-2xl p-6 text-center animate-pop-in space-y-4">
+                    <div id="alert-icon" class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-2xl"></div>
+                    <div class="space-y-1.5">
+                        <h4 id="alert-title" class="font-extrabold text-gray-900 text-base">Pemberitahuan</h4>
+                        <p id="alert-message" class="text-xs text-gray-500 leading-relaxed">Pesan alert di sini.</p>
+                    </div>
+                    <button onclick="closeCustomAlert()" id="alert-btn" class="w-full py-3.5 rounded-2xl text-white font-bold text-sm transition-all active:scale-[.98]"></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
     
     <script>
+        // --- CUSTOM ALERT HELPER ---
+        function showCustomAlert(message, title, type) {
+            title = title || "Notification"; type = type || "brand";
+            const m = document.getElementById('custom-alert');
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerHTML = message;
+            const icon = document.getElementById('alert-icon'), btn = document.getElementById('alert-btn');
+            
+            // Perbaikan Bug: Reset onclick behavior supaya tidak menyimpan fungsi logout
+            btn.onclick = closeCustomAlert; 
+
+            if (type === "rose") {
+                icon.className = "w-14 h-14 bg-rose-50 text-rose-400 rounded-2xl mx-auto flex items-center justify-center text-2xl";
+                icon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+                btn.className = "w-full py-3.5 bg-rose-400 hover:bg-rose-500 rounded-2xl text-white font-bold text-sm transition-all";
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Oke, mengerti';
+            } else {
+                icon.className = "w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-2xl";
+                icon.style.background = "linear-gradient(135deg,#f3e8ff,#d8b4fe)";
+                icon.innerHTML = '<i class="fa-solid fa-sparkles text-brand-dark"></i>';
+                btn.className = "w-full py-3.5 gradient-btn rounded-2xl text-white font-bold text-sm transition-all shadow-md shadow-purple-200";
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Awesome! 🎉';
+            }
+            m.classList.remove('hidden'); m.classList.add('flex');
+        }
+        
+        function closeCustomAlert() {
+            const m = document.getElementById('custom-alert');
+            m.classList.add('hidden'); m.classList.remove('flex');
+        }
+
+        // --- MODAL CONTROLLER ---
         function toggleModal(id) {
             const modal = document.getElementById(id);
+            if (!modal) return;
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
@@ -474,22 +508,155 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('gd_loggedIn') !== 'true') {
-                window.location.href = 'landing.html';
-                return;
-            }
-            const username = localStorage.getItem('gd_currentUser') || '';
-            const users = JSON.parse(localStorage.getItem('gd_users') || '[]');
-            const user = users.find(u => u.username === username);
-            document.getElementById('profile-name').textContent = username;
-            document.getElementById('profile-email').textContent = user ? user.email : '';
+        // --- INIT DATA PADA SAAT LOAD ---
+        document.addEventListener("DOMContentLoaded", function() {
+            loadUserProfile();
+            
+            generateDummyDataIfEmpty();
+
+            loadFavoritesFromStorage();
+            renderProfileFavorites();
+            renderProfileHistory();
         });
 
+        // --- KELOLA DATA PROFIL USER ---
+        function loadUserProfile() {
+            const username = localStorage.getItem('gd_currentUser') || 'Bestie';
+            const firstName = username.split(' ')[0];
+            
+            document.getElementById('profile-name').textContent = username;
+            document.getElementById('profile-username').textContent = `@${firstName.toLowerCase()}`;
+            
+            const editNameInput = document.getElementById('edit-profile-name');
+            if (editNameInput) editNameInput.value = username;
+
+            const points = parseInt(localStorage.getItem('gd_glowPoints')) || 450;
+            const pointsEl = document.getElementById('profile-glowpoints-text');
+            if (pointsEl) pointsEl.textContent = points;
+        }
+
+        function saveProfileChanges() {
+            const editNameInput = document.getElementById('edit-profile-name');
+            if (!editNameInput) return;
+            
+            const newName = editNameInput.value;
+            if (newName.trim() === '') return showCustomAlert('Nama tidak boleh kosong!', 'Peringatan', 'rose');
+            
+            localStorage.setItem('gd_currentUser', newName);
+            loadUserProfile(); 
+            toggleModal('modal-edit-profile');
+            showCustomAlert('Profil berhasil diperbarui!', 'Berhasil', 'brand');
+        }
+
         function handleLogout() {
-            localStorage.removeItem('gd_loggedIn');
-            localStorage.removeItem('gd_currentUser');
-            window.location.href = 'landing.html';
+            showCustomAlert("Yakin mau keluar?", "Logout", "rose");
+            
+            const btn = document.getElementById('alert-btn');
+            btn.innerHTML = '<i class="fa-solid fa-arrow-right-from-bracket"></i> Ya, Keluar';
+            btn.onclick = function() {
+                localStorage.removeItem('gd_currentUser');
+                localStorage.removeItem('gd_loggedIn'); 
+                window.location.href = 'landing.html'; 
+            };
+        }
+
+        // --- DATA DUMMY GENERATOR ---
+        function generateDummyDataIfEmpty() {
+            if (!localStorage.getItem('skincare_favorites')) {
+                const dummyFavs = ['p1', 'p2', 'p4'];
+                localStorage.setItem('skincare_favorites', JSON.stringify(dummyFavs));
+            }
+            if (!localStorage.getItem('skincare_discover_data')) {
+                const PRODUCTS = [
+                    { id:'p1', title:'Hydrating Serum', brand:'GlowLab', image:'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=400&auto=format&fit=crop', price:'Rp 149.000' },
+                    { id:'p2', title:'Vitamin C Cream', brand:'SkinEssence', image:'https://images.unsplash.com/photo-1608248593802-86111ed22079?q=80&w=400&auto=format&fit=crop', price:'Rp 210.000' },
+                    { id:'p4', title:'Retinol Serum 0.3%', brand:'Youth Labs', image:'https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=400&auto=format&fit=crop', price:'Rp 185.000' },
+                ];
+                localStorage.setItem('skincare_discover_data', JSON.stringify(PRODUCTS));
+            }
+            if (!localStorage.getItem('gd_history')) {
+                const today = new Date().toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                const dummyHistory = {};
+                dummyHistory[today] = ['Gentle Cleanser', 'Hydrating Serum', 'SPF 50 Sunscreen'];
+                dummyHistory[yesterday] = ['Double Cleansing', 'Retinol Serum 0.3%', 'Moisturizer Gel'];
+                localStorage.setItem('gd_history', JSON.stringify(dummyHistory));
+            }
+        }
+
+        // --- WISHLIST & FAVORIT ---
+        let favoriteProducts = [];
+        
+        function loadFavoritesFromStorage() {
+            const storedFavIds = localStorage.getItem('skincare_favorites');
+            const discoverData = JSON.parse(localStorage.getItem('skincare_discover_data')) || [];
+            
+            if (storedFavIds && discoverData.length > 0) {
+                const favIds = JSON.parse(storedFavIds);
+                favoriteProducts = [];
+                
+                favIds.forEach(id => {
+                    const product = discoverData.find(p => p.id === parseInt(id) || p.id === id);
+                    if (product) favoriteProducts.push(product);
+                });
+            }
+        }
+
+        function renderProfileFavorites() {
+            const container = document.getElementById('profile-favorites-container');
+            const countBadge = document.getElementById('fav-count');
+            
+            if (!container) return;
+            if (countBadge) countBadge.textContent = `${favoriteProducts.length} Produk`;
+
+            if (favoriteProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <i class="fa-regular fa-heart text-gray-300 text-3xl mb-2"></i>
+                        <p class="text-[10px] font-semibold text-gray-400">Belum ada produk favorit.</p>
+                        <button onclick="window.location.href='discover.html'" class="mt-2 text-[10px] font-extrabold text-brand hover:underline">Eksplor Produk &rarr;</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = favoriteProducts.map(item => `
+                <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm flex flex-col group cursor-pointer hover:shadow-md transition-all">
+                    <div class="relative overflow-hidden h-24">
+                        <img src="${item.image || 'https://via.placeholder.com/150'}" class="w-full h-full object-cover bg-gray-50 group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-2 right-2 w-6 h-6 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-rose-500 shadow-sm">
+                            <i class="fa-solid fa-heart text-[10px]"></i>
+                        </div>
+                    </div>
+                    <div class="p-3 flex flex-col flex-grow">
+                        <span class="text-[8px] font-extrabold text-brand-mid uppercase tracking-wider mb-0.5 line-clamp-1">${item.brand || 'Brand'}</span>
+                        <h4 class="font-extrabold text-gray-800 text-[10px] mb-1 line-clamp-2 leading-tight group-hover:text-brand transition-colors">${item.title || 'Produk'}</h4>
+                        <span class="text-[9px] font-extrabold text-gray-500 mt-auto">${item.price || 'Rp 0'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- RIWAYAT (HISTORY) CATATAN RUTINITAS ---
+        function renderProfileHistory() {
+            const container = document.getElementById('profile-history-list');
+            if (!container) return;
+            
+            let history = JSON.parse(localStorage.getItem('gd_history')) || {};
+            const historyDates = Object.keys(history).sort((a,b) => new Date(b) - new Date(a));
+            const today = new Date().toDateString();
+
+            if (historyDates.length === 0) {
+                container.innerHTML = '<p class="text-[10px] font-medium text-gray-400 italic py-4 text-center">Belum ada riwayat pemakaian produk.</p>';
+            } else {
+                container.innerHTML = historyDates.map(date => `
+                    <div class="border-l-2 border-brand-light pl-4 py-1.5 relative">
+                        <div class="absolute -left-[5px] top-2.5 w-2 h-2 rounded-full ${date === today ? 'bg-brand' : 'bg-gray-300'}"></div>
+                        <p class="text-[10px] font-extrabold ${date === today ? 'text-brand-mid' : 'text-gray-700'}">${date === today ? 'Hari Ini' : date}</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed font-medium">${history[date].join(', ')}</p>
+                    </div>
+                `).join('');
+            }
         }
     </script>
 </body>

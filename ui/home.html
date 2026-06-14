@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowDiary - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#f3e8ff', soft: '#e9d5ff', DEFAULT: '#c084fc', mid: '#a855f7', dark: '#7e22ce',
+                        }
+                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { height: -webkit-fill-available; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #e9d5ff; border-radius: 10px; }
+        body { height: 100vh; height: -webkit-fill-available; height: 100dvh; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .pb-safe { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+        .gradient-btn { background: linear-gradient(135deg, #d8b4fe 0%, #a855f7 100%); }
+        .gradient-bg { background: linear-gradient(175deg, #fdf4ff 0%, #faf5ff 40%, #f8f0fe 100%); }
+        .modal-backdrop { background: rgba(15,5,30,.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .nav-pill { background: rgba(255,255,255,0.94); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .nav-active-bg { background: linear-gradient(135deg, #f3e8ff, #ede9fe); }
+        .streak-card { background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 60%, #fde68a 100%); }
+        .period-header-bg { background: linear-gradient(135deg, #fff1f2 0%, #fce7f3 100%); }
+        .routine-checked { background: linear-gradient(135deg,#f9f5ff,#fdf4ff); border-color:#e9d5ff; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes popIn  { from { opacity:0; transform:scale(0.88); } to { opacity:1; transform:scale(1); } }
+        @keyframes shimmer { 0%,100% { opacity:1; } 50% { opacity:.6; } }
+        @keyframes pulsering { 
+            0%,
+            100% { box-shadow:0 0 0 0 rgba(192,132,252,.5); } 
+            60% { box-shadow:0 0 0 10px rgba(192,132,252,0); } 
+        }
+        .animate-fade-up  { animation: fadeUp .35s cubic-bezier(.22,.61,.36,1) both; }
+        .animate-pop-in   { animation: popIn  .28s cubic-bezier(.34,1.56,.64,1) both; }
+        .animate-shimmer  { animation: shimmer 2.2s ease-in-out infinite; }
+        .pulse-ring { animation: pulsering 2.5s ease-in-out infinite; }
+        .delay-100 { animation-delay:.1s; } .delay-200 { animation-delay:.2s; }
+        .delay-300 { animation-delay:.3s; } .delay-400 { animation-delay:.4s; }
+        @media (min-width: 641px) {
+            body { background: radial-gradient(ellipse at 60% 40%, #2d1b4e, #1a0a2e 50%, #0d0314) !important; display:flex !important; justify-content:center !important; align-items:center !important; }
+            .iphone-frame { width:390px; height:844px; border:13px solid #1c1c1e; border-radius:50px; position:relative; box-shadow:0 0 0 1px #3a3a3c, 0 30px 80px rgba(0,0,0,.7); background:#fff; overflow:hidden; display:flex; }
+            .iphone-frame::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:126px; height:34px; background:#1c1c1e; border-bottom-left-radius:20px; border-bottom-right-radius:20px; z-index:9999; }
+            .iphone-screen aside { display:none !important; }
+        }
+        @media (max-width: 640px) {
+            .iphone-frame, .iphone-screen { width:100%; height:100%; display:flex; flex:1; }
+            .iphone-frame { border:none; border-radius:0; }
+            .iphone-frame::before { display:none; }
+        }
+    </style>
+</head>
+<body class="text-gray-800 overflow-hidden flex h-screen w-screen">
+<div class="iphone-frame">
+<div class="iphone-screen bg-gray-50 flex flex-col w-full h-full relative overflow-hidden">
+
+<aside class="hidden flex-col w-64 bg-white border-r border-gray-100 p-6 z-20 shadow-sm">
+    <div class="flex items-center gap-3 text-xl font-extrabold text-brand-dark mb-10">
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,#f3e8ff,#d8b4fe)">
+            <i class="fa-solid fa-sparkles text-brand-dark"></i>
+        </div>
+        GlowDiary
+    </div>
+    <div class="flex flex-col gap-1 flex-1">
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-3">Menu Utama</p>
+        <button onclick="window.location.href='home.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm bg-brand-light text-brand-dark"><i class="fa-solid fa-house w-5 text-center"></i> Home</button>
+        <button onclick="window.location.href='discover.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm text-gray-400 hover:bg-brand-light hover:text-brand-dark"><i class="fa-solid fa-magnifying-glass w-5 text-center"></i> Discover</button>
+        <button onclick="window.location.href='analyze.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm text-gray-400 hover:bg-brand-light hover:text-brand-dark"><i class="fa-solid fa-clipboard-check w-5 text-center"></i> Analyze</button>
+        <button onclick="window.location.href='profile.html'" class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-semibold text-left text-sm text-gray-400 hover:bg-brand-light hover:text-brand-dark"><i class="fa-solid fa-user w-5 text-center"></i> Profile</button>
+    </div>
+</aside>
+
+<main class="flex-1 overflow-y-auto relative pb-[90px]" style="height:100%;-webkit-overflow-scrolling:touch;">
+    <div class="screen w-full min-h-full gradient-bg">
+        
+        <div class="px-4 pt-10 pb-3">
+            <div class="animate-fade-up">
+                <h1 class="text-2xl font-extrabold text-gray-900">Hi, <span id="greeting-name">Bestie</span> <i class="fa-solid fa-hand text-yellow-400 text-xl ml-1"></i></h1>
+            </div>
+        </div>
+
+        <div class="px-4 pt-1 pb-4 space-y-4">
+            <div class="streak-card animate-fade-up delay-100 rounded-3xl p-4 flex items-center gap-4 shadow-sm border border-amber-100">
+                <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-sm flex-shrink-0 animate-shimmer">
+                    <i class="fa-solid fa-fire text-orange-500"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Current Streak</p>
+                    <h3 class="font-extrabold text-gray-900 text-xl">5 Days</h3>
+                    <p class="text-[11px] text-amber-700/60 mt-0.5">Keep glowing! You're on fire</p>
+                </div>
+                <div class="flex items-end gap-1 h-10">
+                    <div class="w-2 rounded-full bg-amber-400 h-8"></div>
+                    <div class="w-2 rounded-full bg-amber-300 h-5"></div>
+                    <div class="w-2 rounded-full bg-amber-500 h-10"></div>
+                    <div class="w-2 rounded-full bg-amber-300 h-4"></div>
+                    <div class="w-2 rounded-full bg-amber-400 h-7"></div>
+                </div>
+            </div>
+
+            <div class="animate-fade-up delay-200 bg-white rounded-3xl p-5 shadow-sm border border-purple-50">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="font-bold text-sm text-gray-900" id="skin-condition-title">Skin Condition</h2>
+                    <span class="text-[10px] font-bold text-brand-mid bg-brand-light px-2.5 py-1 rounded-full">Today</span>
+                </div>
+                <div class="flex flex-wrap gap-2" id="skin-status-box">
+                    <span class="text-xs text-gray-400 italic">Memuat data...</span>
+                </div>
+            </div>
+
+            <div id="calendar-card-container" class="animate-fade-up delay-300 rounded-3xl overflow-hidden shadow-sm border border-rose-100">
+                <div id="calendar-header-bg" class="period-header-bg p-4 flex justify-between items-center">
+                    <div>
+                        <h2 id="calendar-header-title" class="font-bold text-sm text-gray-900 flex items-center gap-2">
+                            <span class="w-6 h-6 bg-rose-400 rounded-lg flex items-center justify-center text-white text-xs"><i class="fa-solid fa-book"></i></span>
+                            Diary & Period
+                        </h2>
+                        <p id="period-status-text" class="text-xs text-rose-500 font-medium mt-1">Belum ada data tercatat</p>
+                    </div>
+                    <button id="calendar-add-btn" onclick="toggleModal('modal-calendar-options')" class="w-9 h-9 bg-rose-400 hover:bg-rose-500 rounded-2xl flex items-center justify-center text-white transition-all active:scale-95 shadow-sm shadow-rose-200">
+                        <i class="fa-solid fa-plus text-sm"></i>
+                    </button>
+                </div>
+                <div class="bg-white p-4">
+                    <div class="flex justify-between items-center mb-4 bg-gray-50 rounded-2xl px-3 py-2 border border-gray-100">
+                        <button onclick="changeMonth(-1)" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-white rounded-xl transition-all"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                        <h3 id="calendar-month-year" class="font-bold text-gray-800 text-xs tracking-wide">Bulan Tahun</h3>
+                        <button onclick="changeMonth(1)" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-white rounded-xl transition-all"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-gray-400 mb-2 select-none">
+                        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                    </div>
+                    <div id="calendar-days" class="grid grid-cols-7 gap-y-1 gap-x-1 text-center text-xs font-medium text-gray-700 select-none"></div>
+                    
+                    <div id="diary-card-container" class="mt-4 hidden animate-fade-up">
+                        </div>
+
+                    <div id="calendar-legends" class="flex gap-3 mt-4 pt-3 border-t border-gray-100 justify-center flex-wrap text-[9px] text-gray-500 font-semibold">
+                        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)"></div> Today</div>
+                        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div> Period</div>
+                        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-rose-100 border border-rose-200"></div> Fertile</div>
+                        <div class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-brand-mid"></div> Diary</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="animate-fade-up delay-400 bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-5">
+                    <h2 class="font-bold text-sm text-gray-900">Products Today</h2>
+                    <button onclick="toggleModal('modal-routine')" class="gradient-btn text-white w-9 h-9 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-sm shadow-purple-200">
+                        <i class="fa-solid fa-plus text-sm"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between items-end mb-2.5">
+                            <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-sun text-yellow-400"></i> Morning Routine
+                            </h3>
+                            <p id="routine-progress-text-morning" class="text-[9px] font-semibold text-gray-400">0 of 0 done</p>
+                        </div>
+                        <div class="h-1.5 bg-amber-50 rounded-full mb-3 overflow-hidden">
+                            <div id="routine-progress-bar-morning" class="h-full rounded-full transition-all duration-300" style="width: 0%; background:linear-gradient(90deg,#fbbf24,#f59e0b)"></div>
+                        </div>
+                        <div id="routine-list-morning" class="flex flex-col gap-2.5">
+                            </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-end mb-2.5">
+                            <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-moon text-indigo-400"></i> Evening Routine
+                            </h3>
+                            <p id="routine-progress-text-evening" class="text-[9px] font-semibold text-gray-400">0 of 0 done</p>
+                        </div>
+                        <div class="h-1.5 bg-indigo-50 rounded-full mb-3 overflow-hidden">
+                            <div id="routine-progress-bar-evening" class="h-full rounded-full transition-all duration-300" style="width: 0%; background:linear-gradient(90deg,#818cf8,#6366f1)"></div>
+                        </div>
+                        <div id="routine-list-evening" class="flex flex-col gap-2.5">
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</main>
+
+<nav class="absolute bottom-0 left-0 w-full z-50 px-3 pb-safe pt-2">
+    <div class="nav-pill rounded-[28px] border border-gray-100 shadow-lg shadow-gray-200/60 px-2 py-2 flex justify-between items-center">
+        <button onclick="window.location.href='home.html'" class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="nav-active-bg w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-house text-brand-mid text-base"></i></div>
+            <span class="text-[9px] font-bold text-brand-mid">Home</span>
+        </button>
+        <button onclick="window.location.href='discover.html'" class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-magnifying-glass text-gray-400 text-base"></i></div>
+            <span class="text-[9px] font-semibold text-gray-400">Search</span>
+        </button>
+        <button onclick="window.location.href='analyze.html'" class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-clipboard-check text-gray-400 text-base"></i></div>
+            <span class="text-[9px] font-semibold text-gray-400">Analyze</span>
+        </button>
+        <button onclick="window.location.href='profile.html'" class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-user text-gray-400 text-base"></i></div>
+            <span class="text-[9px] font-semibold text-gray-400">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<div id="modal-calendar-options" class="absolute inset-0 modal-backdrop z-[100] hidden items-center justify-center p-5">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-pop-in p-5 relative">
+        <button onclick="toggleModal('modal-calendar-options')" class="absolute right-4 top-4 w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all"><i class="fa-solid fa-xmark text-sm"></i></button>
+        <h3 class="font-extrabold text-gray-900 text-base mb-4">Tambahkan Data</h3>
+        
+        <div class="space-y-3">
+            <button onclick="openSpecificModal('modal-diary')" class="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-brand-soft hover:bg-brand-light/50 transition-all text-left">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-purple-50 text-brand-mid"><i class="fa-solid fa-book"></i></div>
+                <div>
+                    <h4 class="font-bold text-gray-800 text-sm">Tulis Diary</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Catat kondisi kulit & mood hari ini</p>
+                </div>
+            </button>
+            <button onclick="openSpecificModal('modal-period')" class="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-rose-200 hover:bg-rose-50 transition-all text-left">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-rose-50 text-rose-400"><i class="fa-solid fa-droplet"></i></div>
+                <div>
+                    <h4 class="font-bold text-gray-800 text-sm">Catat Siklus Haid</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Prediksi & log menstruasi bulanan</p>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-diary" class="absolute inset-0 modal-backdrop z-[100] hidden items-center justify-center p-5">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-pop-in">
+        <div class="p-5 relative" style="background:linear-gradient(135deg,#f3e8ff,#ede9fe);">
+            <button onclick="toggleModal('modal-diary')" class="absolute right-4 top-4 w-8 h-8 bg-white/60 rounded-xl flex items-center justify-center text-brand-mid hover:bg-white transition-all"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-white" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)"><i class="fa-solid fa-book"></i></div>
+                <div><h3 class="font-extrabold text-gray-900 text-base">Tulis Diary</h3><p class="text-xs text-brand-mid font-medium">Gimana kulitmu hari ini?</p></div>
+            </div>
+        </div>
+        <div class="p-5 space-y-4">
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tanggal</label>
+                <input type="date" id="input-diary-date" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm text-gray-800 focus:ring-brand/30 focus:border-brand outline-none">
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Catatan Kulit / Mood</label>
+                <textarea id="input-diary-text" rows="4" placeholder="Hari ini ada jerawat baru di pipi dan ngerasa agak kering karena AC kantor..." class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm outline-none focus:ring-brand/30 focus:border-brand resize-none transition-all leading-relaxed"></textarea>
+            </div>
+            <button onclick="saveDiary()" class="w-full gradient-btn text-white font-bold py-4 rounded-2xl shadow-md shadow-purple-200 transition-all active:scale-[.98] text-sm">
+                <i class="fa-solid fa-pen mr-2"></i> Simpan Diary
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-read-diary" class="absolute inset-0 modal-backdrop z-[100] hidden items-center justify-center p-5">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-pop-in">
+        <div class="p-5 border-b border-gray-50 relative">
+            <button onclick="toggleModal('modal-read-diary')" class="absolute right-4 top-4 w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all"><i class="fa-solid fa-xmark text-sm"></i></button>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-sm" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)"><i class="fa-solid fa-book-open text-sm"></i></div>
+                <div>
+                    <h3 class="font-extrabold text-gray-900 text-base">Diary Entry</h3>
+                    <p id="read-diary-date" class="text-[11px] text-brand-mid font-semibold">Tanggal</p>
+                </div>
+            </div>
+        </div>
+        <div class="p-6">
+            <p id="read-diary-content" class="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap"></p>
+        </div>
+    </div>
+</div>
+
+<div id="modal-period" class="absolute inset-0 modal-backdrop z-[100] hidden items-center justify-center p-5">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-pop-in">
+        <div class="p-5 relative" style="background:linear-gradient(135deg,#fff1f2,#fce7f3);">
+            <button onclick="toggleModal('modal-period')" class="absolute right-4 top-4 w-8 h-8 bg-white/60 rounded-xl flex items-center justify-center text-rose-400 hover:bg-white transition-all"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-rose-400 rounded-2xl flex items-center justify-center text-white"><i class="fa-solid fa-droplet"></i></div>
+                <div><h3 class="font-extrabold text-gray-900 text-base">Catat Siklus Haid</h3><p class="text-xs text-rose-400 font-medium">Kapan hari pertama haid terakhir?</p></div>
+            </div>
+        </div>
+        <div class="p-5 space-y-4">
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tanggal Mulai Terakhir</label>
+                <input type="date" id="input-last-period" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm text-gray-800 focus:ring-rose-300 focus:border-rose-300 outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Durasi (Hari)</label><input type="number" id="input-duration" value="5" min="2" max="10" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm outline-none text-center font-bold"></div>
+                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Siklus (Hari)</label><input type="number" id="input-cycle" value="28" min="21" max="40" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm outline-none text-center font-bold"></div>
+            </div>
+            <button onclick="savePeriodData()" class="w-full bg-rose-400 hover:bg-rose-500 text-white font-bold py-4 rounded-2xl shadow-md shadow-rose-200 transition-all active:scale-[.98] flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-check mr-2"></i> Simpan & Hitung
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-routine" class="absolute inset-0 modal-backdrop z-[100] hidden items-center justify-center p-5">
+    <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-pop-in">
+        <div class="p-5 relative" style="background:linear-gradient(135deg,#f3e8ff,#ede9fe);">
+            <button onclick="toggleModal('modal-routine')" class="absolute right-4 top-4 w-8 h-8 bg-white/60 rounded-xl flex items-center justify-center text-brand-mid hover:bg-white transition-all"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-white" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)"><i class="fa-solid fa-star"></i></div>
+                <div><h3 class="font-extrabold text-gray-900 text-base">Catat Rutinitas</h3><p class="text-xs text-brand-mid font-medium">Produk apa yang kamu pakai?</p></div>
+            </div>
+        </div>
+        <div class="p-5 space-y-4">
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Kategori Produk</label>
+                <select id="routine-category" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm text-gray-800 focus:ring-brand/30 focus:border-brand outline-none appearance-none font-semibold">
+                    <option value="cleanser">Cleanser</option>
+                    <option value="toner">Toner</option>
+                    <option value="serum">Serum</option>
+                    <option value="moisturizer">Moisturizer</option>
+                    <option value="sunscreen">Sunscreen</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Produk</label>
+                <input type="text" id="routine-name" placeholder="Contoh: Cetaphil Gentle Cleanser" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm outline-none focus:ring-brand/30 focus:border-brand transition-all">
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Waktu Pemakaian</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="cursor-pointer"><input type="radio" name="waktu" value="morning" class="peer hidden" checked><div class="text-center p-3 rounded-2xl border-2 border-gray-100 peer-checked:border-brand peer-checked:bg-brand-light transition-all font-bold text-xs text-gray-400 peer-checked:text-brand-dark"><i class="fa-solid fa-sun text-yellow-500 mr-1"></i> Morning</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="waktu" value="evening" class="peer hidden"><div class="text-center p-3 rounded-2xl border-2 border-gray-100 peer-checked:border-brand peer-checked:bg-brand-light transition-all font-bold text-xs text-gray-400 peer-checked:text-brand-dark"><i class="fa-solid fa-moon text-indigo-500 mr-1"></i> Evening</div></label>
+                </div>
+            </div>
+            <button onclick="saveRoutine()" class="w-full gradient-btn text-white font-bold py-4 rounded-2xl shadow-md shadow-purple-200 transition-all active:scale-[.98] text-sm"><i class="fa-solid fa-check mr-2"></i> Simpan Rutinitas</button>
+        </div>
+    </div>
+</div>
+
+<div id="custom-alert" class="absolute inset-0 modal-backdrop z-[200] hidden items-center justify-center p-6">
+    <div class="bg-white rounded-3xl w-full max-w-[300px] overflow-hidden shadow-2xl p-6 text-center animate-pop-in space-y-4">
+        <div id="alert-icon" class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-2xl"></div>
+        <div class="space-y-1.5">
+            <h4 id="alert-title" class="font-extrabold text-gray-900 text-base">Pemberitahuan</h4>
+            <p id="alert-message" class="text-xs text-gray-500 leading-relaxed">Pesan alert di sini.</p>
+        </div>
+        <button onclick="closeCustomAlert()" id="alert-btn" class="w-full py-3.5 rounded-2xl text-white font-bold text-sm transition-all active:scale-[.98]"></button>
+    </div>
+</div>
+
+</div>
+</div>
+
+<script>
+// --- GENDER & CALENDAR SETUP ---
+let userGender = localStorage.getItem('gd_gender') || 'female';
+
+function setupCalendarByGender() {
+    const titleEl = document.getElementById('calendar-header-title');
+    const statusEl = document.getElementById('period-status-text');
+    const addBtn = document.getElementById('calendar-add-btn');
+    const legendsEl = document.getElementById('calendar-legends');
+    const headerBg = document.getElementById('calendar-header-bg');
+    const cardBorder = document.getElementById('calendar-card-container');
+
+    if (userGender === 'male') {
+        // UI Laki-laki: Hanya Skin Diary
+        if (cardBorder) {
+            cardBorder.classList.remove('border-rose-100');
+            cardBorder.classList.add('border-brand-soft');
+        }
+        if (headerBg) {
+            headerBg.classList.remove('period-header-bg');
+            headerBg.style.background = 'linear-gradient(135deg, #f3e8ff 0%, #ede9fe 100%)';
+        }
+        if (titleEl) {
+            titleEl.innerHTML = `<span class="w-6 h-6 bg-brand-mid rounded-lg flex items-center justify-center text-white text-xs shadow-sm"><i class="fa-solid fa-book"></i></span> Skin Diary`;
+        }
+        if (statusEl) {
+            statusEl.innerText = "Catat perjalanan kulitmu hari ini";
+            statusEl.classList.remove('text-rose-500');
+            statusEl.classList.add('text-brand-mid');
+        }
+        if (addBtn) {
+            addBtn.setAttribute('onclick', "toggleModal('modal-diary')");
+            addBtn.className = "w-9 h-9 gradient-btn rounded-2xl flex items-center justify-center text-white transition-all active:scale-95 shadow-sm shadow-purple-200";
+        }
+        if (legendsEl) {
+            legendsEl.innerHTML = `
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)"></div> Today</div>
+                <div class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-brand-mid"></div> Diary</div>
+            `;
+        }
+    } else {
+        // UI Perempuan: Diary & Period
+        if (titleEl) {
+            titleEl.innerHTML = `<span class="w-6 h-6 bg-rose-400 rounded-lg flex items-center justify-center text-white text-xs"><i class="fa-solid fa-book"></i></span> Diary & Period`;
+        }
+        if (addBtn) {
+            addBtn.setAttribute('onclick', "toggleModal('modal-calendar-options')");
+        }
+        if (legendsEl) {
+            legendsEl.innerHTML = `
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)"></div> Today</div>
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div> Period</div>
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-rose-100 border border-rose-200"></div> Fertile</div>
+                <div class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-brand-mid"></div> Diary</div>
+            `;
+        }
+    }
+}
+
+// --- CUSTOM ALERT ---
+function showCustomAlert(message, title, type) {
+    title = title || "Notification"; type = type || "brand";
+    const m = document.getElementById('custom-alert');
+    document.getElementById('alert-title').innerText = title;
+    document.getElementById('alert-message').innerHTML = message;
+    const icon = document.getElementById('alert-icon'), btn = document.getElementById('alert-btn');
+    if (type === "rose") {
+        icon.className = "w-14 h-14 bg-rose-50 text-rose-400 rounded-2xl mx-auto flex items-center justify-center text-2xl";
+        icon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+        btn.className = "w-full py-3.5 bg-rose-400 hover:bg-rose-500 rounded-2xl text-white font-bold text-sm transition-all";
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Oke, mengerti';
+    } else {
+        icon.className = "w-14 h-14 rounded-2xl mx-auto flex items-center justify-center text-2xl";
+        icon.style.background = "linear-gradient(135deg,#f3e8ff,#d8b4fe)";
+        icon.innerHTML = '<i class="fa-solid fa-sparkles text-brand-dark"></i>';
+        btn.className = "w-full py-3.5 gradient-btn rounded-2xl text-white font-bold text-sm transition-all shadow-md shadow-purple-200";
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Awesome!';
+    }
+    m.classList.remove('hidden'); m.classList.add('flex');
+}
+
+function closeCustomAlert() {
+    const m = document.getElementById('custom-alert');
+    m.classList.add('hidden'); m.classList.remove('flex');
+}
+
+// --- ROUTINE STATE MANAGEMENT ---
+let userRoutines = [
+    { id: 1, category: 'cleanser', name: 'Cleanser', time: 'morning', done: false },
+    { id: 2, category: 'moisturizer', name: 'Moisturizer', time: 'evening', done: false }
+];
+
+const categoryMeta = {
+    'cleanser': { icon: 'fa-pump-soap', bg: 'bg-pink-50 text-pink-400' },
+    'toner': { icon: 'fa-spray-can', bg: 'bg-purple-50 text-purple-400' },
+    'serum': { icon: 'fa-flask', bg: 'bg-yellow-50 text-yellow-400' },
+    'moisturizer': { icon: 'fa-jar', bg: 'bg-blue-50 text-blue-400' },
+    'sunscreen': { icon: 'fa-sun', bg: 'bg-orange-50 text-orange-400' }
+};
+
+function renderRoutines() {
+    const morningContainer = document.getElementById('routine-list-morning');
+    const eveningContainer = document.getElementById('routine-list-evening');
+    
+    morningContainer.innerHTML = '';
+    eveningContainer.innerHTML = '';
+    
+    let morningTotal = 0, morningDone = 0;
+    let eveningTotal = 0, eveningDone = 0;
+
+    userRoutines.forEach(routine => {
+        if (routine.time === 'morning') {
+            morningTotal++;
+            if (routine.done) morningDone++;
+        } else {
+            eveningTotal++;
+            if (routine.done) eveningDone++;
+        }
+
+        const meta = categoryMeta[routine.category] || { icon: 'fa-pump-soap', bg: 'bg-gray-100 text-gray-400' };
+        const outerClass = routine.done ? 'routine-checked border-[#e9d5ff]' : 'bg-white border-gray-100';
+            
+        const checkBtn = routine.done 
+            ? `<div class="w-7 h-7 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 transition-all"><i class="fa-solid fa-check text-green-400 text-sm"></i></div>`
+            : `<div class="w-7 h-7 rounded-full bg-gray-50 border-2 border-gray-200 flex items-center justify-center flex-shrink-0 transition-all group-hover:border-brand-mid"><i class="fa-solid fa-check text-transparent text-sm"></i></div>`;
+
+        const html = `
+            <div onclick="toggleRoutine(${routine.id})" class="group cursor-pointer ${outerClass} flex items-center justify-between p-3.5 border rounded-2xl shadow-sm transition-all hover:scale-[1.01]">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 ${meta.bg} rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid ${meta.icon}"></i>
+                    </div>
+                    <div>
+                        <h4 class="${routine.done ? 'font-bold text-gray-800' : 'font-semibold text-gray-600'} text-sm transition-colors">${routine.name}</h4>
+                        <p class="text-[10px] ${routine.done ? 'text-gray-500' : 'text-gray-400'} mt-0.5">${routine.time === 'morning' ? '<i class="fa-solid fa-sun text-yellow-500"></i> Morning' : '<i class="fa-solid fa-moon text-indigo-500"></i> Evening'} Routine</p>
+                    </div>
+                </div>
+                ${checkBtn}
+            </div>
+        `;
+
+        if (routine.time === 'morning') {
+            morningContainer.insertAdjacentHTML('beforeend', html);
+        } else {
+            eveningContainer.insertAdjacentHTML('beforeend', html);
+        }
+    });
+
+    if (morningContainer.children.length === 0) {
+        morningContainer.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-2">Belum ada rutinitas pagi.</p>';
+    }
+    if (eveningContainer.children.length === 0) {
+        eveningContainer.innerHTML = '<p class="text-xs text-gray-400 italic text-center py-2">Belum ada rutinitas malam.</p>';
+    }
+
+    updateProgressBar('morning', morningDone, morningTotal);
+    updateProgressBar('evening', eveningDone, eveningTotal);
+}
+
+function toggleRoutine(id) {
+    const routineIndex = userRoutines.findIndex(r => r.id === id);
+    if (routineIndex !== -1) {
+        userRoutines[routineIndex].done = !userRoutines[routineIndex].done;
+        renderRoutines();
+    }
+}
+
+function updateProgressBar(time, done, total) {
+    const textElement = document.getElementById(`routine-progress-text-${time}`);
+    const barElement = document.getElementById(`routine-progress-bar-${time}`);
+    if(textElement) textElement.innerText = `${done} of ${total} done`;
+    const percentage = total === 0 ? 0 : (done / total) * 100;
+    if(barElement) barElement.style.width = `${percentage}%`;
+}
+
+function saveRoutine() {
+    const catSelect = document.getElementById('routine-category');
+    const categoryVal = catSelect.value;
+    const categoryText = catSelect.options[catSelect.selectedIndex].text;
+    let name = document.getElementById('routine-name').value || categoryText;
+    const timeVal = document.querySelector('input[name="waktu"]:checked').value;
+    
+    const newRoutine = { id: Date.now(), category: categoryVal, name: name, time: timeVal, done: false };
+    userRoutines.push(newRoutine);
+    renderRoutines();
+    
+    document.getElementById('routine-name').value = '';
+    toggleModal('modal-routine');
+}
+
+
+// --- LOGIKA KALENDER & DIARY ---
+function toggleModal(id) {
+    const m = document.getElementById(id);
+    m.classList.toggle('hidden'); m.classList.toggle('flex');
+}
+
+function openSpecificModal(targetId) {
+    toggleModal('modal-calendar-options');
+    setTimeout(() => toggleModal(targetId), 150);
+}
+
+let todayStr = new Date().toISOString().split('T')[0];
+let userDiaries = {};
+userDiaries[todayStr] = "Yeay hari ini aku coba sunscreen baru dan teksturnya enak banget, so far ga bikin kulit break out!";
+
+function saveDiary() {
+    const date = document.getElementById('input-diary-date').value;
+    const text = document.getElementById('input-diary-text').value;
+    
+    if (!date || !text.trim()) {
+        showCustomAlert("Jangan lupa isi tanggal dan catatanmu ya! <i class='fa-solid fa-pen text-rose-500'></i>", "Data Belum Lengkap", "rose");
+        return;
+    }
+    
+    userDiaries[date] = text.trim();
+    document.getElementById('input-diary-text').value = '';
+    toggleModal('modal-diary');
+    
+    renderCalendar(); 
+    selectCalendarDate(date); 
+    showCustomAlert("Catatan diary kamu berhasil disimpan! <i class='fa-solid fa-sparkles text-yellow-500'></i>", "Diary Tersimpan", "brand");
+}
+
+function selectCalendarDate(dateStr) {
+    const container = document.getElementById('diary-card-container');
+    if (userDiaries[dateStr]) {
+        const text = userDiaries[dateStr];
+        const preview = text.length > 50 ? text.substring(0, 50) + '...' : text;
+        const d = new Date(dateStr);
+        const displayDate = d.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
+
+        container.innerHTML = `
+            <div onclick="openReadDiary('${dateStr}')" class="bg-brand-light/40 border border-brand-soft rounded-2xl p-3.5 cursor-pointer hover:bg-brand-light transition-all flex items-start gap-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-mid flex-shrink-0 shadow-sm"><i class="fa-solid fa-book-open text-sm"></i></div>
+                <div>
+                    <p class="text-[10px] font-bold text-brand-mid mb-1">${displayDate}</p>
+                    <p class="text-xs text-gray-700 line-clamp-2 leading-relaxed font-medium">${preview}</p>
+                </div>
+            </div>
+        `;
+        container.classList.remove('hidden');
+    } else {
+        container.classList.add('hidden');
+    }
+}
+
+function openReadDiary(dateStr) {
+    if (!userDiaries[dateStr]) return;
+    const d = new Date(dateStr);
+    const displayDate = d.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
+    
+    document.getElementById('read-diary-date').innerText = displayDate;
+    document.getElementById('read-diary-content').innerText = userDiaries[dateStr];
+    toggleModal('modal-read-diary');
+}
+
+let currentDate = new Date();
+let userPeriodData = { lastStartDate: null, duration: 5, cycle: 28 };
+
+function savePeriodData() {
+    const dateInput = document.getElementById('input-last-period').value;
+    if (!dateInput) { showCustomAlert("Pilih tanggal dulu ya! <i class='fa-solid fa-calendar-day text-rose-500'></i>", "Tanggal Kosong", "rose"); return; }
+    userPeriodData.lastStartDate = new Date(dateInput);
+    userPeriodData.duration = parseInt(document.getElementById('input-duration').value);
+    userPeriodData.cycle = parseInt(document.getElementById('input-cycle').value);
+    toggleModal('modal-period'); renderCalendar();
+}
+
+function changeMonth(offset) { 
+    currentDate.setMonth(currentDate.getMonth() + offset); 
+    document.getElementById('diary-card-container').classList.add('hidden'); 
+    renderCalendar(); 
+}
+
+function renderCalendar() {
+    const myt = document.getElementById('calendar-month-year');
+    const dc  = document.getElementById('calendar-days');
+    const st  = document.getElementById('period-status-text');
+    const yr = currentDate.getFullYear(), mo = currentDate.getMonth();
+    const today = new Date();
+    const mn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    myt.innerText = mn[mo] + ' ' + yr;
+    const firstDay = new Date(yr, mo, 1).getDay();
+    const dim = new Date(yr, mo+1, 0).getDate();
+    
+    let nps=null,npe=null,fs=null,fe=null;
+    
+    // Perhitungan menstruasi dilewati jika user laki-laki
+    if (userGender !== 'male' && userPeriodData.lastStartDate) {
+        nps = new Date(userPeriodData.lastStartDate); nps.setDate(nps.getDate() + userPeriodData.cycle);
+        npe = new Date(nps); npe.setDate(npe.getDate() + userPeriodData.duration - 1);
+        let ov = new Date(nps); ov.setDate(ov.getDate() - 14);
+        fs = new Date(ov); fs.setDate(fs.getDate()-4);
+        fe = new Date(ov); fe.setDate(fe.getDate()+1);
+        const dd = Math.ceil((nps - today)/(1000*60*60*24));
+        st.innerHTML = dd > 0 ? 'Next cycle in <span class="font-extrabold text-rose-500">'+dd+' days</span>'
+            : (dd > -userPeriodData.duration ? '<span class="font-extrabold text-rose-500">Sedang haid <i class="fa-solid fa-droplet text-rose-500"></i></span>' : 'Siklus selesai. Log berikutnya ya!');
+    } else if (userGender !== 'male') {
+        st.innerText = "Belum ada data tercatat";
+    }
+    
+    let html = '';
+    for (let i=0;i<firstDay;i++) html += '<div></div>';
+    
+    for (let i=1;i<=dim;i++) {
+        let d = new Date(yr,mo,i); d.setHours(0,0,0,0);
+        let dStr = `${yr}-${String(mo+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+        
+        let isToday=(i===today.getDate()&&mo===today.getMonth()&&yr===today.getFullYear());
+        let isPeriod=false, isFertile=false;
+        
+        // Pengecekan status menstruasi jika user perempuan
+        if (userGender !== 'male' && nps) {
+            [nps,npe,fs,fe].forEach(x=>x.setHours(0,0,0,0));
+            if(d>=nps&&d<=npe) isPeriod=true;
+            let ls=new Date(userPeriodData.lastStartDate); ls.setHours(0,0,0,0);
+            let le=new Date(userPeriodData.lastStartDate); le.setDate(le.getDate()+userPeriodData.duration-1); le.setHours(0,0,0,0);
+            if(d>=ls&&d<=le) isPeriod=true;
+            if(d>=fs&&d<=fe) isFertile=true;
+        }
+
+        let hasDiary = !!userDiaries[dStr];
+        let dotWhite = `<div class="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full"></div>`;
+        let dotPurple = `<div class="absolute bottom-[2px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-brand-mid rounded-full border border-white"></div>`;
+
+        if (isToday) {
+            html += `<div onclick="selectCalendarDate('${dStr}')" class="py-1 relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"><div class="absolute inset-0.5 rounded-xl" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)"></div><span class="relative z-10 text-white font-extrabold text-[11px]">${i}</span>${hasDiary ? dotWhite : ''}</div>`;
+        } else if (isPeriod) {
+            html += `<div onclick="selectCalendarDate('${dStr}')" class="py-1 relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"><div class="absolute inset-0.5 bg-rose-400 rounded-xl scale-90"></div><span class="relative z-10 text-white font-bold text-[11px]">${i}</span>${hasDiary ? dotWhite : ''}</div>`;
+        } else if (isFertile) {
+            html += `<div onclick="selectCalendarDate('${dStr}')" class="py-1 relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"><div class="absolute inset-0.5 bg-rose-50 border border-rose-200 rounded-xl scale-90"></div><span class="relative z-10 text-rose-400 font-semibold text-[11px]">${i}</span>${hasDiary ? dotPurple : ''}</div>`;
+        } else {
+            html += `<div onclick="selectCalendarDate('${dStr}')" class="py-1 relative hover:bg-brand-light rounded-xl transition-colors text-[11px] text-gray-600 font-medium flex items-center justify-center cursor-pointer">${i}${hasDiary ? dotPurple : ''}</div>`;
+        }
+    }
+    dc.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const username = localStorage.getItem('gd_currentUser') || 'Bestie';
+    document.getElementById('greeting-name').textContent = username;
+    document.getElementById('skin-condition-title').textContent = username + "'s Skin";
+    
+    const skinBox = document.getElementById('skin-status-box');
+    const storedSkin = localStorage.getItem('gd_skin');
+    if (storedSkin) {
+        const sd = JSON.parse(storedSkin);
+        let html = sd.skinType.map(t => `<span style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);color:#6d28d9" class="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5"><i class="fa-solid fa-check text-[9px]"></i> ${t}</span>`).join('');
+        if (sd.skinConcern) html += `<span style="background:linear-gradient(135deg,#fff1f2,#fce7f3);color:#be185d" class="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> ${sd.skinConcern}</span>`;
+        skinBox.innerHTML = html;
+    } else {
+        skinBox.innerHTML = '<a href="kuesioner.html" class="text-xs font-bold text-brand-mid hover:underline flex items-center gap-1.5"><i class="fa-solid fa-arrow-right text-[10px]"></i> Mulai Analisis Kulit</a>';
+    }
+
+    // Setup kalender UI berdasarkan gender
+    setupCalendarByGender();
+
+    // Set Default Date untuk Form Diary (Hari Ini)
+    document.getElementById('input-diary-date').value = todayStr;
+
+    // Panggil fungsi render awal
+    renderRoutines();
+    renderCalendar();
+    
+    // Tampilkan Diary Card Hari Ini (jika ada) saat pertama load
+    selectCalendarDate(todayStr); 
+});
+</script>
+</body>
+</html>

@@ -24,7 +24,7 @@
     <style>
         html { height: -webkit-fill-available; }
         body {
-            background-color: #1a1a1a; /* Background gelap di desktop */
+            background: radial-gradient(ellipse at 60% 40%, #2d1b4e, #1a0a2e 50%, #0d0314) !important;
             min-height: 100vh;
             min-height: -webkit-fill-available;
             min-height: 100dvh;
@@ -37,6 +37,10 @@
         }
 
         .gradient-btn { background: linear-gradient(135deg, #d8b4fe 0%, #c084fc 100%); }
+        .gradient-bg { background: linear-gradient(175deg, #fdf4ff 0%, #faf5ff 40%, #f8f0fe 100%); }
+        .screen-bg { background: linear-gradient(175deg, #fdf4ff 0%, #faf5ff 40%, #f8f0fe 100%); }
+        .top-purple-fade { background: linear-gradient(180deg, rgba(248,240,254,0.95) 0%, rgba(248,240,254,0.75) 45%, rgba(248,240,254,0) 100%); }
+
         
         /* Efek Transisi Antar Step */
         .step-container { display: none; animation: slideIn 0.3s ease-out forwards; }
@@ -113,10 +117,11 @@
 <body>
 
     <div class="iphone-frame">
-        <div class="iphone-screen bg-white flex flex-col w-full h-full relative overflow-hidden">
-        
-            <div class="px-6 pt-10 pb-4 bg-white z-10 md:pt-12">
-                <div class="flex justify-between items-center mb-6">
+        <div class="iphone-screen bg-gray-50 flex flex-col w-full h-full relative overflow-hidden">
+            <div class="screen w-full min-h-full gradient-bg relative">
+                <div class="absolute inset-x-0 top-0 h-52 top-purple-fade pointer-events-none"></div>
+                <div class="px-6 pt-10 pb-4 bg-white/90 backdrop-blur-sm z-10 md:pt-12">
+                    <div class="flex justify-between items-center mb-6">
                     <button id="btn-prev" onclick="prevStep()" class="text-gray-400 hover:text-gray-800 transition-colors w-8 h-8 flex items-center justify-center rounded-full invisible">
                         <i class="fa-solid fa-arrow-left text-lg"></i>
                     </button>
@@ -248,13 +253,13 @@
 
             </div>
 
-            <div class="absolute bottom-0 left-0 w-full bg-white border-t border-gray-100 z-20 pb-safe-area px-6 pt-4">
-                <button id="btn-next" onclick="nextStep()" class="w-full gradient-btn text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 hover:opacity-90 transition-all mb-2">
-                    Continue
-                </button>
+                <div class="absolute bottom-0 left-0 w-full bg-white border-t border-gray-100 z-20 pb-safe-area px-6 pt-4">
+                    <button id="btn-next" onclick="nextStep()" class="w-full gradient-btn text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 hover:opacity-90 transition-all mb-2">
+                        Continue
+                    </button>
+                </div>
             </div>
-
-        </div> </div>
+        </div>
 
         <!-- Loading Overlay -->
         <div id="loading-overlay" class="hidden fixed inset-0 bg-[#0f0b1a] z-[200] flex-col items-center justify-center" style="opacity:0; transition: opacity 0.4s ease;">
@@ -344,7 +349,7 @@
 
         // Selesaikan Onboarding & Pergi ke Halaman Aplikasi
         function finishOnboarding() {
-            window.location.href = 'glowdiary.html';
+            window.location.href = 'home.html';
         }
 
         // Update UI (Progress Bar, Tombol, Label Step)

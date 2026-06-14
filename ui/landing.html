@@ -42,7 +42,7 @@
     <style>
         html { height: -webkit-fill-available; }
         body {
-            background-color: #1a1a1a;
+            background: radial-gradient(ellipse at 60% 40%, #2d1b4e, #1a0a2e 50%, #0d0314) !important;
             min-height: 100vh;
             min-height: -webkit-fill-available;
             min-height: 100dvh;
@@ -88,6 +88,11 @@
             .iphone-frame::before { display: none; }
         }
         .fade-out { opacity: 0; visibility: hidden; transition: opacity 0.6s ease-out, visibility 0.6s ease-out; }
+
+        /* Custom Placeholder Color */
+        ::placeholder { color: #a1a1aa; opacity: 1; }
+        :-ms-input-placeholder { color: #a1a1aa; }
+        ::-ms-input-placeholder { color: #a1a1aa; }
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased overflow-hidden flex h-screen w-screen">
@@ -95,7 +100,6 @@
     <div class="iphone-frame">
         <div class="iphone-screen app-bg-gradient flex flex-col justify-center items-center px-6 w-full h-full relative overflow-x-hidden overflow-y-auto safe-bottom">
 
-            <!-- Splash Overlay -->
             <div id="splash-overlay" class="absolute inset-0 bg-[#0f0b1a] z-[100] flex flex-col items-center justify-center w-full h-full">
                 <div class="flex flex-col items-center justify-center animate-fade-in w-full px-8">
                     <div class="relative flex items-center justify-center w-64 h-64 mb-6">
@@ -110,7 +114,6 @@
                 </div>
             </div>
 
-            <!-- Loading Overlay -->
             <div id="loading-overlay" class="hidden absolute inset-0 bg-[#0f0b1a] z-[200] flex-col items-center justify-center gap-5">
                 <div class="relative flex items-center justify-center w-24 h-24">
                     <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9333ea] via-[#c084fc] to-[#f472b6] blur-[15px] opacity-70 animate-spin-slow"></div>
@@ -121,48 +124,57 @@
                 <p class="text-purple-200 text-sm font-semibold tracking-widest uppercase animate-pulse">Loading...</p>
             </div>
 
-            <!-- Form Title -->
             <div class="text-center mb-6 mt-10 w-full relative z-10">
                 <h1 id="form-title" class="text-[32px] font-extrabold text-brand-title tracking-tight mb-1">Create Account</h1>
                 <p id="form-subtitle" class="text-brand-subtitle font-medium text-sm">Start your skin journey here</p>
             </div>
 
-            <!-- Alert Box -->
             <div id="alert-box" class="hidden w-full max-w-[320px] bg-red-100 border border-red-300 text-red-700 text-xs rounded-2xl px-4 py-3 mb-3 relative z-10"></div>
 
-            <!-- Sign Up Form -->
-            <div id="form-signup" class="w-full max-w-[320px] bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
-                <div class="space-y-5">
+            <div id="form-signup" class="w-full max-w-[320px] bg-brand-card p-6 sm:p-8 rounded-[2rem] custom-shadow mb-6 relative z-10">
+                <div class="space-y-4">
                     <div class="flex flex-col gap-1.5">
                         <label class="text-sm font-medium text-gray-800 ml-1">Username</label>
-                        <input type="text" id="su-username"
-                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                        <input type="text" id="su-username" placeholder="e.g. GlowBeauty"
+                            class="w-full bg-transparent border border-gray-500 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-sm font-medium text-gray-800 ml-1">Email</label>
-                        <input type="email" id="su-email"
-                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                        <input type="email" id="su-email" placeholder="e.g. user@example.com"
+                            class="w-full bg-transparent border border-gray-500 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-sm font-medium text-gray-800 ml-1">Gender</label>
+                        <div class="flex gap-3">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="su-gender" value="female" class="peer hidden" checked>
+                                <div class="text-center py-2 rounded-full border border-gray-500 text-gray-600 peer-checked:border-brand-title peer-checked:bg-[#e6dced] peer-checked:text-brand-title font-medium text-xs transition-all">Perempuan</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="su-gender" value="male" class="peer hidden">
+                                <div class="text-center py-2 rounded-full border border-gray-500 text-gray-600 peer-checked:border-brand-title peer-checked:bg-[#e6dced] peer-checked:text-brand-title font-medium text-xs transition-all">Laki-laki</div>
+                            </label>
+                        </div>
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-sm font-medium text-gray-800 ml-1">Password</label>
-                        <input type="password" id="su-password"
-                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                        <input type="password" id="su-password" placeholder="Min. 6 characters"
+                            class="w-full bg-transparent border border-gray-500 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
                     </div>
                 </div>
             </div>
 
-            <!-- Login Form -->
-            <div id="form-login" class="hidden w-full max-w-[320px] bg-brand-card p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
+            <div id="form-login" class="hidden w-full max-w-[320px] bg-brand-card p-6 sm:p-8 rounded-[2rem] custom-shadow mb-8 relative z-10">
                 <div class="space-y-5">
                     <div class="flex flex-col gap-1.5">
                         <label class="text-sm font-medium text-gray-800 ml-1">Email</label>
-                        <input type="email" id="li-email"
-                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                        <input type="email" id="li-email" placeholder="Enter your email"
+                            class="w-full bg-transparent border border-gray-500 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-sm font-medium text-gray-800 ml-1">Password</label>
-                        <input type="password" id="li-password"
-                            class="w-full bg-transparent border border-gray-600 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
+                        <input type="password" id="li-password" placeholder="Enter your password"
+                            class="w-full bg-transparent border border-gray-500 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-title focus:ring-1 focus:ring-brand-title transition-colors">
                     </div>
                 </div>
             </div>
@@ -172,7 +184,7 @@
                 Sign Up
             </button>
 
-            <p id="switch-text" class="text-gray-600 text-sm font-medium relative z-10">
+            <p id="switch-text" class="text-gray-600 text-sm font-medium relative z-10 pb-6">
                 Already have an account?
                 <a href="#" onclick="showTab('login'); return false;" class="text-brand-title font-bold hover:underline">Login</a>
             </p>
@@ -188,12 +200,12 @@
             }, 3000);
 
             if (localStorage.getItem('gd_loggedIn') === 'true') {
-                window.location.href = 'glowdiary.html';
+                window.location.href = 'home.html';
             }
         });
 
         function showLoading() {
-            window.location.href = 'glowdiary.html';
+            window.location.href = 'home.html';
         }
 
         function showTab(tab) {
@@ -224,6 +236,8 @@
             const username = document.getElementById('su-username').value.trim();
             const email = document.getElementById('su-email').value.trim();
             const password = document.getElementById('su-password').value;
+            // Ambil value gender yang dipilih
+            const gender = document.querySelector('input[name="su-gender"]:checked').value;
 
             if (!username) { showAlert('Username wajib diisi!'); return; }
             if (!email) { showAlert('Email wajib diisi!'); return; }
@@ -234,10 +248,15 @@
             const users = JSON.parse(localStorage.getItem('gd_users') || '[]');
             if (users.find(u => u.email === email)) { showAlert('Email sudah terdaftar. Silakan login.'); return; }
 
-            users.push({ username, email, password });
+            // Simpan gender ke dalam data user
+            users.push({ username, email, password, gender });
             localStorage.setItem('gd_users', JSON.stringify(users));
             localStorage.setItem('gd_loggedIn', 'true');
             localStorage.setItem('gd_currentUser', username);
+            
+            // Set active gender session for home.html
+            localStorage.setItem('gd_gender', gender);
+            
             window.location.href = 'kuesioner.html';
         }
 
@@ -255,6 +274,12 @@
 
             localStorage.setItem('gd_loggedIn', 'true');
             localStorage.setItem('gd_currentUser', user.username);
+            
+            // Set active gender session if user has it
+            if (user.gender) {
+                localStorage.setItem('gd_gender', user.gender);
+            }
+            
             showLoading();
         }
     </script>

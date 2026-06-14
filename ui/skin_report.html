@@ -9,12 +9,22 @@
     
     <script>
         tailwind.config = {
-            theme: { extend: { colors: { brand: { DEFAULT: '#c084fc', dark: '#9333ea' } } } }
+            theme: { 
+                extend: { 
+                    colors: { 
+                        brand: { light: '#e9d5ff', DEFAULT: '#c084fc', mid: '#a855f7', dark: '#7c3aed' } 
+                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }
+                } 
+            }
         }
     </script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
         html { height: -webkit-fill-available; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
         /* SCROLLBAR KUSTOM */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -25,7 +35,7 @@
            BINGKAI HP CSS (TAMPILAN LAYAR)
            ========================================= */
         body {
-            background-color: #1a1a1a; 
+            background: radial-gradient(ellipse at 60% 40%, #2d1b4e, #1a0a2e 50%, #0d0314) !important;
             min-height: 100vh;
             min-height: -webkit-fill-available;
             min-height: 100dvh;
@@ -33,7 +43,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: sans-serif;
             overflow: hidden;
         }
 
@@ -68,33 +77,37 @@
             flex: 1;
             overflow-y: auto;
             position: relative;
-            background-color: #f3f4f6;
+            background: linear-gradient(175deg, #fdf4ff 0%, #faf5ff 40%, #f8f0fe 100%);
             -webkit-overflow-scrolling: touch;
         }
 
         /* 
          * STYLING KERTAS A4 UNTUK LAYAR HP
-         * Di layar, margin dan padding dikecilkan agar pas di layar 390px
          */
         .a4-page {
             background: white;
             margin: 16px;
             margin-top: 0;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
+        /* =========================================
+           KODE BARU: Perbaikan Jarak Aman Notch
+           ========================================= */
         .action-bar {
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(243, 244, 246, 0.95);
+            background: rgba(253, 244, 255, 0.95);
             backdrop-filter: blur(8px);
             padding: 16px;
-            padding-top: calc(16px + env(safe-area-inset-top, 24px)); /* Jarak aman notch */
+            /* TAMBAHKAN INI: Jarak aman yang lebih tinggi untuk notch dan speaker */
+            padding-top: calc(48px + env(safe-area-inset-top, 0px));
+            /* Dan tambahkan sedikit jarak bawah */
+            padding-bottom: 24px;
         }
-
         /* =========================================
            MODE PRINT / PDF DOWNLOAD (TAMPILAN A4 ASLI)
            ========================================= */
@@ -124,7 +137,7 @@
             }
             .action-bar, .no-print { display: none !important; }
             
-            /* Mengembalikan ukuran persis kertas A4 milikmu */
+            /* Mengembalikan ukuran persis kertas A4 */
             .a4-page {
                 width: 210mm !important;
                 min-height: 297mm !important;
@@ -137,7 +150,7 @@
         }
     </style>
 </head>
-<body class="font-sans text-gray-800">
+<body class="text-gray-800">
 
     <!-- BINGKAI HP -->
     <div class="iphone-frame">
@@ -145,134 +158,161 @@
             
             <!-- ACTION BAR (Sticky di atas HP) -->
             <div class="action-bar flex justify-between items-center w-full">
-                <button onclick="window.history.back()" class="text-gray-500 hover:text-brand font-medium flex items-center gap-2 text-sm">
+                <button onclick="window.history.back()" class="text-gray-500 hover:text-brand font-bold flex items-center gap-2 text-sm transition-colors">
                     <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline print:hidden">Kembali</span>
                 </button>
-                <button onclick="window.print()" class="bg-brand text-white px-4 py-2 rounded-xl font-bold shadow-md hover:bg-brand-dark transition-colors flex items-center gap-2 text-sm">
+                <button onclick="window.print()" class="bg-gradient-to-r from-[#c084fc] to-[#a855f7] text-white px-5 py-2.5 rounded-xl font-bold shadow-md shadow-purple-200 hover:opacity-90 transition-all flex items-center gap-2 text-sm active:scale-95">
                     <i class="fa-solid fa-file-pdf"></i> Download
                 </button>
             </div>
 
             <!-- HALAMAN LAPORAN (Responsive di layar, A4 di Print) -->
-            <div class="a4-page border border-gray-200 print:border-none">
+            <div class="a4-page border border-gray-100 print:border-none">
                 
-                <!-- HEADER REPORT -->
-                <div class="border-b-2 border-brand pb-5 print:pb-6 mb-6 print:mb-8 flex flex-col print:flex-row justify-between print:items-end gap-4">
+                <!-- HEADER REPORT (SEJAJAR KIRI KANAN) -->
+                <div class="border-b-2 border-purple-100 pb-4 mb-6 flex justify-between items-start">
                     <div>
-                        <div class="flex items-center gap-2 text-xl print:text-2xl font-bold text-brand-dark mb-1">
+                        <div class="flex items-center gap-2 text-xl print:text-2xl font-extrabold text-brand-dark mb-1">
                             <i class="fa-solid fa-sparkles"></i> GlowDiary
                         </div>
-                        <p class="text-[10px] print:text-sm text-gray-500 tracking-widest uppercase font-bold">Skincare Progress Report</p>
+                        <p class="text-[9px] print:text-[11px] text-gray-400 tracking-widest uppercase font-extrabold">Skincare Progress Report</p>
                     </div>
-                    <div class="text-left print:text-right">
-                        <p class="text-xs print:text-sm font-bold text-gray-800">Periode Data:</p>
-                        <p class="text-xs print:text-sm text-gray-600">1 Mar 2024 - 30 Mar 2024</p>
+                    <div class="text-right">
+                        <p class="text-[9px] print:text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-0.5">Periode Data</p>
+                        <p class="text-xs print:text-sm font-bold text-gray-800">1 Mar - 30 Mar 2026</p>
                     </div>
                 </div>
 
                 <!-- 1. PROFIL PASIEN -->
-                <h2 class="text-[10px] print:text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b pb-1">1. Profil Pasien</h2>
-                <div class="bg-gray-50 rounded-xl p-4 print:p-5 mb-6 print:mb-8 flex flex-col print:flex-row print:flex-wrap gap-4 print:gap-x-12">
-                    <div>
-                        <p class="text-[9px] print:text-[10px] text-gray-500 uppercase font-bold mb-0.5 print:mb-1">Nama Lengkap</p>
-                        <p class="text-sm print:text-base font-bold text-gray-800">Chloe Williams</p>
-                    </div>
-                    <div>
-                        <p class="text-[9px] print:text-[10px] text-gray-500 uppercase font-bold mb-0.5 print:mb-1">Tipe Kulit</p>
-                        <p class="text-sm print:text-base font-bold text-gray-800">Kombinasi, Acne-Prone</p>
-                    </div>
-                    <div>
-                        <p class="text-[9px] print:text-[10px] text-gray-500 uppercase font-bold mb-0.5 print:mb-1">Fokus Utama (Goal)</p>
-                        <p class="text-sm print:text-base font-bold text-gray-800">Menghilangkan Jerawat Hormonal</p>
+                <div class="mb-6">
+                    <h2 class="text-[10px] print:text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-100 pb-1.5">1. Profil Pasien</h2>
+                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <p class="text-[9px] print:text-[10px] text-gray-400 uppercase font-extrabold mb-1 tracking-wider">Nama Lengkap</p>
+                            <p class="text-sm print:text-base font-extrabold text-gray-800" id="report-name">Chloe Williams</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] print:text-[10px] text-gray-400 uppercase font-extrabold mb-1 tracking-wider">Tipe Kulit</p>
+                            <p class="text-[11px] print:text-sm font-bold text-gray-800">Kombinasi, Acne-Prone</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] print:text-[10px] text-gray-400 uppercase font-extrabold mb-1 tracking-wider">Fokus Utama (Goal)</p>
+                            <p class="text-[11px] print:text-sm font-bold text-gray-800">Jerawat Hormonal</p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 2. RINGKASAN 30 HARI -->
-                <h2 class="text-[10px] print:text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b pb-1">2. Ringkasan 30 Hari (Basic Dashboard)</h2>
-                <!-- Di layar menyusun ke bawah (flex-col), saat diprint jadi ke samping (print:flex-row) -->
-                <div class="flex flex-col print:flex-row gap-4 print:gap-6 mb-6 print:mb-8">
-                    <!-- Kotak Konsistensi -->
-                    <div class="w-full print:w-1/3">
-                        <div class="bg-purple-50 rounded-xl p-4 text-center h-full border border-purple-100 flex flex-col justify-center">
-                            <p class="text-[9px] print:text-[10px] text-purple-600 uppercase font-bold mb-1 print:mb-2">Konsistensi Rutinitas</p>
-                            <h3 class="text-2xl print:text-3xl font-bold text-brand-dark">85%</h3>
-                            <p class="text-[10px] print:text-xs text-gray-600 mt-1 print:mt-2">Pagi: 90% | Malam: 80%</p>
+                <div class="mb-6">
+                    <h2 class="text-[10px] print:text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-100 pb-1.5">2. Ringkasan 30 Hari</h2>
+                    
+                    <div class="flex flex-col gap-3">
+                        <!-- Kotak Konsistensi -->
+                        <div class="bg-purple-50 rounded-2xl p-4 text-center border border-purple-100 flex flex-col justify-center items-center w-full">
+                            <p class="text-[9px] print:text-[10px] text-brand-dark uppercase font-extrabold tracking-wider mb-1">Konsistensi Rutinitas</p>
+                            <h3 class="text-3xl font-extrabold text-brand-dark mb-1">85%</h3>
+                            <p class="text-[10px] font-bold text-gray-500">Pagi: 90% &nbsp;|&nbsp; Malam: 80%</p>
                         </div>
-                    </div>
-                    <!-- Kotak Detail -->
-                    <!-- Di layar jadi 2 kolom, saat diprint jadi 4 kolom asli -->
-                    <div class="w-full print:w-2/3 grid grid-cols-2 print:grid-cols-4 gap-3 text-center">
-                        <div class="border border-gray-200 rounded-xl p-3 flex flex-col justify-center">
-                            <h4 class="font-bold text-gray-800 text-lg print:text-xl">14 <span class="text-[10px] print:text-xs font-normal">hari</span></h4>
-                            <p class="text-[9px] print:text-[10px] text-gray-500 uppercase font-bold mt-1">Berminyak</p>
-                        </div>
-                        <div class="border border-gray-200 rounded-xl p-3 flex flex-col justify-center">
-                            <h4 class="font-bold text-gray-800 text-lg print:text-xl">5 <span class="text-[10px] print:text-xs font-normal">hari</span></h4>
-                            <p class="text-[9px] print:text-[10px] text-red-500 uppercase font-bold mt-1">Jerawat</p>
-                        </div>
-                        <div class="border border-gray-200 rounded-xl p-3 flex flex-col justify-center">
-                            <h4 class="font-bold text-gray-800 text-lg print:text-xl">3 <span class="text-[10px] print:text-xs font-normal">hari</span></h4>
-                            <p class="text-[9px] print:text-[10px] text-gray-500 uppercase font-bold mt-1">Kering</p>
-                        </div>
-                        <div class="border border-gray-200 rounded-xl p-3 flex flex-col justify-center">
-                            <h4 class="font-bold text-gray-800 text-lg print:text-xl">8 <span class="text-[10px] print:text-xs font-normal">hari</span></h4>
-                            <p class="text-[9px] print:text-[10px] text-green-600 uppercase font-bold mt-1">Normal</p>
+                        
+                        <!-- Kotak Detail (Grid 2x2) -->
+                        <div class="grid grid-cols-2 gap-3 w-full">
+                            <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-3 flex flex-col justify-center items-center">
+                                <h4 class="font-extrabold text-gray-800 text-lg">14 <span class="text-[10px] font-semibold text-gray-400">hari</span></h4>
+                                <p class="text-[9px] text-blue-500 uppercase font-extrabold tracking-wider mt-0.5">Berminyak</p>
+                            </div>
+                            <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-3 flex flex-col justify-center items-center">
+                                <h4 class="font-extrabold text-gray-800 text-lg">5 <span class="text-[10px] font-semibold text-gray-400">hari</span></h4>
+                                <p class="text-[9px] text-red-500 uppercase font-extrabold tracking-wider mt-0.5">Jerawat</p>
+                            </div>
+                            <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-3 flex flex-col justify-center items-center">
+                                <h4 class="font-extrabold text-gray-800 text-lg">3 <span class="text-[10px] font-semibold text-gray-400">hari</span></h4>
+                                <p class="text-[9px] text-orange-500 uppercase font-extrabold tracking-wider mt-0.5">Kering</p>
+                            </div>
+                            <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-3 flex flex-col justify-center items-center">
+                                <h4 class="font-extrabold text-gray-800 text-lg">8 <span class="text-[10px] font-semibold text-gray-400">hari</span></h4>
+                                <p class="text-[9px] text-green-500 uppercase font-extrabold tracking-wider mt-0.5">Normal</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. INVENTORI PRODUK -->
-                <h2 class="text-[10px] print:text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b pb-1">3. Inventori Produk Aktif</h2>
-                <!-- overflow-x-auto agar tabel bisa digeser ke kanan di layar HP sempit -->
-                <div class="overflow-x-auto mb-6 print:mb-8 pb-2 print:pb-0">
-                    <table class="w-full text-left border-collapse text-xs print:text-sm min-w-[300px]">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-600">
-                                <th class="p-2 print:p-3 border-b border-gray-200 font-bold whitespace-nowrap">Kategori</th>
-                                <th class="p-2 print:p-3 border-b border-gray-200 font-bold">Nama Produk</th>
-                                <th class="p-2 print:p-3 border-b border-gray-200 font-bold whitespace-nowrap">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-2 print:p-3 border-b border-gray-100 font-medium text-gray-700">Cleanser</td>
-                                <td class="p-2 print:p-3 border-b border-gray-100 text-gray-600">Cetaphil Gentle Skin Cleanser</td>
-                                <td class="p-2 print:p-3 border-b border-gray-100 text-gray-500">Rutin (Pagi & Malam)</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 print:p-3 border-b border-gray-100 font-medium text-gray-700">Serum</td>
-                                <td class="p-2 print:p-3 border-b border-gray-100 text-gray-600">The Ordinary Niacinamide 10% + Zinc 1%</td>
-                                <td class="p-2 print:p-3 border-b border-gray-100 text-brand font-bold">Produk Baru (Minggu ke-2)</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 print:p-3 border-b border-gray-100 font-medium text-gray-700">Moisturizer</td>
-                                <td class="p-2 print:p-3 border-b border-gray-100 text-gray-600">Cerave Moisturizing Cream</td>
-                                <td class="p-2 print:p-3 border-b border-gray-100 text-gray-500">Rutin (Malam)</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="mb-6">
+                    <h2 class="text-[10px] print:text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-100 pb-1.5">3. Inventori Produk Aktif</h2>
+                    <div class="overflow-hidden rounded-2xl border border-gray-100">
+                        <table class="w-full text-left border-collapse text-[10px] print:text-xs min-w-full">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 uppercase tracking-wider">
+                                    <th class="p-3 font-extrabold border-b border-gray-100">Kategori</th>
+                                    <th class="p-3 font-extrabold border-b border-gray-100">Nama Produk</th>
+                                    <th class="p-3 font-extrabold border-b border-gray-100">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr>
+                                    <td class="p-3 border-b border-gray-50 font-bold text-gray-700">Cleanser</td>
+                                    <td class="p-3 border-b border-gray-50 text-gray-600 font-medium">Cetaphil Gentle Skin Cleanser</td>
+                                    <td class="p-3 border-b border-gray-50 text-gray-500 font-medium">Rutin (Pagi & Malam)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 border-b border-gray-50 font-bold text-gray-700">Serum</td>
+                                    <td class="p-3 border-b border-gray-50 text-gray-600 font-medium">The Ordinary Niacinamide 10% + Zinc 1%</td>
+                                    <td class="p-3 border-b border-gray-50 text-brand-dark font-extrabold">Baru (Minggu ke-2)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-gray-700">Moisturizer</td>
+                                    <td class="p-3 text-gray-600 font-medium">Cerave Moisturizing Cream</td>
+                                    <td class="p-3 text-gray-500 font-medium">Rutin (Malam)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- 4. AI PATTERN -->
-                <h2 class="text-[10px] print:text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b pb-1">4. AI Pattern & Hormonal Insight</h2>
-                <div class="bg-blue-50 border border-blue-100 p-4 print:p-5 rounded-xl mb-6 print:mb-8">
-                    <ul class="list-disc list-inside space-y-2 text-xs print:text-sm text-gray-700 leading-relaxed">
-                        <li><b>Penurunan Jerawat:</b> Intensitas kemerahan jerawat menurun sebanyak 40% setelah penggunaan rutin Niacinamide selama 3 minggu.</li>
-                        <li><b>Pemicu Jerawat (Breakout Trigger):</b> Deteksi sistem menemukan 60% kemunculan jerawat baru bertepatan dengan siklus tidur kurang dari 6 jam.</li>
-                        <li><b>Siklus Hormonal:</b> Pasien sering mengalami peningkatan produksi sebum (minyak) yang signifikan pada H-3 sebelum fase menstruasi (Luteal Phase).</li>
-                    </ul>
+                <div class="mb-6">
+                    <h2 class="text-[10px] print:text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-100 pb-1.5">4. AI Pattern & Hormonal Insight</h2>
+                    <div class="bg-blue-50 border border-blue-100 p-4 print:p-5 rounded-2xl">
+                        <ul class="space-y-3 text-[11px] print:text-xs text-gray-700 leading-relaxed font-medium">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5 text-[10px]"></i>
+                                <span><b class="text-gray-900 font-extrabold">Penurunan Jerawat:</b> Intensitas kemerahan jerawat menurun sebanyak 40% setelah penggunaan rutin Niacinamide selama 3 minggu.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-triangle-exclamation text-red-400 mt-0.5 text-[10px]"></i>
+                                <span><b class="text-gray-900 font-extrabold">Pemicu Jerawat:</b> Deteksi sistem menemukan 60% kemunculan jerawat baru bertepatan dengan siklus tidur kurang dari 6 jam.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-droplet text-brand-mid mt-0.5 text-[10px]"></i>
+                                <span><b class="text-gray-900 font-extrabold">Siklus Hormonal:</b> Pasien sering mengalami peningkatan produksi sebum (minyak) yang signifikan pada H-3 sebelum fase menstruasi.</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- CATATAN DOKTER -->
-                <h2 class="text-[10px] print:text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b pb-1">Catatan Dokter / Resep</h2>
-                <div class="w-full border-2 border-dashed border-gray-300 rounded-xl h-24 print:h-32 p-4 flex items-center justify-center">
-                    <p class="text-gray-400 text-[10px] print:text-sm italic text-center">Ruang kosong ini disediakan untuk catatan atau stempel Dermatologis saat konsultasi fisik.</p>
+                <div>
+                    <h2 class="text-[10px] print:text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-100 pb-1.5">Catatan Dokter / Resep</h2>
+                    <div class="w-full border-2 border-dashed border-gray-200 bg-gray-50 rounded-2xl h-24 print:h-32 p-4 flex items-center justify-center">
+                        <p class="text-gray-400 text-[10px] print:text-xs font-medium italic text-center max-w-[200px]">Ruang kosong ini disediakan untuk catatan atau stempel Dermatologis saat konsultasi fisik.</p>
+                    </div>
                 </div>
 
             </div>
             
+            <div class="h-10 print:hidden"></div>
+            
         </div>
     </div>
 
+    <script>
+        // Ambil nama pengguna dari localStorage agar laporannya personal
+        document.addEventListener("DOMContentLoaded", function() {
+            const userName = localStorage.getItem('gd_currentUser');
+            if (userName) {
+                document.getElementById('report-name').textContent = userName;
+            }
+        });
+    </script>
 </body>
 </html>

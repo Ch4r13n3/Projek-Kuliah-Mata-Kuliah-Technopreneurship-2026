@@ -6,711 +6,1589 @@
     <title>GlowDiary - Analyze</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            light: '#e9d5ff',
-                            DEFAULT: '#c084fc',
-                            dark: '#9333ea',
-                        }
+                        brand: { light:'#e9d5ff', DEFAULT:'#c084fc', dark:'#7c3aed', deeper:'#5b21b6' }
                     }
                 }
             }
         }
     </script>
     <style>
-        html { height: -webkit-fill-available; }
-        body {
-            height: 100vh;
-            height: -webkit-fill-available;
-            height: 100dvh;
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
-        .gradient-btn { background: linear-gradient(135deg, #d8b4fe 0%, #c084fc 100%); }
+        html{height:-webkit-fill-available}
+        *{-webkit-tap-highlight-color:transparent}
+        body{height:100vh;height:-webkit-fill-available;height:100dvh;font-family:'Plus Jakarta Sans',sans-serif;color:#1f2937}
+        ::-webkit-scrollbar{width:3px}
+        ::-webkit-scrollbar-thumb{background:#ede9fe;border-radius:10px}
 
-        .pb-safe {
-            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        /* ── Tokens ── */
+        :root{
+            --purple-50:#faf5ff;--purple-100:#f3e8ff;--purple-200:#e9d5ff;
+            --purple-600:#9333ea;--purple-700:#7c3aed;--purple-800:#5b21b6;
         }
 
-        /* Scan animations */
-        .scan-line { animation: scanMove 2s linear infinite; }
-        @keyframes scanMove {
-            0%   { top: 10%; }
-            50%  { top: 80%; }
-            100% { top: 10%; }
-        }
-        .pulse-ring { animation: pulseRing 1.8s ease-out infinite; }
-        @keyframes pulseRing {
-            0%   { transform: scale(0.95); opacity: 1; }
-            70%  { transform: scale(1.08); opacity: 0; }
-            100% { transform: scale(0.95); opacity: 0; }
-        }
-        .bar-fill { transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
-        .tab-btn.active { background: #9333ea; color: white; }
-        .mode-btn.active { background: white; color: #9333ea; box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
-        .hist-card:hover { border-color: #c084fc; }
-        .sidebar-btn { color: #9ca3af; }
-        .sidebar-btn:hover { background: #f5f3ff; color: #9333ea; }
-        .sidebar-btn.active { background: #f5f3ff; color: #9333ea; font-weight: 700; }
+        /* ── Buttons ── */
+        .btn-primary{background:linear-gradient(135deg,#9333ea,#7c3aed);color:#fff;font-weight:700;border-radius:16px;transition:all .2s;box-shadow:0 6px 20px rgba(124,58,237,.38)}
+        .btn-primary:hover{box-shadow:0 8px 28px rgba(124,58,237,.5);transform:translateY(-1px)}
+        .btn-primary:active{transform:translateY(0);box-shadow:0 3px 10px rgba(124,58,237,.3)}
 
-        /* ── BINGKAI HP ── */
-        @media (min-width: 641px) {
-            body {
-                background-color: #1a1a1a !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-            }
-            .iphone-frame {
-                width: 390px;
-                height: 844px;
-                border: 14px solid #111;
-                border-radius: 40px;
-                position: relative;
-                box-shadow: 0 0 0 2px #333, 0 20px 40px rgba(0,0,0,0.5);
-                background: #fff;
-                overflow: hidden;
-                display: flex;
-                transform: translateZ(0);
-            }
-            .iphone-frame::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 150px;
-                height: 28px;
-                background: #111;
-                border-bottom-left-radius: 18px;
-                border-bottom-right-radius: 18px;
-                z-index: 9999;
-            }
-            .iphone-screen aside { display: none !important; }
-        }
+        /* ── Nav ── */
+        .nav-pill{background:rgba(255,255,255,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+        .nav-active-bg{background:linear-gradient(135deg,#f3e8ff,#ede9fe)}
+        .pb-safe{padding-bottom:max(16px,env(safe-area-inset-bottom))}
 
-        @media (max-width: 640px) {
-            .iphone-frame {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex: 1;
-                border: none;
-                border-radius: 0;
-            }
-            .iphone-frame::before { display: none; }
-        }
+        /* ── Tab switcher ── */
+        .tab-wrap{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.1)}
+        .tab-btn{color:#9ca3af;transition:all .25s cubic-bezier(.4,0,.2,1);font-size:13px;font-weight:700}
+        .tab-btn.active{background:#fff;color:#7c3aed;box-shadow:0 2px 16px rgba(124,58,237,.18)}
 
-        .iphone-screen {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
+        /* ── Mode toggle ── */
+        .mode-btn{color:#9ca3af;font-size:10px;font-weight:700;transition:all .2s;padding:6px 12px;border-radius:10px}
+        .mode-btn.active{background:#fff;color:#c084fc;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+
+        /* ── Cards ── */
+        .card{background:#fff;border:1px solid #f0ebff;border-radius:24px;transition:transform .2s,box-shadow .2s}
+        .card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,.07)}
+        .card-section-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#111827;margin-bottom:16px}
+        .card-section-icon{width:22px;height:22px;border-radius:8px;background:#ede9fe;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .card-section-icon i{color:#7c3aed;font-size:9px}
+
+        /* ── Score ring ── */
+        @keyframes ringDraw{from{stroke-dasharray:0 100}to{stroke-dasharray:78 100}}
+        .score-ring{animation:ringDraw 1.6s cubic-bezier(.4,0,.2,1) .3s both}
+
+        /* ── Metric bars ── */
+        .bar-wrap{background:#f5f3ff;height:7px;border-radius:99px;overflow:hidden}
+        .bar-fill{height:100%;border-radius:99px;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+        @keyframes barIn{from{width:0!important}to{}}
+        .bar-fill{animation:barIn 1.4s cubic-bezier(.4,0,.2,1) .5s both}
+
+        /* ── Weekly bars ── */
+        .wk-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+        .wk-bar{width:100%;border-radius:6px 6px 0 0;transition:all .8s cubic-bezier(.4,0,.2,1)}
+        .wk-bar.past{background:#ede9fe}
+        .wk-bar.today{background:linear-gradient(180deg,#a855f7,#7c3aed)}
+        .wk-bar.future{background:#f3f4f6;border:1px dashed #d1d5db;border-bottom:none}
+        .wk-label{font-size:9px;font-weight:700}
+        .wk-label.today{color:#7c3aed}
+        .wk-label.other{color:#9ca3af}
+
+        /* ── Ingredient cards ── */
+        .ing-tag{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;letter-spacing:.05em;flex-shrink:0}
+        .ing-card{border-radius:18px;border:1px solid #f0ebff;background:#fff;transition:transform .18s,box-shadow .18s}
+        .ing-card:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.07)}
+        .ing-card.safe{border-left:3px solid #22c55e}
+        .ing-card.warn{border-left:3px solid #f59e0b;border-color:#fef08a}
+        .ing-card.bad{border-left:3px solid #ef4444;border-color:#fecaca}
+
+        /* ── Tip cards ── */
+        .tip-card{border-radius:16px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px}
+        .tip-icon{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+
+        /* ── Scan animations ── */
+        @keyframes scanMove{0%{top:8%;opacity:0}10%{opacity:1}50%{top:82%;opacity:1}90%{opacity:1}100%{top:8%;opacity:0}}
+        .scan-line{animation:scanMove 2.2s linear infinite}
+        @keyframes pulseRing{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.45)}60%{box-shadow:0 0 0 18px rgba(168,85,247,0)}}
+        .pulse-ring-anim{animation:pulseRing 2.2s ease-in-out infinite}
+        @keyframes spinRing{to{stroke-dashoffset:-280}}
+        .spin-ring{animation:spinRing 2s linear infinite;transform-origin:center}
+
+        /* ── Fade up ── */
+        @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .au{animation:fadeUp .32s cubic-bezier(.22,.61,.36,1) both}
+        .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
+
+        /* ── Preview frame ── */
+        .preview-frame{width:96px;height:96px;border-radius:20px;overflow:hidden;position:relative;flex-shrink:0}
+        .preview-inner{width:100%;height:100%;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.18);border-radius:20px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+        /* ── Loading screen ── */
+        .loading-step{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;transition:all .4s}
+        .loading-step.done{background:#f0fdf4}
+        .loading-step.active{background:#faf5ff}
+        .loading-step.pending{opacity:.35}
+        .step-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px}
+
+        /* ── Match donut ── */
+        @keyframes donutDraw{from{stroke-dasharray:0 100}to{stroke-dasharray:75 100}}
+        .match-ring{animation:donutDraw 1.4s cubic-bezier(.4,0,.2,1) .3s both}
+
+        /* ── Alt product cards ── */
+        .prod-card{background:#fff;border:1px solid #ede9fe;border-radius:18px;padding:10px;width:120px;flex-shrink:0;transition:transform .18s,box-shadow .18s}
+        .prod-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,.1)}
+
+        /* ── Riwayat card ── */
+        .hist-card{background:#faf5ff;border:1px solid #ede9fe;border-radius:18px;display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;transition:all .18s}
+        .hist-card:hover{border-color:#c084fc;transform:translateY(-1px)}
+
+        /* ── iphone frame ── */
+        @media(min-width:641px){
+            body{background:radial-gradient(ellipse at 55% 40%,#2d1b4e,#13072b 50%,#070010)!important;display:flex!important;justify-content:center!important;align-items:center!important}
+            .iphone-frame{width:390px;height:844px;border:13px solid #1a1a1c;border-radius:50px;position:relative;box-shadow:0 0 0 1px #3a3a3c,0 0 60px rgba(124,58,237,.2),0 30px 80px rgba(0,0,0,.8);background:#fff;overflow:hidden;display:flex}
+            .iphone-frame::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#1a1a1c;border-bottom-left-radius:20px;border-bottom-right-radius:20px;z-index:9999}
+            .iphone-screen aside{display:none!important}
+        }
+        @media(max-width:640px){
+            .iphone-frame,.iphone-screen{width:100%;height:100%;display:flex;flex:1}
+            .iphone-frame{border:none;border-radius:0}
+            .iphone-frame::before{display:none}
         }
     </style>
 </head>
-<body class="font-sans text-gray-800 overflow-hidden flex h-screen w-screen">
+<body class="overflow-hidden flex h-screen w-screen">
+<div class="iphone-frame">
+<div class="iphone-screen flex flex-col w-full h-full relative overflow-hidden" style="background:#f8f5ff">
 
-    <div class="iphone-frame">
-        <div class="iphone-screen bg-gray-50 flex flex-col w-full h-full relative overflow-hidden">
+<main class="flex-1 overflow-y-auto pb-[86px]" style="-webkit-overflow-scrolling:touch">
+<div class="px-4 pt-12 pb-4 space-y-4">
 
-            <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto bg-gray-50 pb-[80px]" style="-webkit-overflow-scrolling: touch;">
-                <div class="w-full mx-auto p-4 pt-10 space-y-6">
+    <div class="flex justify-between items-center mb-4 au">
+        <div>
+            <h1 class="text-[26px] font-extrabold text-gray-900 leading-none">Analyze</h1>
+        </div>
+        <button onclick="toggleHistory()" id="hist-btn" class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center border transition-all hover:bg-purple-50 shadow-sm" style="border-color:#ede9fe;color:#c084fc;">
+            <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+        </button>
+    </div>
 
-                    <!-- Header -->
-                    <div class="flex justify-between items-center">
+    <div class="tab-wrap p-1 rounded-2xl flex gap-1 au d1 mb-6">
+        <button onclick="switchMainTab('scan')" id="tab-scan" class="tab-btn active flex-1 py-2.5 rounded-xl flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-camera text-[11px]"></i> Skin Scan
+        </button>
+        <button onclick="switchMainTab('ingredient')" id="tab-ingredient" class="tab-btn flex-1 py-2.5 rounded-xl flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-flask text-[11px]"></i> Ingredients
+        </button>
+    </div>
+
+    <div id="section-scan" class="hidden space-y-4 au d2">
+
+        <div class="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm relative z-10 flex flex-col gap-4">
+            
+            <div class="flex justify-between items-center px-1">
+                <h3 class="text-[11px] font-extrabold text-gray-800 uppercase tracking-widest">Skin Scan</h3>
+                <div class="flex gap-0.5 p-1 rounded-xl bg-gray-50 border border-gray-100">
+                    <button onclick="setScanMode('camera')" id="mode-camera" class="mode-btn active text-gray-500"><i class="fa-solid fa-camera mr-1" style="font-size:9px"></i>Kamera</button>
+                    <button onclick="setScanMode('upload')" id="mode-upload" class="mode-btn text-gray-500"><i class="fa-solid fa-upload mr-1" style="font-size:9px"></i>Upload</button>
+                </div>
+            </div>
+
+            <div class="relative w-full aspect-video bg-gray-900 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center">
+                <img id="captured-preview" class="hidden w-full h-full object-cover absolute inset-0 z-10">
+                <div class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('https://plus.unsplash.com/premium_photo-1692948505024-20a1288d0b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+                
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[75%] border border-dashed border-white/40 rounded-xl pointer-events-none z-20">
+                    <div class="absolute -top-1 -left-1 w-5 h-5 border-t-4 border-l-4 border-brand-mid rounded-tl-xl"></div>
+                    <div class="absolute -top-1 -right-1 w-5 h-5 border-t-4 border-r-4 border-brand-mid rounded-tr-xl"></div>
+                    <div class="absolute -bottom-1 -left-1 w-5 h-5 border-b-4 border-l-4 border-brand-mid rounded-bl-xl"></div>
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 border-b-4 border-r-4 border-brand-mid rounded-br-xl"></div>
+                    <div class="scan-line absolute left-0 right-0 h-[2px] bg-brand-light shadow-[0_0_8px_rgba(192,132,252,1)]"></div>
+                </div>
+            </div>
+
+            <div class="px-1 text-center">
+                <p class="text-[11px] text-gray-500 leading-relaxed mb-4">Pindai wajahmu untuk mengukur kelembapan, kadar sebum, dan analisis perkembangan jerawat secara real-time.</p>
+                
+                <div id="scan-mode-camera">
+                    <button onclick="openFaceCamera()" class="w-full bg-[#c084fc] hover:bg-[#a855f7] text-white font-bold py-3.5 rounded-xl shadow-md shadow-purple-200 transition-all flex items-center justify-center gap-2 text-sm active:scale-[0.98]">
+                        <i class="fa-solid fa-camera"></i> Mulai Analisis Wajah
+                    </button>
+                </div>
+                
+                <div id="scan-mode-upload" class="hidden">
+                    <label class="w-full bg-[#c084fc] hover:bg-[#a855f7] text-white font-bold py-3.5 rounded-xl shadow-md shadow-purple-200 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer active:scale-[0.98]">
+                        <i class="fa-solid fa-upload"></i> Upload Foto Wajah
+                        <input type="file" accept="image/*" class="hidden" onchange="handleUpload(this)">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="capture-canvas" class="hidden"></canvas>
+
+        <div id="scan-loading" class="hidden card p-6 text-center">
+            <div class="relative w-16 h-16 mx-auto mb-4">
+                <div class="pulse-ring-anim absolute inset-0 rounded-full" style="background:#f3e8ff"></div>
+                <svg class="w-16 h-16 absolute inset-0 -rotate-90" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#ede9fe" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#9333ea" stroke-width="2.5" stroke-dasharray="22 88" stroke-linecap="round" class="spin-ring"/>
+                </svg>
+                <div class="w-16 h-16 relative rounded-full flex items-center justify-center" style="background:#faf5ff">
+                    <i class="fa-solid fa-brain text-brand-dark text-xl"></i>
+                </div>
+            </div>
+            <h3 class="font-extrabold text-gray-900 text-base mb-1">AI Menganalisis...</h3>
+            <p class="text-xs text-gray-400 mb-4" id="loading-step-text">Mendeteksi kontur wajah</p>
+            <div class="bg-purple-50 rounded-full h-1.5 overflow-hidden mb-4">
+                <div id="scan-progress-bar" class="h-full rounded-full" style="width:0%;background:linear-gradient(90deg,#a855f7,#7c3aed);transition:width .3s"></div>
+            </div>
+            <div class="space-y-1.5 text-left" id="scan-steps">
+                <div class="loading-step active" id="step-1">
+                    <div class="step-dot" style="background:#ede9fe"><i class="fa-solid fa-spinner fa-spin text-brand-dark" style="font-size:9px"></i></div>
+                    <span class="text-xs font-semibold text-gray-700">Deteksi kontur wajah</span>
+                </div>
+                <div class="loading-step pending" id="step-2">
+                    <div class="step-dot" style="background:#f3f4f6"><i class="fa-solid fa-circle text-gray-300" style="font-size:6px"></i></div>
+                    <span class="text-xs font-semibold text-gray-400">Analisis kadar hidrasi</span>
+                </div>
+                <div class="loading-step pending" id="step-3">
+                    <div class="step-dot" style="background:#f3f4f6"><i class="fa-solid fa-circle text-gray-300" style="font-size:6px"></i></div>
+                    <span class="text-xs font-semibold text-gray-400">Deteksi jerawat & pigmentasi</span>
+                </div>
+                <div class="loading-step pending" id="step-4">
+                    <div class="step-dot" style="background:#f3f4f6"><i class="fa-solid fa-circle text-gray-300" style="font-size:6px"></i></div>
+                    <span class="text-xs font-semibold text-gray-400">Menyusun rekomendasi AI</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="scan-results" class="hidden space-y-3">
+            <div class="card p-5 au">
+                <div class="flex items-center gap-4">
+                    <div class="relative flex-shrink-0" style="width:80px;height:80px">
+                        <svg width="80" height="80" viewBox="0 0 36 36" class="-rotate-90" style="position:absolute;inset:0">
+                            <defs>
+                                <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#a855f7"/>
+                                    <stop offset="100%" stop-color="#6d28d9"/>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="18" cy="18" r="15.2" fill="none" stroke="#f3e8ff" stroke-width="3.8"/>
+                            <circle cx="18" cy="18" r="15.2" fill="none" stroke="url(#rg)" stroke-width="3.8" stroke-dasharray="78 100" stroke-linecap="round" class="score-ring"/>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-[22px] font-extrabold leading-none" style="color:#6d28d9">78</span>
+                            <span style="font-size:8px;font-weight:800;color:#9ca3af">/100</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[9px] font-extrabold uppercase tracking-[.15em] text-gray-400 mb-0.5">Overall Score</p>
+                        <h3 class="text-[19px] font-extrabold text-gray-900 leading-tight">Cukup Sehat ✨</h3>
+                        <div class="flex flex-wrap gap-1.5 mt-2">
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full" style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0">
+                                <i class="fa-solid fa-arrow-trend-up" style="font-size:8px"></i> +5 poin
+                            </span>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe">
+                                <i class="fa-solid fa-droplet" style="font-size:8px"></i> Oily
+                            </span>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca">
+                                <i class="fa-solid fa-circle-dot" style="font-size:8px"></i> Acne-prone
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-5 au d1">
+                <div class="card-section-title">
+                    <span class="card-section-icon"><i class="fa-solid fa-chart-simple"></i></span>
+                    Detail Kondisi Kulit
+                </div>
+                <div class="grid grid-cols-2 gap-x-5 gap-y-4">
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-5 h-5 rounded-lg flex items-center justify-center" style="background:#eff6ff"><i class="fa-solid fa-droplet text-blue-500" style="font-size:8px"></i></div>
+                                <span class="text-[11px] font-semibold text-gray-700">Hidrasi</span>
+                            </div>
+                            <span class="text-[11px] font-extrabold text-blue-600">72%</span>
+                        </div>
+                        <div class="bar-wrap"><div class="bar-fill" style="width:72%;background:linear-gradient(90deg,#60a5fa,#3b82f6)"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-5 h-5 rounded-lg flex items-center justify-center" style="background:#fefce8"><i class="fa-solid fa-sun text-yellow-500" style="font-size:8px"></i></div>
+                                <span class="text-[11px] font-semibold text-gray-700">Sebum</span>
+                            </div>
+                            <span class="text-[11px] font-extrabold text-yellow-600">65%</span>
+                        </div>
+                        <div class="bar-wrap"><div class="bar-fill" style="width:65%;background:linear-gradient(90deg,#fcd34d,#f59e0b)"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-5 h-5 rounded-lg flex items-center justify-center" style="background:#fef2f2"><i class="fa-solid fa-circle-exclamation text-red-400" style="font-size:8px"></i></div>
+                                <span class="text-[11px] font-semibold text-gray-700">Jerawat</span>
+                            </div>
+                            <span class="text-[11px] font-extrabold text-red-500">3 titik</span>
+                        </div>
+                        <div class="bar-wrap"><div class="bar-fill" style="width:30%;background:linear-gradient(90deg,#fca5a5,#ef4444)"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-5 h-5 rounded-lg flex items-center justify-center" style="background:#fff7ed"><i class="fa-solid fa-circle text-orange-300" style="font-size:8px"></i></div>
+                                <span class="text-[11px] font-semibold text-gray-700">Pigmen</span>
+                            </div>
+                            <span class="text-[11px] font-extrabold text-orange-500">Ringan</span>
+                        </div>
+                        <div class="bar-wrap"><div class="bar-fill" style="width:25%;background:linear-gradient(90deg,#fdba74,#f97316)"></div></div>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-5 h-5 rounded-lg flex items-center justify-center" style="background:#f0fdf4"><i class="fa-solid fa-hand-sparkles text-green-500" style="font-size:8px"></i></div>
+                                <span class="text-[11px] font-semibold text-gray-700">Tekstur Kulit</span>
+                            </div>
+                            <span class="text-[11px] font-extrabold text-green-600">80%</span>
+                        </div>
+                        <div class="bar-wrap"><div class="bar-fill" style="width:80%;background:linear-gradient(90deg,#6ee7b7,#22c55e)"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-5 au d2">
+                <div class="card-section-title">
+                    <span class="card-section-icon"><i class="fa-solid fa-location-dot"></i></span>
+                    Zona Deteksi
+                </div>
+                <div class="flex items-center gap-5">
+                    <div class="flex-shrink-0">
+                        <svg width="88" height="110" viewBox="0 0 88 110" fill="none">
+                            <path d="M34 78 Q44 86 54 78 L56 102 Q44 108 32 102Z" fill="#fde68a" stroke="#fcd34d" stroke-width="1"/>
+                            <ellipse cx="44" cy="46" rx="26" ry="32" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.2"/>
+                            <ellipse cx="33" cy="40" rx="5" ry="3.5" fill="#fff" stroke="#d1d5db" stroke-width="1"/>
+                            <circle cx="33" cy="40" r="2.2" fill="#374151"/>
+                            <circle cx="34.2" cy="39" r="0.8" fill="#fff"/>
+                            <ellipse cx="55" cy="40" rx="5" ry="3.5" fill="#fff" stroke="#d1d5db" stroke-width="1"/>
+                            <circle cx="55" cy="40" r="2.2" fill="#374151"/>
+                            <circle cx="56.2" cy="39" r="0.8" fill="#fff"/>
+                            <path d="M28 34.5 Q33 32 38 34" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                            <path d="M50 34 Q55 32 60 34.5" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                            <path d="M44 43 L41.5 52 Q44 54 46.5 52 L44 43Z" fill="#fde68a" stroke="#fcd34d" stroke-width=".8"/>
+                            <path d="M37 60 Q44 65 51 60" stroke="#e5a87a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                            <ellipse cx="18" cy="46" rx="4" ry="6" fill="#fef3c7" stroke="#fcd34d" stroke-width="1"/>
+                            <ellipse cx="70" cy="46" rx="4" ry="6" fill="#fef3c7" stroke="#fcd34d" stroke-width="1"/>
+
+                            <circle cx="44" cy="20" r="5" fill="#f59e0b" fill-opacity=".25" stroke="#f59e0b" stroke-width="1.5"/>
+                            <circle cx="44" cy="20" r="2.5" fill="#f59e0b"/>
+                            <circle cx="44" cy="48" r="4" fill="#f59e0b" fill-opacity=".2" stroke="#f59e0b" stroke-width="1.2"/>
+                            <circle cx="44" cy="48" r="2" fill="#f59e0b"/>
+                            <circle cx="25" cy="50" r="4.5" fill="#ef4444" fill-opacity=".2" stroke="#ef4444" stroke-width="1.2"/>
+                            <circle cx="25" cy="50" r="2" fill="#ef4444"/>
+                            <circle cx="63" cy="50" r="4.5" fill="#ef4444" fill-opacity=".2" stroke="#ef4444" stroke-width="1.2"/>
+                            <circle cx="63" cy="50" r="2" fill="#ef4444"/>
+                            <circle cx="44" cy="70" r="4.5" fill="#3b82f6" fill-opacity=".2" stroke="#3b82f6" stroke-width="1.2"/>
+                            <circle cx="44" cy="70" r="2" fill="#3b82f6"/>
+                        </svg>
+                    </div>
+                    <div class="space-y-2.5 flex-1">
+                        <div class="flex items-start gap-2.5">
+                            <div style="width:9px;height:9px;border-radius:50%;background:#f59e0b;flex-shrink:0;margin-top:3px"></div>
+                            <div>
+                                <p class="text-xs font-extrabold text-gray-800">T-Zone</p>
+                                <p class="text-[10px] text-gray-500 leading-snug">Berminyak, pori-pori terlihat</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <div style="width:9px;height:9px;border-radius:50%;background:#ef4444;flex-shrink:0;margin-top:3px"></div>
+                            <div>
+                                <p class="text-xs font-extrabold text-gray-800">Pipi kiri & kanan</p>
+                                <p class="text-[10px] text-gray-500 leading-snug">3 jerawat aktif terdeteksi</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <div style="width:9px;height:9px;border-radius:50%;background:#3b82f6;flex-shrink:0;margin-top:3px"></div>
+                            <div>
+                                <p class="text-xs font-extrabold text-gray-800">Dagu</p>
+                                <p class="text-[10px] text-gray-500 leading-snug">Hidrasi optimal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-5 au d2">
+                <div class="card-section-title">
+                    <span class="card-section-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                    Rekomendasi AI
+                    <span class="ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full" style="background:#faf5ff;color:#7c3aed;border:1px solid #ede9fe">3 tips hari ini</span>
+                </div>
+                <div class="space-y-2">
+                    <div class="tip-card" style="background:#eff6ff;border:1px solid #bfdbfe">
+                        <div class="tip-icon" style="background:#dbeafe">
+                            <i class="fa-solid fa-droplet text-blue-500"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2 mb-0.5">
+                                <p class="text-xs font-extrabold text-blue-900">Tambah Hidrasi</p>
+                                <span class="text-[9px] font-bold text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full flex-shrink-0">#1</span>
+                            </div>
+                            <p class="text-[10px] text-blue-700 leading-relaxed">Pakai <b>Hyaluronic Acid</b> setelah toner. Hidrasi kulitmu butuh boost hari ini.</p>
+                        </div>
+                    </div>
+                    <div class="tip-card" style="background:#fff7ed;border:1px solid #fed7aa">
+                        <div class="tip-icon" style="background:#ffedd5">
+                            <i class="fa-solid fa-triangle-exclamation text-orange-500"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2 mb-0.5">
+                                <p class="text-xs font-extrabold text-orange-900">Tunda Eksfoliasi</p>
+                                <span class="text-[9px] font-bold text-orange-600 bg-orange-100 px-1.5 py-0.5 rounded-full flex-shrink-0">#2</span>
+                            </div>
+                            <p class="text-[10px] text-orange-700 leading-relaxed">3 jerawat aktif. Tunda AHA/BHA 2–3 hari ke depan untuk hindari iritasi.</p>
+                        </div>
+                    </div>
+                    <div class="tip-card" style="background:#f0fdf4;border:1px solid #bbf7d0">
+                        <div class="tip-icon" style="background:#dcfce7">
+                            <i class="fa-solid fa-sun text-green-500"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2 mb-0.5">
+                                <p class="text-xs font-extrabold text-green-900">Sunscreen Wajib</p>
+                                <span class="text-[9px] font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full flex-shrink-0">#3</span>
+                            </div>
+                            <p class="text-[10px] text-green-700 leading-relaxed">Hiperpigmentasi terdeteksi. SPF 30+ setiap pagi mencegah noda makin gelap.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-5 au d3">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="card-section-title" style="margin-bottom:0">
+                        <span class="card-section-icon"><i class="fa-solid fa-chart-bar"></i></span>
+                        Weekly Progress
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-extrabold text-green-700 bg-green-50 px-2.5 py-1 rounded-full" style="border:1px solid #bbf7d0">
+                            <i class="fa-solid fa-arrow-trend-up mr-1" style="font-size:8px"></i>+15%
+                        </span>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-x-0 flex flex-col justify-between pointer-events-none" style="top:0;bottom:20px;gap:0">
+                        <div style="border-top:1px dashed #f3e8ff;width:100%"></div>
+                        <div style="border-top:1px dashed #f3e8ff;width:100%"></div>
+                        <div style="border-top:1px dashed #f3e8ff;width:100%"></div>
+                    </div>
+                    <div class="flex items-end gap-1.5 relative" style="height:100px">
+                        <div class="wk-col">
+                            <span class="text-[8px] font-bold text-gray-300 absolute" style="top:-14px">40</span>
+                            <div class="wk-bar past" style="height:40%;position:relative"></div>
+                            <span class="wk-label other">M</span>
+                        </div>
+                        <div class="wk-col">
+                            <div class="wk-bar past" style="height:55%"></div>
+                            <span class="wk-label other">T</span>
+                        </div>
+                        <div class="wk-col">
+                            <div class="wk-bar past" style="height:30%"></div>
+                            <span class="wk-label other">W</span>
+                        </div>
+                        <div class="wk-col">
+                            <div class="wk-bar past" style="height:65%"></div>
+                            <span class="wk-label other">T</span>
+                        </div>
+                        <div class="wk-col" style="position:relative">
+                            <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:#7c3aed;color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:6px;white-space:nowrap">78</div>
+                            <div class="wk-bar today" style="height:78%"></div>
+                            <span class="wk-label today">F</span>
+                        </div>
+                        <div class="wk-col">
+                            <div class="wk-bar future" style="height:12%"></div>
+                            <span class="wk-label other" style="opacity:.35">S</span>
+                        </div>
+                        <div class="wk-col">
+                            <div class="wk-bar future" style="height:12%"></div>
+                            <span class="wk-label other" style="opacity:.35">S</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 flex items-center gap-3">
+                    <div class="flex items-center gap-1.5"><div style="width:8px;height:8px;border-radius:2px;background:#ede9fe"></div><span class="text-[10px] text-gray-400">Lalu</span></div>
+                    <div class="flex items-center gap-1.5"><div style="width:8px;height:8px;border-radius:2px;background:linear-gradient(180deg,#a855f7,#7c3aed)"></div><span class="text-[10px] text-gray-400">Hari ini</span></div>
+                    <div class="flex items-center gap-1.5"><div style="width:8px;height:8px;border-radius:2px;background:#f3f4f6;border:1px dashed #d1d5db"></div><span class="text-[10px] text-gray-400">Akan datang</span></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="scan-empty" class="card p-8 text-center au d2">
+            <div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 float-anim" style="background:linear-gradient(135deg,#f3e8ff,#ede9fe)">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect x="4" y="8" width="24" height="18" rx="3" fill="#c084fc" fill-opacity=".3" stroke="#9333ea" stroke-width="1.5"/>
+                    <circle cx="16" cy="17" r="5" fill="#9333ea" fill-opacity=".2" stroke="#9333ea" stroke-width="1.5"/>
+                    <circle cx="16" cy="17" r="2.5" fill="#9333ea"/>
+                    <circle cx="24" cy="10" r="2" fill="#9333ea"/>
+                </svg>
+            </div>
+            <h3 class="font-extrabold text-gray-900 text-base mb-1.5">Belum Ada Scan</h3>
+            <p class="text-xs text-gray-400 leading-relaxed max-w-[200px] mx-auto">Lakukan scan pertamamu untuk mulai melacak kondisi kulit setiap hari.</p>
+        </div>
+
+    </div><div id="section-ingredient" class="hidden space-y-4 au d2">
+
+        <div class="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm relative z-10 flex flex-col gap-4">
+            
+            <div class="flex justify-between items-start px-1">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-900 mb-1 tracking-tight">Ingredient Matcher</h2>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">AI Checker</p>
+                </div>
+                <div class="flex flex-col items-end gap-1">
+                    <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-blue-50 text-blue-500 border border-blue-100">Oily</span>
+                    <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-red-50 text-red-500 border border-red-100">Acne</span>
+                </div>
+            </div>
+
+            <div class="relative w-full">
+                <textarea id="ing-input" rows="3"
+                    placeholder="Tulis daftar ingredients di sini...&#10;&#10;Contoh: Water, Niacinamide, Glycerin..."
+                    class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3.5 pr-14 text-xs resize-none transition-all leading-relaxed focus:outline-none focus:border-brand-mid focus:ring-1 focus:ring-brand-mid font-medium text-gray-700"></textarea>
+                <button onclick="openProductCamera()"
+                    class="absolute bottom-3 right-3 w-9 h-9 rounded-xl bg-white flex items-center justify-center transition-all shadow-sm border border-gray-200 text-brand-mid hover:bg-purple-50">
+                    <i class="fa-solid fa-camera text-xs"></i>
+                </button>
+            </div>
+            
+            <button onclick="runIngredientCheck()" class="w-full bg-[#c084fc] hover:bg-[#a855f7] text-white font-bold py-3.5 rounded-xl shadow-md shadow-purple-200 transition-all flex items-center justify-center gap-2 text-sm active:scale-[0.98]">
+                <i class="fa-solid fa-flask text-xs"></i> Check Compatibility
+            </button>
+            <p class="text-center text-gray-400 text-[9px] font-semibold">Database 5.000+ bahan aktif skincare</p>
+        </div>
+
+        <div id="ing-results" class="hidden space-y-3">
+
+            <div class="card p-5 au">
+                <div class="flex items-center justify-between mb-4 pb-4" style="border-bottom:1px solid #f5f3ff">
+                    <div>
+                        <p class="text-[9px] font-extrabold uppercase tracking-[.15em] text-gray-400 mb-0.5">Hasil Analisis</p>
+                        <h3 class="text-base font-extrabold text-gray-900">Kompatibilitas Produk</h3>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="relative" style="width:52px;height:52px">
+                            <svg width="52" height="52" viewBox="0 0 36 36" class="-rotate-90" style="position:absolute;inset:0">
+                                <circle cx="18" cy="18" r="14.5" fill="none" stroke="#f0fdf4" stroke-width="4"/>
+                                <circle cx="18" cy="18" r="14.5" fill="none" stroke="#22c55e" stroke-width="4" stroke-dasharray="75 100" stroke-linecap="round" class="match-ring"/>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span style="font-size:11px;font-weight:800;color:#15803d">75%</span>
+                            </div>
+                        </div>
                         <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Analyze</h1>
-                            <p class="text-sm text-gray-400 mt-1">Skin scan & ingredient checker</p>
-                        </div>
-                        <button onclick="toggleHistory()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 hover:text-brand transition-colors">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
-                        </button>
-                    </div>
-
-                    <!-- Tab Switcher -->
-                    <div class="bg-gray-100 p-1 rounded-2xl flex gap-1">
-                        <button onclick="switchMainTab('scan')" id="tab-scan" class="tab-btn active flex-1 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-camera"></i> Skin Scan
-                        </button>
-                        <button onclick="switchMainTab('ingredient')" id="tab-ingredient" class="tab-btn flex-1 py-2.5 rounded-xl text-sm font-bold text-gray-400 transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-flask"></i> Ingredient
-                        </button>
-                    </div>
-
-                    <!-- SECTION 1: SKIN SCAN -->
-                    <div id="section-scan" class="hidden space-y-6">
-                        <div class="bg-gradient-to-br from-purple-600 to-brand-dark rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-                            <div class="absolute -right-10 -top-10 w-44 h-44 bg-white/10 rounded-full"></div>
-                            <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-pink-400/20 rounded-full"></div>
-                            <div class="relative z-10 flex justify-end mb-4">
-                                <div class="bg-white/20 rounded-xl p-1 flex gap-1">
-                                    <button onclick="setScanMode('camera')" id="mode-camera" class="mode-btn active px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all">
-                                        <i class="fa-solid fa-camera mr-1"></i>Kamera
-                                    </button>
-                                    <button onclick="setScanMode('upload')" id="mode-upload" class="mode-btn px-3 py-1.5 rounded-lg text-xs font-bold text-white/70 transition-all">
-                                        <i class="fa-solid fa-upload mr-1"></i>Upload
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="relative z-10 flex flex-col items-center gap-4 text-center">
-                                
-                                <div class="relative w-36 h-36 flex-shrink-0">
-                                    <div class="w-full h-full bg-black/20 backdrop-blur-md rounded-2xl border border-white/30 flex items-center justify-center overflow-hidden relative">
-                                        <!-- Pratinjau Foto Hasil Snapshot Wajah / File Upload -->
-                                        <img id="captured-preview" class="hidden w-full h-full object-cover rounded-2xl">
-                                        <i id="default-face-icon" class="fa-solid fa-user-astronaut text-5xl text-white/80"></i>
-                                    </div>
-                                    <div class="absolute top-1 left-1 w-5 h-5 border-t-2 border-l-2 border-white rounded-tl-sm"></div>
-                                    <div class="absolute top-1 right-1 w-5 h-5 border-t-2 border-r-2 border-white rounded-tr-sm"></div>
-                                    <div class="absolute bottom-1 left-1 w-5 h-5 border-b-2 border-l-2 border-white rounded-bl-sm"></div>
-                                    <div class="absolute bottom-1 right-1 w-5 h-5 border-b-2 border-r-2 border-white rounded-br-sm"></div>
-                                </div>
-
-                                <div class="w-full">
-                                    <h2 class="text-xl font-bold mb-2">Daily Skin Scan</h2>
-                                    <p class="text-purple-100 text-sm mb-5 leading-relaxed">Ambil foto wajahmu hari ini untuk melihat tingkat kelembapan, jerawat, dan noda hitam secara real-time.</p>
-                                    
-                                    <div id="scan-mode-camera" class="flex flex-col gap-3 justify-center w-full">
-                                        <!-- Tombol pemicu modal kamera wajah kustom -->
-                                        <button onclick="openFaceCamera()" class="bg-white text-brand-dark font-bold px-6 py-3 rounded-xl shadow-md hover:scale-[1.02] transition-transform flex items-center gap-2 justify-center w-full">
-                                            <i class="fa-solid fa-camera"></i> Scan Face Now
-                                        </button>
-                                        <button class="bg-white/20 text-white font-bold px-5 py-3 rounded-xl border border-white/30 hover:bg-white/30 transition-colors flex items-center gap-2 justify-center text-sm w-full">
-                                            <i class="fa-solid fa-circle-question"></i> Cara Scan
-                                        </button>
-                                    </div>
-                                    
-                                    <div id="scan-mode-upload" class="hidden w-full">
-                                        <label class="cursor-pointer bg-white text-brand-dark font-bold px-6 py-3 rounded-xl shadow-md hover:scale-[1.02] transition-transform flex items-center gap-2 justify-center w-full">
-                                            <i class="fa-solid fa-upload"></i> Upload Foto Wajah
-                                            <input type="file" accept="image/*" class="hidden" onchange="handleUpload(this)">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <canvas id="capture-canvas" class="hidden"></canvas>
-
-                        <!-- Loading State -->
-                        <div id="scan-loading" class="hidden bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center">
-                            <div class="relative w-20 h-20 mx-auto mb-4">
-                                <div class="pulse-ring absolute inset-0 bg-purple-100 rounded-full"></div>
-                                <div class="relative w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center text-brand-dark text-3xl">
-                                    <i class="fa-solid fa-brain"></i>
-                                </div>
-                            </div>
-                            <h3 class="font-bold text-gray-800 text-lg mb-2">AI sedang menganalisis...</h3>
-                            <p class="text-sm text-gray-400">Mendeteksi kondisi kulit, pori-pori, dan tingkat hidrasi</p>
-                            <div class="mt-4 bg-gray-100 rounded-full h-2 overflow-hidden">
-                                <div id="scan-progress-bar" class="h-2 bg-brand rounded-full transition-all duration-300" style="width:0%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Scan Results Wrapper -->
-                        <div id="scan-results" class="hidden space-y-6">
-                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-6">
-                                <div class="relative w-20 h-20 flex-shrink-0">
-                                    <svg class="w-20 h-20 -rotate-90" viewBox="0 0 36 36">
-                                        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#f3f4f6" stroke-width="3"/>
-                                        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#c084fc" stroke-width="3" stroke-dasharray="78 100" stroke-linecap="round"/>
-                                    </svg>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span class="text-xl font-bold text-brand-dark">78</span>
-                                        <span class="text-[9px] text-gray-400 font-bold">/ 100</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Overall Skin Score</p>
-                                    <h3 class="text-xl font-bold text-gray-800">Cukup Sehat ✨</h3>
-                                    <p class="text-sm text-gray-400 mt-1">Naik 5 poin dari scan terakhir (3 hari lalu)</p>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                                <h3 class="font-bold text-gray-800 text-lg mb-5">Detail Kondisi Kulit</h3>
-                                <div class="space-y-5">
-                                    <div>
-                                        <div class="flex justify-between items-center mb-2">
-                                            <div class="flex items-center gap-2"><div class="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center"><i class="fa-solid fa-droplet text-blue-500 text-xs"></i></div><span class="text-sm font-semibold text-gray-700">Hidrasi</span></div>
-                                            <span class="text-sm font-bold text-blue-600">72%</span>
-                                        </div>
-                                        <div class="h-2.5 bg-gray-100 rounded-full overflow-hidden"><div class="bar-fill h-full bg-blue-400 rounded-full" style="width:72%"></div></div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-center mb-2">
-                                            <div class="flex items-center gap-2"><div class="w-7 h-7 bg-yellow-50 rounded-lg flex items-center justify-center"><i class="fa-solid fa-sun text-yellow-500 text-xs"></i></div><span class="text-sm font-semibold text-gray-700">Minyak (Sebum)</span></div>
-                                            <span class="text-sm font-bold text-yellow-600">65%</span>
-                                        </div>
-                                        <div class="h-2.5 bg-gray-100 rounded-full overflow-hidden"><div class="bar-fill h-full bg-yellow-400 rounded-full" style="width:65%"></div></div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-center mb-2">
-                                            <div class="flex items-center gap-2"><div class="w-7 h-7 bg-red-50 rounded-lg flex items-center justify-center"><i class="fa-solid fa-circle-exclamation text-red-400 text-xs"></i></div><span class="text-sm font-semibold text-gray-700">Jerawat Aktif</span></div>
-                                            <span class="text-sm font-bold text-red-500">3 titik</span>
-                                        </div>
-                                        <div class="h-2.5 bg-gray-100 rounded-full overflow-hidden"><div class="bar-fill h-full bg-red-400 rounded-full" style="width:30%"></div></div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-center mb-2">
-                                            <div class="flex items-center gap-2"><div class="w-7 h-7 bg-orange-50 rounded-lg flex items-center justify-center"><i class="fa-solid fa-circle text-orange-300 text-xs"></i></div><span class="text-sm font-semibold text-gray-700">Hiperpigmentasi</span></div>
-                                            <span class="text-sm font-bold text-orange-500">Ringan</span>
-                                        </div>
-                                        <div class="h-2.5 bg-gray-100 rounded-full overflow-hidden"><div class="bar-fill h-full bg-orange-300 rounded-full" style="width:25%"></div></div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-center mb-2">
-                                            <div class="flex items-center gap-2"><div class="w-7 h-7 bg-green-50 rounded-lg flex items-center justify-center"><i class="fa-solid fa-hand-sparkles text-green-500 text-xs"></i></div><span class="text-sm font-semibold text-gray-700">Kehalusan Tekstur</span></div>
-                                            <span class="text-sm font-bold text-green-600">80%</span>
-                                        </div>
-                                        <div class="h-2.5 bg-gray-100 rounded-full overflow-hidden"><div class="bar-fill h-full bg-green-400 rounded-full" style="width:80%"></div></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                                <h3 class="font-bold text-gray-800 text-lg mb-4">Zona Kulit <span class="text-sm font-normal text-gray-400 ml-1">(Area Deteksi)</span></h3>
-                                <div class="flex flex-col gap-6 items-center">
-                                    <div class="relative w-32 h-40 mx-auto flex-shrink-0">
-                                        <div class="absolute inset-0 bg-gradient-to-b from-amber-50 to-orange-50 rounded-[50%_50%_45%_45%/60%_60%_40%_40%] border-2 border-amber-100 flex items-center justify-center text-5xl">😊</div>
-                                        <div class="absolute top-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-yellow-400 rounded-full border-2 border-white shadow-md"></div>
-                                        <div class="absolute top-12 left-5 w-2.5 h-2.5 bg-red-400 rounded-full border-2 border-white shadow-md"></div>
-                                        <div class="absolute top-12 right-5 w-2.5 h-2.5 bg-red-400 rounded-full border-2 border-white shadow-md"></div>
-                                        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
-                                    </div>
-                                    <div class="w-full space-y-3">
-                                        <div class="flex items-center gap-3"><div class="w-3 h-3 rounded-full bg-yellow-400 flex-shrink-0"></div><span class="text-sm text-gray-600"><b>T-Zone</b>: Berminyak, pori-pori terlihat</span></div>
-                                        <div class="flex items-center gap-3"><div class="w-3 h-3 rounded-full bg-red-400 flex-shrink-0"></div><span class="text-sm text-gray-600"><b>Pipi kiri & kanan</b>: 3 jerawat aktif</span></div>
-                                        <div class="flex items-center gap-3"><div class="w-3 h-3 rounded-full bg-blue-400 flex-shrink-0"></div><span class="text-sm text-gray-600"><b>Dagu</b>: Hidrasi optimal</span></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                                <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">AI Recommendations <span class="text-xl">✨</span></h3>
-                                <div class="space-y-3">
-                                    <div class="flex gap-4 p-4 rounded-2xl bg-blue-50 border border-blue-100">
-                                        <div class="text-blue-500 text-lg mt-0.5 flex-shrink-0"><i class="fa-solid fa-droplet"></i></div>
-                                        <div><h4 class="font-bold text-blue-800 text-sm">Tambah Hidrasi</h4><p class="text-xs text-blue-600/80 mt-1">Gunakan <b>Hyaluronic Acid</b> setelah toner. Kulitmu butuh boost kelembapan hari ini.</p></div>
-                                    </div>
-                                    <div class="flex gap-4 p-4 rounded-2xl bg-orange-50 border border-orange-100">
-                                        <div class="text-orange-500 text-lg mt-0.5 flex-shrink-0"><i class="fa-solid fa-circle-exclamation"></i></div>
-                                        <div><h4 class="font-bold text-orange-800 text-sm">Hindari Eksfoliasi</h4><p class="text-xs text-orange-600/80 mt-1">Ada 3 jerawat aktif terdeteksi. Tunda penggunaan AHA/BHA 2–3 hari ke depan.</p></div>
-                                    </div>
-                                    <div class="flex gap-4 p-4 rounded-2xl bg-green-50 border border-green-100">
-                                        <div class="text-green-500 text-lg mt-0.5 flex-shrink-0"><i class="fa-solid fa-circle-check"></i></div>
-                                        <div><h4 class="font-bold text-green-800 text-sm">Sunscreen Wajib!</h4><p class="text-xs text-green-600/80 mt-1">Hiperpigmentasi terdeteksi. Gunakan SPF 30+ setiap pagi untuk mencegah noda makin gelap.</p></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                                <div class="flex justify-between items-center mb-5">
-                                    <h3 class="font-bold text-gray-800 text-lg">Weekly Progress</h3>
-                                    <span class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-100">+15% Better</span>
-                                </div>
-                                <div class="flex items-end justify-between h-28 gap-2 mb-2">
-                                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-gray-100 rounded-t-md" style="height:40%"></div><span class="text-xs text-gray-400 font-medium">M</span></div>
-                                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-gray-100 rounded-t-md" style="height:55%"></div><span class="text-xs text-gray-400 font-medium">T</span></div>
-                                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-gray-100 rounded-t-md" style="height:30%"></div><span class="text-xs text-gray-400 font-medium">W</span></div>
-                                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-gray-100 rounded-t-md" style="height:65%"></div><span class="text-xs text-gray-400 font-medium">T</span></div>
-                                    <div class="flex-1 flex flex-col items-center gap-1 relative"><div class="w-full bg-brand rounded-t-md shadow-sm" style="height:78%"></div><span class="text-xs font-bold text-brand-dark">F</span><span class="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-brand-dark">78</span></div>
-                                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-gray-50 rounded-t-md border border-dashed border-gray-200" style="height:10%"></div><span class="text-xs text-gray-300 font-medium">S</span></div>
-                                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full bg-gray-50 rounded-t-md border border-dashed border-gray-200" style="height:10%"></div><span class="text-xs text-gray-300 font-medium">S</span></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Standby Empty State -->
-                        <div id="scan-empty" class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center">
-                            <div class="w-20 h-20 bg-purple-50 rounded-full mx-auto flex items-center justify-center text-4xl mb-4">📸</div>
-                            <h3 class="font-bold text-gray-800 text-lg mb-2">Belum Ada Riwayat Scan</h3>
-                            <p class="text-sm text-gray-400">Lakukan scan pertamamu sekarang untuk mulai melacak kondisi kulitmu.</p>
+                            <p class="text-xs font-extrabold text-gray-800">Match Score</p>
+                            <p class="text-[10px] font-bold text-green-600">Cukup Aman</p>
                         </div>
                     </div>
-
-                    <!-- SECTION 2: INGREDIENT MATCHER -->
-                    <div id="section-ingredient" class="hidden space-y-6">
-                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                            <div class="flex flex-col mb-5 gap-3 border-b border-gray-50 pb-4">
-                                <div>
-                                    <h3 class="font-bold text-gray-800">Ingredient Matcher</h3>
-                                    <p class="text-xs text-gray-400 mt-0.5">Analisis kecocokan bahan dengan profil kulitmu</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    <span class="bg-blue-50 text-blue-600 border border-blue-100 text-xs px-3 py-1 rounded-full font-bold">Oily</span>
-                                    <span class="bg-red-50 text-red-600 border border-red-100 text-xs px-3 py-1 rounded-full font-bold">Acne</span>
-                                </div>
-                            </div>
-                            <div class="relative mb-4">
-                                <textarea id="ing-input" rows="4" placeholder="Tulis daftar ingredients di sini...&#10;&#10;Contoh:&#10;Water, Niacinamide, Glycerin, Zinc PCA, Coconut Oil..."
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 pr-14 text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand resize-none transition-colors leading-relaxed"></textarea>
-                                <button onclick="openProductCamera()" class="absolute bottom-4 right-4 bg-white text-brand border border-gray-200 w-10 h-10 rounded-full flex items-center justify-center hover:bg-brand hover:text-white hover:border-brand transition-all shadow-sm shadow-purple-100">
-                                    <i class="fa-solid fa-camera"></i>
-                                </button>
-                            </div>
-                            <button onclick="runIngredientCheck()" class="w-full gradient-btn text-white font-bold py-4 rounded-2xl shadow-md shadow-purple-200 hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-2">
-                                <i class="fa-solid fa-flask"></i> Check Compatibility
-                            </button>
-                            <p class="text-center text-xs text-gray-400">Database 5.000+ bahan aktif skincare</p>
-                        </div>
-
-                        <!-- Ingredient Results -->
-                        <div id="ing-results" class="hidden space-y-5">
-                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h3 class="font-bold text-gray-800">Hasil Analisis</h3>
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-10 h-10 rounded-full border-4 border-green-400 flex items-center justify-center"><span class="text-xs font-bold text-green-600">75%</span></div>
-                                        <div><p class="text-xs font-bold text-gray-800">Match Score</p><p class="text-xs text-gray-400">Cukup Aman</p></div>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-3 gap-3 mb-4">
-                                    <div class="bg-green-50 rounded-2xl p-3 text-center border border-green-100"><h4 class="text-xl font-bold text-green-600">4</h4><p class="text-[10px] text-green-700 font-bold uppercase mt-1">Aman</p></div>
-                                    <div class="bg-yellow-50 rounded-2xl p-3 text-center border border-yellow-100"><h4 class="text-xl font-bold text-yellow-600">1</h4><p class="text-[10px] text-yellow-700 font-bold uppercase mt-1">Perhatian</p></div>
-                                    <div class="bg-red-50 rounded-2xl p-3 text-center border border-red-100"><h4 class="text-xl font-bold text-red-500">1</h4><p class="text-[10px] text-red-600 font-bold uppercase mt-1">Bahaya</p></div>
-                                </div>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex gap-4 items-start">
-                                    <div class="w-9 h-9 rounded-xl bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-check text-sm"></i></div>
-                                    <div class="flex-1"><div class="flex items-center justify-between mb-1"><p class="font-bold text-gray-800">Niacinamide</p><span class="text-[10px] bg-green-50 text-green-700 font-bold px-2 py-0.5 rounded-full border border-green-100">AMAN</span></div><p class="text-xs text-gray-500 leading-relaxed">Sempurna untuk kulitmu. Mengontrol sebum berlebih, memperkecil pori-pori, dan mencerahkan bekas jerawat.</p></div>
-                                </div>
-                                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex gap-4 items-start">
-                                    <div class="w-9 h-9 rounded-xl bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-check text-sm"></i></div>
-                                    <div class="flex-1"><div class="flex items-center justify-between mb-1"><p class="font-bold text-gray-800">Glycerin</p><span class="text-[10px] bg-green-50 text-green-700 font-bold px-2 py-0.5 rounded-full border border-green-100">AMAN</span></div><p class="text-xs text-gray-500 leading-relaxed">Humektan ringan yang aman untuk kulit acne-prone. Menghidrasi tanpa menyumbat pori.</p></div>
-                                </div>
-                                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex gap-4 items-start">
-                                    <div class="w-9 h-9 rounded-xl bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-check text-sm"></i></div>
-                                    <div class="flex-1"><div class="flex items-center justify-between mb-1"><p class="font-bold text-gray-800">Zinc PCA</p><span class="text-[10px] bg-green-50 text-green-700 font-bold px-2 py-0.5 rounded-full border border-green-100">AMAN</span></div><p class="text-xs text-gray-500 leading-relaxed">Anti-bakteri alami. Bekerja baik dengan Niacinamide untuk melawan jerawat hormonal.</p></div>
-                                </div>
-                                <div class="bg-white rounded-2xl p-4 shadow-sm border border-yellow-100 flex gap-4 items-start">
-                                    <div class="w-9 h-9 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-triangle-exclamation text-sm"></i></div>
-                                    <div class="flex-1"><div class="flex items-center justify-between mb-1"><p class="font-bold text-gray-800">Fragrance</p><span class="text-[10px] bg-yellow-50 text-yellow-700 font-bold px-2 py-0.5 rounded-full border border-yellow-100">PERHATIAN</span></div><p class="text-xs text-gray-500 leading-relaxed">Bisa menyebabkan iritasi pada kulit sensitif. Monitor reaksi di 2 minggu pertama pemakaian.</p></div>
-                                </div>
-                                <div class="bg-white rounded-2xl p-4 shadow-sm border border-red-100 flex gap-4 items-start">
-                                    <div class="w-9 h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-xmark text-sm"></i></div>
-                                    <div class="flex-1"><div class="flex items-center justify-between mb-1"><p class="font-bold text-gray-800">Coconut Oil</p><span class="text-[10px] bg-red-50 text-red-600 font-bold px-2 py-0.5 rounded-full border border-red-100">HINDARI</span></div><p class="text-xs text-gray-500 leading-relaxed">Comedogenic rating: <b class="text-red-500">4/5</b>. Sangat berisiko menyumbat pori-pori pada kulit Oily + Acne-prone seperti kulitmu.</p></div>
-                                </div>
-                            </div>
-                            <div class="bg-purple-50 rounded-3xl p-5 border border-purple-100">
-                                <h4 class="font-bold text-brand-dark mb-3 flex items-center gap-2"><i class="fa-solid fa-lightbulb"></i> Produk Alternatif yang Lebih Aman</h4>
-                                <p class="text-xs text-gray-500 mb-4">Berdasarkan ingredients di atas, produk ini bisa jadi pilihan lebih baik:</p>
-                                <div class="flex gap-3 overflow-x-auto pb-1">
-                                    <div class="flex-shrink-0 bg-white rounded-2xl p-3 w-36 border border-purple-100 shadow-sm">
-                                        <div class="w-full h-20 bg-purple-50 rounded-xl mb-2 flex items-center justify-center text-3xl">🧴</div>
-                                        <p class="text-xs font-bold text-gray-800 truncate">Niacinamide 10%</p>
-                                        <p class="text-[10px] text-gray-400">The Ordinary</p>
-                                        <p class="text-xs font-bold text-brand-dark mt-1">$7.90</p>
-                                    </div>
-                                    <div class="flex-shrink-0 bg-white rounded-2xl p-3 w-36 border border-purple-100 shadow-sm">
-                                        <div class="w-full h-20 bg-green-50 rounded-xl mb-2 flex items-center justify-center text-3xl">🌿</div>
-                                        <p class="text-xs font-bold text-gray-800 truncate">Centella Serum</p>
-                                        <p class="text-[10px] text-gray-400">COSRX</p>
-                                        <p class="text-xs font-bold text-brand-dark mt-1">$18.50</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- History Panel -->
-                    <div id="history-panel" class="hidden bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-gray-800 text-lg">Riwayat Scan</h3>
-                            <button onclick="toggleHistory()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="hist-card flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 cursor-pointer transition-colors">
-                                <div class="w-12 h-12 bg-brand-light rounded-xl flex items-center justify-center text-brand-dark font-bold">78</div>
-                                <div class="flex-1"><p class="font-bold text-gray-800 text-sm">Hari ini — Jum, 6 Jun</p><p class="text-xs text-gray-400">Hidrasi 72% · 3 jerawat aktif</p></div>
-                                <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </main>
-
-            <!-- ⚠️ NEW COMPONENT: MODAL VIEWPORT KAMERA KHUSUS SCAN WAJAH (TAB 1) -->
-            <div id="modal-face-camera" class="absolute inset-0 bg-black/90 z-[300] hidden flex-col justify-between p-6">
-                <div class="flex justify-between items-center text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider text-purple-300">Daily Skin Biometric Scan</span>
-                    <button onclick="closeFaceCamera()" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                
-                <!-- Lingkaran Deteksi Wajah untuk Pratinjau Aliran Kamera Depan -->
-                <div class="w-72 h-72 mx-auto bg-neutral-900 rounded-full border-2 border-brand/50 overflow-hidden relative shadow-lg shadow-purple-500/20">
-                    <video id="face-webcam-view" autoplay playsinline muted class="w-full h-full object-cover scale-x-[-1]"></video>
-                    <!-- Animasi Garis Laser Scan Bergerak Naik-Turun -->
-                    <div id="laser-line-face" class="scan-line absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent shadow-[0_0_8px_#c084fc]"></div>
-                </div>
-
-                <div class="w-full pb-safe flex flex-col items-center gap-2 text-center text-white">
-                    <p class="text-xs text-gray-400 max-w-[240px]">Posisikan wajah Anda tepat di dalam lingkaran radar scan</p>
-                    <button onclick="captureFaceSnapshot()" class="w-16 h-16 bg-white rounded-full border-4 border-purple-300 flex items-center justify-center active:scale-95 transition-transform mt-2">
-                        <div class="w-12 h-12 bg-brand rounded-full flex items-center justify-center text-white text-xl"><i class="fa-solid fa-expand"></i></div>
-                    </button>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="rounded-2xl p-3 text-center" style="background:#f0fdf4;border:1px solid #bbf7d0">
+                        <p class="text-[22px] font-extrabold text-green-600 leading-none">4</p>
+                        <p class="text-[9px] font-extrabold uppercase tracking-wider text-green-700 mt-1">Aman</p>
+                    </div>
+                    <div class="rounded-2xl p-3 text-center" style="background:#fefce8;border:1px solid #fef08a">
+                        <p class="text-[22px] font-extrabold text-yellow-600 leading-none">1</p>
+                        <p class="text-[9px] font-extrabold uppercase tracking-wider text-yellow-700 mt-1">Perhatian</p>
+                    </div>
+                    <div class="rounded-2xl p-3 text-center" style="background:#fef2f2;border:1px solid #fecaca">
+                        <p class="text-[22px] font-extrabold text-red-500 leading-none">1</p>
+                        <p class="text-[9px] font-extrabold uppercase tracking-wider text-red-600 mt-1">Hindari</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- MODAL VIEWPORT KAMERA KHUSUS PRODUK BOTOL (TAB 2) -->
-            <div id="modal-product-camera" class="absolute inset-0 bg-black/90 z-[300] hidden flex-col justify-between p-6">
-                <div class="flex justify-between items-center text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider text-purple-300">Scan Product Ingredients</span>
-                    <button onclick="closeProductCamera()" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                
-                <div class="w-full aspect-[4/5] bg-neutral-900 rounded-2xl border border-white/10 overflow-hidden relative">
-                    <video id="product-webcam-view" autoplay playsinline muted class="w-full h-full object-cover"></video>
-                    <div class="absolute inset-y-10 inset-x-6 border border-dashed border-brand rounded-xl pointer-events-none flex items-center justify-center">
-                        <span class="text-[10px] text-white/40 font-medium bg-black/40 px-2 py-1 rounded-md">Posisikan tulisan komposisi di area ini</span>
+            <div class="space-y-2">
+                <div class="ing-card safe p-3.5 flex gap-3 items-start">
+                    <div style="width:32px;height:32px;border-radius:12px;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+                        <i class="fa-solid fa-check text-green-500" style="font-size:11px"></i>
                     </div>
-                    <div class="scan-line absolute left-0 right-0 h-0.5 bg-brand shadow-md"></div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <p class="font-extrabold text-gray-900 text-sm">Niacinamide</p>
+                            <span class="ing-tag" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">AMAN</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 leading-relaxed">Sempurna untuk kulitmu. Mengontrol sebum, memperkecil pori & mencerahkan bekas jerawat.</p>
+                    </div>
                 </div>
-
-                <div class="w-full pb-safe flex justify-center">
-                    <button onclick="captureProductSnapshot()" class="w-16 h-16 bg-white rounded-full border-4 border-purple-300 flex items-center justify-center active:scale-95 transition-transform">
-                        <div class="w-12 h-12 bg-brand rounded-full flex items-center justify-center text-white text-lg"><i class="fa-solid fa-expand"></i></div>
-                    </button>
+                <div class="ing-card safe p-3.5 flex gap-3 items-start">
+                    <div style="width:32px;height:32px;border-radius:12px;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+                        <i class="fa-solid fa-check text-green-500" style="font-size:11px"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <p class="font-extrabold text-gray-900 text-sm">Glycerin</p>
+                            <span class="ing-tag" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">AMAN</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 leading-relaxed">Humektan ringan, aman untuk acne-prone. Menghidrasi tanpa menyumbat pori.</p>
+                    </div>
+                </div>
+                <div class="ing-card safe p-3.5 flex gap-3 items-start">
+                    <div style="width:32px;height:32px;border-radius:12px;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+                        <i class="fa-solid fa-check text-green-500" style="font-size:11px"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <p class="font-extrabold text-gray-900 text-sm">Zinc PCA</p>
+                            <span class="ing-tag" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">AMAN</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 leading-relaxed">Anti-bakteri alami. Sinergi sempurna dengan Niacinamide untuk melawan jerawat hormonal.</p>
+                    </div>
+                </div>
+                <div class="ing-card warn p-3.5 flex gap-3 items-start">
+                    <div style="width:32px;height:32px;border-radius:12px;background:#fef9c3;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+                        <i class="fa-solid fa-triangle-exclamation text-yellow-500" style="font-size:11px"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <p class="font-extrabold text-gray-900 text-sm">Fragrance</p>
+                            <span class="ing-tag" style="background:#fef9c3;color:#a16207;border:1px solid #fef08a">HATI-HATI</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 leading-relaxed">Bisa memicu iritasi pada kulit sensitif. Monitor reaksi di 2 minggu pertama pemakaian.</p>
+                    </div>
+                </div>
+                <div class="ing-card bad p-3.5 flex gap-3 items-start">
+                    <div style="width:32px;height:32px;border-radius:12px;background:#fee2e2;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+                        <i class="fa-solid fa-xmark text-red-500" style="font-size:13px"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <p class="font-extrabold text-gray-900 text-sm">Coconut Oil</p>
+                            <span class="ing-tag" style="background:#fee2e2;color:#dc2626;border:1px solid #fecaca">HINDARI</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 leading-relaxed">Comedogenic rating <b class="text-red-600">4/5</b>. Sangat berisiko menyumbat pori pada kulit Oily + Acne-prone.</p>
+                        <div class="mt-1.5 flex gap-1">
+                            <span style="font-size:9px;font-weight:700;background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:10px">Comedogenic 4/5</span>
+                            <span style="font-size:9px;font-weight:700;background:#fef2f2;color:#dc2626;padding:2px 7px;border-radius:10px">Tidak untuk acne</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Bottom Nav -->
-            <nav class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 pt-3 flex justify-between items-center text-[10px] font-medium z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] pb-safe">
-                <button onclick="window.location.href='glowdiary.html#home'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-house text-lg"></i><span>Home</span>
-                </button>
-                <button onclick="window.location.href='glowdiary.html#discover'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-magnifying-glass text-lg"></i><span>Search</span>
-                </button>
-                <button onclick="switchMainTab('scan')" class="nav-btn flex flex-col items-center gap-1 text-brand-dark transition-colors">
-                    <i class="fa-solid fa-clipboard-check text-lg"></i><span>Analyze</span>
-                </button>
-                <button onclick="window.location.href='profile.html'" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-user text-lg"></i><span>Profile</span>
-                </button>
-            </nav>
+            <div class="rounded-3xl p-4 au" style="background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #e9d5ff">
+                <div class="flex items-center gap-2 mb-1">
+                    <i class="fa-solid fa-lightbulb" style="color:#f59e0b;font-size:13px"></i>
+                    <h4 class="text-xs font-extrabold text-purple-900">Produk Alternatif Lebih Aman</h4>
+                </div>
+                <p class="text-[10px] text-gray-500 mb-3">Berdasarkan analisis, produk ini lebih cocok untuk kulitmu:</p>
+                <div class="flex gap-2.5 overflow-x-auto pb-1">
+                    <div class="prod-card">
+                        <div class="w-full h-14 rounded-xl mb-2 flex items-center justify-center text-xl bg-purple-50 text-brand-mid"><i class="fa-solid fa-pump-soap"></i></div>
+                        <p class="text-[11px] font-extrabold text-gray-900 truncate">Niacinamide 10%</p>
+                        <p class="text-[9px] text-gray-400">The Ordinary</p>
+                        <p class="text-xs font-extrabold mt-1" style="color:#7c3aed">$7.90</p>
+                    </div>
+                    <div class="prod-card">
+                        <div class="w-full h-14 rounded-xl mb-2 flex items-center justify-center text-xl bg-green-50 text-green-500"><i class="fa-solid fa-leaf"></i></div>
+                        <p class="text-[11px] font-extrabold text-gray-900 truncate">Centella Serum</p>
+                        <p class="text-[9px] text-gray-400">COSRX</p>
+                        <p class="text-xs font-extrabold mt-1" style="color:#7c3aed">$18.50</p>
+                    </div>
+                    <div class="prod-card">
+                        <div class="w-full h-14 rounded-xl mb-2 flex items-center justify-center text-xl bg-blue-50 text-blue-500"><i class="fa-solid fa-droplet"></i></div>
+                        <p class="text-[11px] font-extrabold text-gray-900 truncate">HA + B5 Serum</p>
+                        <p class="text-[9px] text-gray-400">The Inkey List</p>
+                        <p class="text-xs font-extrabold mt-1" style="color:#7c3aed">$9.99</p>
+                    </div>
+                </div>
+            </div>
 
+        </div>
+    </div><div id="history-panel" class="hidden card p-5 au">
+        <div class="flex justify-between items-center mb-4">
+            <div class="card-section-title" style="margin-bottom:0">
+                <span class="card-section-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                Riwayat Scan
+            </div>
+            <button onclick="toggleHistory()" style="width:28px;height:28px;border-radius:10px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;color:#9ca3af;border:none">
+                <i class="fa-solid fa-xmark" style="font-size:11px"></i>
+            </button>
+        </div>
+        <div class="space-y-2">
+            <div class="hist-card" onclick="loadHistoryScan(78)">
+                <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#f3e8ff,#ede9fe);color:#7c3aed;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">78</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-extrabold text-gray-900">Hari ini — Jum, 6 Jun</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Hidrasi 72% · 3 jerawat aktif</p>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-300" style="font-size:10px"></i>
+            </div>
+            <div class="hist-card" style="opacity:.6">
+                <div style="width:44px;height:44px;border-radius:14px;background:#f3f4f6;color:#6b7280;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">73</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-extrabold text-gray-700">Sel, 3 Jun</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Hidrasi 68% · 5 jerawat aktif</p>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-300" style="font-size:10px"></i>
+            </div>
         </div>
     </div>
 
-    <script>
-        let faceStream = null;     // Stream kamera depan wajah
-        let productStream = null;  // Stream kamera belakang produk
+</div>
+</main>
 
-        // TAB SWITCHER MANAGEMENT
-        function switchMainTab(tab) {
-            document.getElementById('section-scan').classList.add('hidden');
-            document.getElementById('section-ingredient').classList.add('hidden');
-            document.getElementById('history-panel').classList.add('hidden');
+<div id="modal-face-camera" class="absolute inset-0 z-[300] hidden flex-col" style="background:#06000f">
 
-            document.getElementById('tab-scan').classList.remove('active', 'text-gray-400');
-            document.getElementById('tab-ingredient').classList.remove('active', 'text-gray-400');
+    <div class="flex justify-between items-center px-5 pt-10 pb-3 flex-shrink-0">
+        <div>
+            <p style="color:#c084fc;font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase">Biometric Face Scan</p>
+            <p style="color:rgba(255,255,255,.5);font-size:11px;font-weight:600;margin-top:1px">Arahkan kamera ke wajahmu</p>
+        </div>
+        <button onclick="closeFaceCamera()" style="width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;border:1px solid rgba(255,255,255,.12)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
 
-            if (tab === 'scan') {
-                document.getElementById('section-scan').classList.remove('hidden');
-                document.getElementById('tab-scan').classList.add('active');
-                document.getElementById('tab-ingredient').classList.add('text-gray-400');
-                
-                document.getElementById('scan-empty').classList.remove('hidden');
-                document.getElementById('scan-results').classList.add('hidden');
-                document.getElementById('scan-loading').classList.add('hidden');
-            } else if (tab === 'ingredient') {
-                document.getElementById('section-ingredient').classList.remove('hidden');
-                document.getElementById('tab-ingredient').classList.add('active');
-                document.getElementById('tab-scan').classList.add('text-gray-400');
-                
-                closeFaceCamera(); // Matikan kamera wajah jika pindah tab
-            }
-        }
+    <div class="flex gap-2 px-5 pb-3 flex-shrink-0">
+        <div id="status-brightness" style="flex:1;border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);transition:all .4s">
+            <i id="icon-brightness" class="fa-solid fa-sun" style="font-size:12px;color:#f87171"></i>
+            <div style="flex:1">
+                <p id="text-brightness" style="font-size:9px;font-weight:800;color:#fca5a5;line-height:1.2">Terlalu Gelap</p>
+                <p style="font-size:8px;color:rgba(255,255,255,.35);margin-top:1px">Cari tempat lebih terang</p>
+            </div>
+        </div>
+        <div id="status-face" style="flex:1;border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);transition:all .4s">
+            <i id="icon-face" class="fa-solid fa-face-meh" style="font-size:12px;color:#f87171"></i>
+            <div style="flex:1">
+                <p id="text-face" style="font-size:9px;font-weight:800;color:#fca5a5;line-height:1.2">Wajah Belum Terdeteksi</p>
+                <p style="font-size:8px;color:rgba(255,255,255,.35);margin-top:1px">Posisikan di dalam oval</p>
+            </div>
+        </div>
+    </div>
 
-        // --- 📸 MODAL KAMERA WAJAH LOGIC (TAB 1) ---
-        async function openFaceCamera() {
-            const modalFace = document.getElementById('modal-face-camera');
-            const videoElement = document.getElementById('face-webcam-view');
+    <div class="flex-1 flex items-center justify-center px-5" style="min-height:0">
+        <div id="face-cam-wrap" class="relative w-full max-w-[320px] aspect-[3/4] rounded-[28px] overflow-hidden bg-[#0d0014] shadow-inner">
+            <video id="face-webcam-view" autoplay playsinline muted
+                class="absolute inset-0 w-full h-full object-cover" style="transform: scaleX(-1);"></video>
 
-            modalFace.classList.remove('hidden');
-            modalFace.classList.add('flex');
+            <canvas id="face-landmark-canvas"
+                class="absolute inset-0 w-full h-full pointer-events-none z-10" style="transform: scaleX(-1);"></canvas>
 
-            try {
-                faceStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "user" }, // Kamera depan default
-                    audio: false
-                });
-                videoElement.srcObject = faceStream;
-            } catch (error) {
-                console.error("Gagal memuat kamera depan wajah:", error);
-                alert("Gagal mengakses kamera depan Anda.");
-                closeFaceCamera();
-            }
-        }
+            <svg id="face-guide-svg" class="absolute inset-0 w-full h-full pointer-events-none z-20" viewBox="0 0 320 427" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <mask id="oval-mask">
+                        <rect width="320" height="427" fill="white"/>
+                        <ellipse cx="160" cy="213.5" rx="115" ry="155" fill="black"/>
+                    </mask>
+                </defs>
+                <rect width="320" height="427" fill="rgba(6,0,15,.55)" mask="url(#oval-mask)"/>
+                <ellipse id="oval-border" cx="160" cy="213.5" rx="115" ry="155"
+                    fill="none" stroke="rgba(168,85,247,.5)" stroke-width="2.5" stroke-dasharray="8 5"/>
+                <path d="M45 100 Q45 58.5 85 58.5" stroke="#c084fc" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/>
+                <path d="M275 100 Q275 58.5 235 58.5" stroke="#c084fc" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/>
+                <path d="M45 327 Q45 368.5 85 368.5" stroke="#c084fc" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/>
+                <path d="M275 327 Q275 368.5 235 368.5" stroke="#c084fc" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/>
+            </svg>
 
-        function captureFaceSnapshot() {
-            const videoElement = document.getElementById('face-webcam-view');
-            const canvas = document.getElementById('capture-canvas');
-            const previewImage = document.getElementById('captured-preview');
-            const defaultIcon = document.getElementById('default-face-icon');
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[75%] border border-dashed border-white/40 rounded-xl pointer-events-none z-20">
+                <div class="absolute -top-1 -left-1 w-5 h-5 border-t-4 border-l-4 border-brand-mid rounded-tl-xl"></div>
+                <div class="absolute -top-1 -right-1 w-5 h-5 border-t-4 border-r-4 border-brand-mid rounded-tr-xl"></div>
+                <div class="absolute -bottom-1 -left-1 w-5 h-5 border-b-4 border-l-4 border-brand-mid rounded-bl-xl"></div>
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 border-b-4 border-r-4 border-brand-mid rounded-br-xl"></div>
+                <div id="face-laser" class="scan-line absolute left-0 right-0 h-[2px] bg-brand-light shadow-[0_0_8px_rgba(192,132,252,1)]" style="display:none;"></div>
+            </div>
 
-            if (!faceStream) return;
+            <div id="capture-flash" class="absolute inset-0 bg-white/70 rounded-[28px] z-40 transition-opacity duration-150" style="display:none;"></div>
+        </div>
+    </div>
 
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
-            const ctx = canvas.getContext('2d');
-            
-            // Efek mirror kamera depan agar preview gambar pas
-            ctx.translate(canvas.width, 0);
-            ctx.scale(-1, 1);
-            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    <div class="px-5 pt-3 pb-2 flex-shrink-0 text-center">
+        <p id="cam-instruction" style="font-size:11px;color:rgba(255,255,255,.5);line-height:1.6;transition:all .3s">
+            Pastikan wajahmu berada di tempat <b style="color:#e9d5ff">terang</b> dan<br>menghadap langsung ke kamera
+        </p>
+    </div>
 
-            previewImage.src = canvas.toDataURL('image/jpeg');
-            previewImage.classList.remove('hidden');
-            defaultIcon.classList.add('hidden');
-            
-            closeFaceCamera(); // Tutup modal & bersihkan stream harian
-            runScan();        // Jalankan proses bar simulasi AI scan
-        }
+    <div class="pb-safe px-6 pt-1 flex justify-center items-center gap-8 flex-shrink-0">
+        <button onclick="closeFaceCamera()" style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.12)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
 
-        function closeFaceCamera() {
-            const modalFace = document.getElementById('modal-face-camera');
-            modalFace.classList.add('hidden');
-            modalFace.classList.remove('flex');
+        <button id="btn-capture-face" onclick="captureFaceSnapshot()" disabled
+            style="width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.15);border:4px solid rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;transition:all .4s;cursor:not-allowed">
+            <div style="width:58px;height:58px;border-radius:50%;background:rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;transition:all .4s">
+                <i class="fa-solid fa-camera text-white" style="font-size:22px;opacity:.4;transition:opacity .4s"></i>
+            </div>
+        </button>
 
-            if (faceStream) {
-                faceStream.getTracks().forEach(track => track.stop());
-                faceStream = null;
-            }
-        }
+        <button onclick="showLightTip()" style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.12)">
+            <i class="fa-solid fa-lightbulb"></i>
+        </button>
+    </div>
 
-        // --- 🧴 MODAL KAMERA PRODUK LOGIC (TAB 2) ---
-        async function openProductCamera() {
-            const modalCam = document.getElementById('modal-product-camera');
-            const videoElement = document.getElementById('product-webcam-view');
+    <div id="light-tip-toast" style="display:none;position:absolute;bottom:120px;left:16px;right:16px;background:rgba(30,10,50,.95);border:1px solid rgba(168,85,247,.3);border-radius:16px;padding:12px 14px">
+        <p style="font-size:11px;font-weight:800;color:#e9d5ff;margin-bottom:6px"><i class="fa-solid fa-lightbulb" style="color:#fbbf24;margin-right:6px"></i>Tips Pencahayaan</p>
+        <ul style="font-size:10px;color:rgba(255,255,255,.55);line-height:1.9;list-style:none;padding:0;margin:0">
+            <li><i class="fa-solid fa-sun text-yellow-400 mr-1"></i> Hadap jendela atau lampu dari depan</li>
+            <li><i class="fa-solid fa-lightbulb text-yellow-400 mr-1"></i> Nyalakan lampu ruangan sebanyak mungkin</li>
+            <li><i class="fa-solid fa-mobile-screen text-blue-400 mr-1"></i> Naikkan brightness layar HP sebagai fill light</li>
+            <li><i class="fa-solid fa-ban text-red-400 mr-1"></i> Hindari cahaya dari belakang (backlit)</li>
+        </ul>
+    </div>
+</div>
 
-            modalCam.classList.remove('hidden');
-            modalCam.classList.add('flex');
+<div id="modal-product-camera" class="absolute inset-0 z-[300] hidden flex-col" style="background:#0a0012">
+    <div class="flex justify-between items-center px-6 pt-12 pb-4 flex-shrink-0">
+        <div>
+            <p class="text-purple-400 text-[9px] font-extrabold tracking-[.18em] uppercase">Ingredient Scanner</p>
+            <p class="text-white text-xs font-semibold opacity-60 mt-0.5">Arahkan ke komposisi produk</p>
+        </div>
+        <button onclick="closeProductCamera()" style="width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;border:1px solid rgba(255,255,255,.15)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="flex-1 px-4 relative">
+        <div style="width:100%;height:100%;background:#0d0014;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.08);position:relative">
+            <video id="product-webcam-view" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover"></video>
+            <div style="position:absolute;inset:30px 20px;border:1.5px dashed rgba(168,85,247,.6);border-radius:14px;pointer-events:none">
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.5);color:rgba(255,255,255,.4);font-size:9px;font-weight:700;padding:4px 10px;border-radius:8px;white-space:nowrap">Posisikan teks ingredients di sini</div>
+            </div>
+            <div class="scan-line" style="position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,247,.9),transparent);box-shadow:0 0 6px rgba(168,85,247,.7)"></div>
+        </div>
+    </div>
+    <div class="pb-safe px-6 pt-4 flex flex-col items-center gap-3 flex-shrink-0">
+        <p class="text-gray-400 text-xs">Kamera belakang — gunakan flash jika perlu</p>
+        <button onclick="captureProductSnapshot()" style="width:72px;height:72px;border-radius:50%;background:#fff;border:4px solid rgba(168,85,247,.6);display:flex;align-items:center;justify-content:center;transition:transform .15s" onmousedown="this.style.transform='scale(.94)'" onmouseup="this.style.transform='scale(1)'">
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed);display:flex;align-items:center;justify-content:center">
+                <i class="fa-solid fa-camera text-white text-xl"></i>
+            </div>
+        </button>
+    </div>
+</div>
 
-            try {
-                productStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment" }, // Kamera belakang default
-                    audio: false
-                });
-                videoElement.srcObject = productStream;
-            } catch (error) {
-                console.error("Gagal membuka kamera belakang produk:", error);
-                alert("Gagal memuat perangkat kamera belakang.");
-                closeProductCamera();
-            }
-        }
+<nav class="absolute bottom-0 left-0 w-full z-50 px-3 pb-safe pt-2">
+    <div class="nav-pill rounded-[28px] border border-gray-100 shadow-lg px-2 py-2 flex justify-between items-center" style="box-shadow:0 -2px 20px rgba(124,58,237,.07),0 4px 20px rgba(0,0,0,.06)">
+        <button onclick="window.location.href='home.html'" class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-house text-gray-400 text-base"></i></div>
+            <span class="text-[9px] font-semibold text-gray-400">Home</span>
+        </button>
+        <button onclick="window.location.href='discover.html'" class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-magnifying-glass text-gray-400 text-base"></i></div>
+            <span class="text-[9px] font-semibold text-gray-400">Search</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="nav-active-bg w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-clipboard-check text-brand-dark text-base"></i></div>
+            <span class="text-[9px] font-bold text-brand-dark">Analyze</span>
+        </button>
+        <button onclick="window.location.href='profile.html'" class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-10 h-10 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-user text-gray-400 text-base"></i></div>
+            <span class="text-[9px] font-semibold text-gray-400">Profile</span>
+        </button>
+    </div>
+</nav>
 
-        function captureProductSnapshot() {
-            const videoElement = document.getElementById('product-webcam-view');
-            const canvas = document.getElementById('capture-canvas');
-            const textarea = document.getElementById('ing-input');
+</div></div><script>
+    let faceStream = null, productStream = null;
 
-            if (!productStream) return;
+    window.addEventListener('DOMContentLoaded', () => {
+        const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+        const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
+        const now = new Date();
+        const el = document.getElementById('scan-date-label');
+        if(el) el.textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+        switchMainTab('scan');
+    });
 
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-
-            // Pengisian text otomatis (Simulasi OCR)
-            textarea.value = "Water, Niacinamide, Glycerin, Zinc PCA, Centella Asiatica Extract, Phenoxyethanol, Hyaluronic Acid, Fragrance, Coconut Oil.";
-            
-            closeProductCamera();
-            textarea.focus();
-            
-            alert("Bahan aktif berhasil dipindai! Silakan klik 'Check Compatibility'. ✨");
-        }
-
-        function closeProductCamera() {
-            const modalCam = document.getElementById('modal-product-camera');
-            modalCam.classList.add('hidden');
-            modalCam.classList.remove('flex');
-
-            if (productStream) {
-                productStream.getTracks().forEach(track => track.stop());
-                productStream = null;
-            }
-        }
-
-        // --- GLOBAL HANDLING UPLOAD FILE ---
-        function handleUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewImage = document.getElementById('captured-preview');
-                    const defaultIcon = document.getElementById('default-face-icon');
-                    
-                    closeFaceCamera(); // Matikan stream jika sedang berjalan
-
-                    previewImage.src = e.target.result;
-                    previewImage.classList.remove('hidden');
-                    defaultIcon.classList.add('hidden');
-
-                    runScan();
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function setScanMode(mode) {
-            document.getElementById('mode-camera').classList.toggle('active', mode === 'camera');
-            document.getElementById('mode-upload').classList.toggle('active', mode === 'upload');
-            document.getElementById('scan-mode-camera').classList.toggle('hidden', mode !== 'camera');
-            document.getElementById('scan-mode-upload').classList.toggle('hidden', mode !== 'upload');
-            if (mode !== 'camera') closeFaceCamera();
-        }
-
-        function runScan() {
-            document.getElementById('scan-empty').classList.add('hidden');
-            document.getElementById('scan-results').classList.add('hidden');
-            document.getElementById('scan-loading').classList.remove('hidden');
-            
-            let progress = 0;
-            const bar = document.getElementById('scan-progress-bar');
-            const interval = setInterval(() => {
-                progress += Math.random() * 18 + 5;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        document.getElementById('scan-loading').classList.add('hidden');
-                        document.getElementById('scan-results').classList.remove('hidden');
-                    }, 400);
-                }
-                bar.style.width = Math.min(progress, 100) + '%';
-            }, 200);
-        }
-
-        function runIngredientCheck() {
-            const val = document.getElementById('ing-input').value.trim();
-            if (!val) { document.getElementById('ing-input').focus(); return; }
-            document.getElementById('ing-results').classList.remove('hidden');
-            document.getElementById('ing-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function toggleHistory() {
-            document.getElementById('history-panel').classList.toggle('hidden');
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            if (localStorage.getItem('gd_loggedIn') !== 'true') {
-                window.location.href = 'landing.html';
-                return;
-            }
-            switchMainTab('scan');
+    // ── Tab logic ──
+    function switchMainTab(tab) {
+        ['scan','ingredient'].forEach(t => {
+            document.getElementById('section-' + t).classList.add('hidden');
         });
-    </script>
+        document.getElementById('history-panel').classList.add('hidden');
+        document.getElementById('tab-scan').classList.remove('active');
+        document.getElementById('tab-ingredient').classList.remove('active');
+
+        if (tab === 'scan') {
+            document.getElementById('section-scan').classList.remove('hidden');
+            document.getElementById('tab-scan').classList.add('active');
+            document.getElementById('scan-empty').classList.remove('hidden');
+            document.getElementById('scan-results').classList.add('hidden');
+            document.getElementById('scan-loading').classList.add('hidden');
+        } else {
+            document.getElementById('section-ingredient').classList.remove('hidden');
+            document.getElementById('tab-ingredient').classList.add('active');
+            closeFaceCamera();
+        }
+    }
+
+    // ── Scan mode ──
+    function setScanMode(mode) {
+        document.getElementById('mode-camera').classList.toggle('active', mode === 'camera');
+        document.getElementById('mode-upload').classList.toggle('active', mode === 'upload');
+        document.getElementById('scan-mode-camera').classList.toggle('hidden', mode !== 'camera');
+        document.getElementById('scan-mode-upload').classList.toggle('hidden', mode !== 'upload');
+        if (mode !== 'camera') closeFaceCamera();
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  FACE DETECTION SYSTEM
+    // ═══════════════════════════════════════════════════
+    let faceApiLoaded = false;
+    let detectionLoop = null;
+    let faceDetected = false;
+    let lightOk = false;
+    let captureReady = false;
+
+    const FACE_API_CDN = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/dist/face-api.js';
+    const MODELS_URL   = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model';
+
+    async function loadFaceApi() {
+        if (faceApiLoaded) return true;
+        return new Promise((resolve) => {
+            if (window.faceapi) { faceApiLoaded = true; resolve(true); return; }
+            const s = document.createElement('script');
+            s.src = FACE_API_CDN;
+            s.onload = async () => {
+                try {
+                    await faceapi.nets.tinyFaceDetector.loadFromUri(MODELS_URL);
+                    await faceapi.nets.faceLandmark68TinyNet.loadFromUri(MODELS_URL);
+                    faceApiLoaded = true;
+                    resolve(true);
+                } catch(e) {
+                    resolve(false); 
+                }
+            };
+            s.onerror = () => { resolve(false); };
+            document.head.appendChild(s);
+        });
+    }
+
+    async function openFaceCamera() {
+        const modal = document.getElementById('modal-face-camera');
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+
+        faceDetected = false; lightOk = false; captureReady = false;
+        updateCaptureBtn(false);
+        setStatusBrightness('loading');
+        setStatusFace('loading');
+
+        try {
+            faceStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+                audio: false
+            });
+            const video = document.getElementById('face-webcam-view');
+            video.srcObject = faceStream;
+
+            video.onloadedmetadata = async () => {
+                video.play();
+                sizeLandmarkCanvas();
+                const apiOk = await loadFaceApi();
+                startDetectionLoop(video, apiOk);
+            };
+        } catch (e) {
+            closeFaceCamera();
+            alert('Gagal mengakses kamera depan. Pastikan izin kamera diizinkan.');
+        }
+    }
+
+    function sizeLandmarkCanvas() {
+        const wrap = document.getElementById('face-cam-wrap');
+        const lc   = document.getElementById('face-landmark-canvas');
+        if (!wrap || !lc) return;
+        lc.width  = wrap.offsetWidth;
+        lc.height = wrap.offsetHeight;
+    }
+
+    function startDetectionLoop(video, apiOk) {
+        if (detectionLoop) clearInterval(detectionLoop);
+
+        detectionLoop = setInterval(async () => {
+            if (!faceStream) { clearInterval(detectionLoop); return; }
+
+            const brightness = measureBrightness(video);
+            const bright = brightness > 60; 
+            lightOk = bright;
+            setStatusBrightness(bright ? 'ok' : 'bad', brightness);
+
+            if (apiOk && window.faceapi && video.readyState >= 2) {
+                try {
+                    const opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.42 });
+                    const result = await faceapi.detectSingleFace(video, opts).withFaceLandmarks(true);
+                    faceDetected = !!result;
+
+                    let wearingGlasses = false;
+
+                    if (result) {
+                        wearingGlasses = detectGlasses(result.landmarks.positions);
+                        
+                        if (wearingGlasses) {
+                            faceDetected = false; 
+                            clearLandmarks();
+                            showLaser(false);
+                            setStatusFace('warn'); 
+                        } else {
+                            drawLandmarks(result, video);
+                            showLaser(true);
+                            setStatusFace('ok');
+                        }
+                    } else {
+                        clearLandmarks();
+                        showLaser(false);
+                        setStatusFace('bad');
+                    }
+                } catch(e) {
+                    faceDetected = false;
+                    clearLandmarks();
+                    showLaser(false);
+                    setStatusFace('bad');
+                }
+            } else {
+                faceDetected = bright && hasSkinTone(video);
+                if (faceDetected) drawFakeLandmarks(video);
+                else clearLandmarks();
+                showLaser(faceDetected);
+                setStatusFace(faceDetected ? 'ok' : 'bad');
+            }
+
+            const ready = bright && faceDetected;
+            if (ready !== captureReady) {
+                captureReady = ready;
+                updateCaptureBtn(ready);
+                updateInstruction(bright, faceDetected);
+                setOvalColor(ready);
+            }
+        }, 280);
+    }
+
+    function measureBrightness(video) {
+        try {
+            const c = document.createElement('canvas');
+            c.width = 64; c.height = 48;
+            const ctx = c.getContext('2d');
+            ctx.drawImage(video, 0, 0, 64, 48);
+            const d = ctx.getImageData(0, 0, 64, 48).data;
+            let sum = 0;
+            for (let i = 0; i < d.length; i += 16) {
+                sum += (d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114);
+            }
+            return sum / (d.length / 16);
+        } catch(e) { return 128; }
+    }
+
+    function hasSkinTone(video) {
+        try {
+            const c = document.createElement('canvas');
+            c.width = 32; c.height = 32;
+            const ctx = c.getContext('2d');
+            ctx.drawImage(video, video.videoWidth*0.25, video.videoHeight*0.15,
+                          video.videoWidth*0.5, video.videoHeight*0.7, 0, 0, 32, 32);
+            const d = ctx.getImageData(0, 0, 32, 32).data;
+            let skinCount = 0, total = 0;
+            for (let i = 0; i < d.length; i += 4) {
+                const r = d[i], g = d[i+1], b = d[i+2];
+                if (r > 60 && g > 30 && b > 15 && r > b && r > g*0.7 && Math.abs(r - g) > 8) skinCount++;
+                total++;
+            }
+            return (skinCount / total) > 0.18;
+        } catch(e) { return false; }
+    }
+    
+    function detectGlasses(pts) {
+        if(!pts || pts.length < 68) return false;
+        
+        const noseBridgeY = pts[27].y;
+        const leftBrowY = pts[21].y;
+        const rightBrowY = pts[22].y;
+        
+        const distL = noseBridgeY - leftBrowY;
+        const distR = noseBridgeY - rightBrowY;
+        
+        const innerEyeDist = Math.abs(pts[42].x - pts[39].x);
+        
+        if(distL < 5 || distR < 5 || innerEyeDist < 10) return true;
+        
+        return false;
+    }
+
+    function drawLandmarks(result, video) {
+        const lc = document.getElementById('face-landmark-canvas');
+        if (!lc) return;
+        const ctx = lc.getContext('2d');
+        ctx.clearRect(0, 0, lc.width, lc.height);
+
+        const scaleX = lc.width  / video.videoWidth;
+        const scaleY = lc.height / video.videoHeight;
+        const pts = result.landmarks.positions;
+
+        ctx.beginPath();
+        ctx.ellipse(pts[27].x * scaleX, pts[27].y * scaleY, Math.abs(pts[16].x - pts[0].x) * scaleX * 0.18, Math.abs(pts[8].y  - pts[19].y) * scaleY * 0.45, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(251,191,36,.08)';
+        ctx.fill();
+
+        const groups = [
+            { pts: range(0, 16),   color: 'rgba(168,85,247,.5)',  w: 1   }, 
+            { pts: range(17,21),   color: 'rgba(168,85,247,.5)',  w: 1   }, 
+            { pts: range(22,26),   color: 'rgba(168,85,247,.5)',  w: 1   }, 
+            { pts: range(27,35),   color: 'rgba(192,132,252,.6)', w: 1   }, 
+            { pts: range(36,41),   color: 'rgba(96,165,250,.7)',  w: 1   }, 
+            { pts: range(42,47),   color: 'rgba(96,165,250,.7)',  w: 1   }, 
+            { pts: range(48,59),   color: 'rgba(251,113,133,.6)', w: 1   }, 
+            { pts: range(60,67),   color: 'rgba(251,113,133,.5)', w: .8  }, 
+            { pts: range(36,41),   color: 'rgba(96,165,250,.5)',  w: 1, close: true },
+            { pts: range(42,47),   color: 'rgba(96,165,250,.5)',  w: 1, close: true },
+        ];
+
+        groups.forEach(g => {
+            if (!g.pts.every(i => pts[i])) return;
+            ctx.beginPath();
+            ctx.moveTo(pts[g.pts[0]].x * scaleX, pts[g.pts[0]].y * scaleY);
+            g.pts.slice(1).forEach(i => ctx.lineTo(pts[i].x * scaleX, pts[i].y * scaleY));
+            if (g.close) ctx.closePath();
+            ctx.strokeStyle = g.color; ctx.lineWidth = g.w; ctx.stroke();
+        });
+
+        pts.forEach((pt, i) => {
+            const x = pt.x * scaleX, y = pt.y * scaleY;
+            let color = 'rgba(192,132,252,.9)'; 
+            if (i >= 36 && i <= 47) color = 'rgba(96,165,250,.95)';  
+            if (i >= 48 && i <= 67) color = 'rgba(251,113,133,.95)'; 
+            if (i >= 17 && i <= 26) color = 'rgba(167,243,208,.9)';  
+            if (i >= 27 && i <= 35) color = 'rgba(253,224,71,.9)';   
+
+            ctx.beginPath(); ctx.arc(x, y, i < 17 ? 1.5 : 2, 0, Math.PI * 2); 
+            ctx.fillStyle = color; ctx.fill();
+
+            if ([33,4,12,48,54,1,15].includes(i)) {
+                ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(168,85,247,.18)'; ctx.fill();
+            }
+        });
+
+        const labelPts = [
+            { label: 'T-Zone', x: pts[27].x * scaleX, y: pts[19].y * scaleY - 14, color: 'rgba(251,191,36,.9)' },
+            { label: 'Pipi', x: pts[3].x  * scaleX - 15, y: pts[3].y  * scaleY,      color: 'rgba(248,113,113,.9)' },
+            { label: 'Pipi', x: pts[13].x * scaleX + 15, y: pts[13].y * scaleY,      color: 'rgba(248,113,113,.9)' },
+        ];
+        
+        labelPts.forEach(l => {
+            ctx.save();
+            ctx.translate(l.x, l.y);
+            ctx.scale(-1, 1);
+            ctx.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'rgba(0,0,0,.6)';
+            ctx.fillText(l.label, 1, 1);
+            ctx.fillStyle = l.color;
+            ctx.fillText(l.label, 0, 0);
+            ctx.restore();
+        });
+    }
+
+    function range(a, b) { return Array.from({length: b-a+1}, (_, i) => a+i); }
+
+    function drawFakeLandmarks(video) {
+        const lc = document.getElementById('face-landmark-canvas');
+        if (!lc) return;
+        const ctx = lc.getContext('2d');
+        ctx.clearRect(0, 0, lc.width, lc.height);
+
+        const cx = lc.width * 0.5;
+        const cy = lc.height * 0.5; 
+        
+        const fw = lc.width * 0.24; 
+        const fh = lc.height * 0.25; 
+
+        const drawDot = (x, y, r, color, glow) => {
+            ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
+            ctx.fillStyle = color; ctx.fill();
+            if(glow) {
+                ctx.beginPath(); ctx.arc(x, y, r + 4, 0, Math.PI*2);
+                ctx.fillStyle = glow; ctx.fill();
+            }
+        };
+
+        ctx.strokeStyle = 'rgba(168,85,247,.5)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let i = 0; i <= 16; i++) {
+            const t = i / 16; 
+            const angle = Math.PI - t * Math.PI; 
+            const x = cx + Math.cos(angle) * fw * 1.1; 
+            const y = cy + Math.sin(angle) * fh * 1.3; 
+            
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+            drawDot(x, y, 1.8, 'rgba(192,132,252,.9)');
+        }
+        ctx.stroke();
+
+        const eyeOffX = fw * 0.42; 
+        const eyeOffY = -fh * 0.15; 
+        [[-1, eyeOffX], [1, eyeOffX]].forEach(([sign, offX]) => {
+            const ex = cx + sign * offX;
+            const ey = cy + eyeOffY;
+            ctx.strokeStyle = 'rgba(96,165,250,.5)';
+            ctx.beginPath(); ctx.ellipse(ex, ey, fw*0.2, fh*0.08, 0, 0, Math.PI*2); ctx.stroke();
+            
+            drawDot(ex - fw*0.2, ey, 2, 'rgba(96,165,250,.9)');
+            drawDot(ex + fw*0.2, ey, 2, 'rgba(96,165,250,.9)');
+            drawDot(ex, ey - fh*0.08, 2, 'rgba(96,165,250,.9)');
+            drawDot(ex, ey + fh*0.08, 2, 'rgba(96,165,250,.9)');
+            drawDot(ex, ey, 2.5, 'rgba(96,165,250,.9)', 'rgba(96,165,250,.2)'); 
+        });
+
+        [[-1, eyeOffX], [1, eyeOffX]].forEach(([sign, offX]) => {
+            const ex = cx + sign * offX;
+            const ey = cy + eyeOffY - fh * 0.18; 
+            for(let i=-1; i<=1; i+=0.5) {
+                drawDot(ex + i*fw*0.22, ey - Math.cos(i)*fh*0.04, 1.8, 'rgba(167,243,208,.9)');
+            }
+        });
+
+        ctx.strokeStyle = 'rgba(253,224,71,.5)';
+        ctx.beginPath(); 
+        ctx.moveTo(cx, cy + eyeOffY); 
+        ctx.lineTo(cx, cy + fh*0.35); 
+        ctx.stroke();
+        
+        for(let i=0; i<=4; i++) { 
+            drawDot(cx, cy + eyeOffY + i*(fh*0.12), 2, 'rgba(253,224,71,.9)'); 
+        }
+        drawDot(cx - fw*0.18, cy + fh*0.35, 2, 'rgba(253,224,71,.9)');
+        drawDot(cx + fw*0.18, cy + fh*0.35, 2, 'rgba(253,224,71,.9)');
+
+        const mouthY = cy + fh * 0.65;
+        const mouthW = fw * 0.35;
+        ctx.strokeStyle = 'rgba(251,113,133,.5)';
+        ctx.beginPath(); ctx.ellipse(cx, mouthY, mouthW, fh*0.1, 0, 0, Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - mouthW, mouthY); ctx.lineTo(cx + mouthW, mouthY); ctx.stroke();
+        
+        drawDot(cx - mouthW, mouthY, 2, 'rgba(251,113,133,.9)');
+        drawDot(cx + mouthW, mouthY, 2, 'rgba(251,113,133,.9)');
+        drawDot(cx, mouthY - fh*0.1, 2, 'rgba(251,113,133,.9)');
+        drawDot(cx, mouthY + fh*0.1, 2, 'rgba(251,113,133,.9)');
+        drawDot(cx, mouthY, 2, 'rgba(251,113,133,.9)');
+
+        const drawText = (text, x, y, color) => {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(-1, 1); 
+            ctx.font = 'bold 11px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'rgba(0,0,0,.6)';
+            ctx.fillText(text, 1, 1);
+            ctx.fillStyle = color;
+            ctx.fillText(text, 0, 0);
+            ctx.restore();
+        };
+
+        drawText('T-Zone', cx, cy - fh*0.55, 'rgba(251,191,36,.9)');
+        
+        const cheekOffX = fw * 0.75;
+        const cheekY = cy + fh * 0.3;
+        drawText('Pipi', cx - cheekOffX, cheekY, 'rgba(248,113,113,.9)');
+        drawDot(cx - cheekOffX + fw*0.2, cheekY - fh*0.05, 3, 'rgba(239,68,68,.9)', 'rgba(239,68,68,.3)');
+        drawDot(cx - cheekOffX + fw*0.1, cheekY + fh*0.1, 3, 'rgba(239,68,68,.9)', 'rgba(239,68,68,.3)');
+        
+        drawText('Pipi', cx + cheekOffX, cheekY, 'rgba(248,113,113,.9)');
+        drawDot(cx + cheekOffX - fw*0.2, cheekY - fh*0.05, 3, 'rgba(239,68,68,.9)', 'rgba(239,68,68,.3)');
+    }
+
+    function clearLandmarks() {
+        const lc = document.getElementById('face-landmark-canvas');
+        if (lc) lc.getContext('2d').clearRect(0, 0, lc.width, lc.height);
+    }
+
+    function showLaser(on) {
+        const l = document.getElementById('face-laser');
+        if (l) l.style.display = on ? 'block' : 'none';
+    }
+
+    function setStatusFace(state) {
+        const el   = document.getElementById('status-face');
+        const icon = document.getElementById('icon-face');
+        const txt  = document.getElementById('text-face');
+        if (!el) return;
+        
+        if (state === 'loading') {
+            el.style.background = 'rgba(107,114,128,.15)';
+            el.style.borderColor = 'rgba(107,114,128,.25)';
+            icon.className = 'fa-solid fa-spinner fa-spin';
+            icon.style.color = 'rgba(255,255,255,.3)';
+            txt.style.color  = 'rgba(255,255,255,.3)';
+            txt.textContent = 'Menunggu Kamera...';
+            txt.nextElementSibling.textContent = 'Mempersiapkan AI';
+        } else if (state === 'ok') {
+            el.style.background = 'rgba(34,197,94,.15)';
+            el.style.borderColor = 'rgba(34,197,94,.3)';
+            icon.className = 'fa-solid fa-face-smile';
+            icon.style.color = '#4ade80';
+            txt.style.color  = '#86efac';
+            txt.textContent = 'Wajah Terdeteksi ✓';
+            txt.nextElementSibling.textContent = 'Posisi sudah pas';
+        } else if (state === 'warn') {
+            el.style.background = 'rgba(245,158,11,.15)';
+            el.style.borderColor = 'rgba(245,158,11,.3)';
+            icon.className = 'fa-solid fa-glasses';
+            icon.style.color = '#fbbf24';
+            txt.style.color  = '#fde68a';
+            txt.textContent = 'Aksesoris Terdeteksi';
+            txt.nextElementSibling.textContent = 'Tolong lepas kacamata';
+        } else {
+            el.style.background = 'rgba(239,68,68,.15)';
+            el.style.borderColor = 'rgba(239,68,68,.3)';
+            icon.className = 'fa-solid fa-face-meh';
+            icon.style.color = '#f87171';
+            txt.style.color  = '#fca5a5';
+            txt.textContent = 'Wajah Belum Terdeteksi';
+            txt.nextElementSibling.textContent = 'Posisikan di dalam oval';
+        }
+    }
+
+    function setStatusBrightness(state, brightness) {
+        const el = document.getElementById('status-brightness');
+        const icon = document.getElementById('icon-brightness');
+        const txt  = document.getElementById('text-brightness');
+        if (!el) return;
+        if (state === 'loading') {
+            el.style.background = 'rgba(107,114,128,.15)';
+            el.style.borderColor = 'rgba(107,114,128,.25)';
+            icon.className = 'fa-solid fa-spinner fa-spin';
+            icon.style.color = 'rgba(255,255,255,.3)';
+            txt.style.color = 'rgba(255,255,255,.3)';
+            txt.textContent = 'Mengecek Cahaya...';
+        } else if (state === 'ok') {
+            el.style.background = 'rgba(34,197,94,.15)';
+            el.style.borderColor = 'rgba(34,197,94,.3)';
+            icon.className = 'fa-solid fa-sun';
+            icon.style.color = '#4ade80';
+            txt.style.color = '#86efac';
+            txt.textContent = 'Pencahayaan Baik ✓';
+        } else {
+            const pct = brightness ? Math.round(brightness/255*100) : 0;
+            el.style.background = 'rgba(239,68,68,.15)';
+            el.style.borderColor = 'rgba(239,68,68,.3)';
+            icon.className = 'fa-solid fa-moon';
+            icon.style.color = '#f87171';
+            txt.style.color = '#fca5a5';
+            txt.textContent = `Terlalu Gelap (${pct}%)`;
+        }
+    }
+
+    function setOvalColor(ready) {
+        const oval = document.getElementById('oval-border');
+        if (!oval) return;
+        if (ready) {
+            oval.setAttribute('stroke', 'rgba(34,197,94,.9)');
+            oval.setAttribute('stroke-dasharray', '0');
+            oval.setAttribute('stroke-width', '2.5');
+        } else if (faceDetected) {
+            oval.setAttribute('stroke', 'rgba(251,191,36,.8)');
+            oval.setAttribute('stroke-dasharray', '6 4');
+            oval.setAttribute('stroke-width', '2');
+        } else {
+            oval.setAttribute('stroke', 'rgba(168,85,247,.5)');
+            oval.setAttribute('stroke-dasharray', '8 5');
+            oval.setAttribute('stroke-width', '2');
+        }
+    }
+
+    function updateCaptureBtn(ready) {
+        const btn  = document.getElementById('btn-capture-face');
+        const inner = btn?.querySelector('div');
+        const icon  = btn?.querySelector('i');
+        if (!btn) return;
+        btn.disabled = !ready;
+        if (ready) {
+            btn.style.background = '#fff';
+            btn.style.borderColor = 'rgba(34,197,94,.8)';
+            btn.style.cursor = 'pointer';
+            btn.style.boxShadow = '0 0 20px rgba(34,197,94,.35)';
+            if (inner) inner.style.background = 'linear-gradient(135deg,#a855f7,#7c3aed)';
+            if (icon)  { icon.style.opacity = '1'; icon.style.fontSize = '22px'; }
+        } else {
+            btn.style.background = 'rgba(255,255,255,.1)';
+            btn.style.borderColor = 'rgba(168,85,247,.25)';
+            btn.style.cursor = 'not-allowed';
+            btn.style.boxShadow = 'none';
+            if (inner) inner.style.background = 'rgba(168,85,247,.25)';
+            if (icon)  icon.style.opacity = '0.35';
+        }
+    }
+
+    function updateInstruction(bright, face) {
+        const el = document.getElementById('cam-instruction');
+        if (!el) return;
+        
+        const isWarn = document.getElementById('icon-face').classList.contains('fa-glasses');
+
+        if (isWarn)
+            el.innerHTML = '<i class="fa-solid fa-glasses text-yellow-400 mr-1"></i> Tolong <b style="color:#fde68a">lepas kacamata/aksesoris</b> agar AI dapat menganalisis kulit';
+        else if (!bright && !face)
+            el.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-400 mr-1"></i> Pergi ke tempat <b style="color:#fde68a">lebih terang</b> dan posisikan wajah di oval';
+        else if (!bright)
+            el.innerHTML = '<i class="fa-solid fa-lightbulb text-yellow-400 mr-1"></i> Butuh <b style="color:#fde68a">pencahayaan lebih terang</b> — hadap lampu atau jendela';
+        else if (!face)
+            el.innerHTML = '<i class="fa-regular fa-face-smile text-purple-300 mr-1"></i> Posisikan <b style="color:#e9d5ff">wajahmu di dalam oval</b> dan lihat lurus ke kamera';
+        else
+            el.innerHTML = '<i class="fa-solid fa-circle-check text-green-400 mr-1"></i> <b style="color:#86efac">Siap!</b> Tahan diam sejenak lalu tekan tombol capture';
+    }
+
+    function captureFaceSnapshot() {
+        if (!captureReady) return;
+        const video  = document.getElementById('face-webcam-view');
+        const canvas = document.getElementById('capture-canvas');
+        const preview= document.getElementById('captured-preview');
+        const flash  = document.getElementById('capture-flash');
+
+        if (flash) {
+            flash.style.display = 'block';
+            flash.style.opacity = '1';
+            setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.style.display = 'none', 150); }, 80);
+        }
+
+        canvas.width  = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        preview.src = canvas.toDataURL('image/jpeg');
+        preview.classList.remove('hidden');
+        document.getElementById('default-face-icon')?.classList.add('hidden');
+
+        setTimeout(() => { closeFaceCamera(); runScan(); }, 200);
+    }
+
+    function closeFaceCamera() {
+        const modal = document.getElementById('modal-face-camera');
+        modal.classList.add('hidden'); modal.classList.remove('flex');
+        if (detectionLoop) { clearInterval(detectionLoop); detectionLoop = null; }
+        clearLandmarks();
+        showLaser(false);
+        if (faceStream) { faceStream.getTracks().forEach(t => t.stop()); faceStream = null; }
+        const tip = document.getElementById('light-tip-toast');
+        if (tip) tip.style.display = 'none';
+    }
+
+    function showLightTip() {
+        const tip = document.getElementById('light-tip-toast');
+        if (tip) tip.style.display = tip.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showToast(msg) { alert(msg); }
+
+    async function openProductCamera() {
+        const modal = document.getElementById('modal-product-camera');
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        try {
+            productStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+            document.getElementById('product-webcam-view').srcObject = productStream;
+        } catch (e) {
+            alert("Gagal membuka kamera belakang.");
+            closeProductCamera();
+        }
+    }
+
+    function captureProductSnapshot() {
+        const textarea = document.getElementById('ing-input');
+        textarea.value = "Water, Niacinamide, Glycerin, Zinc PCA, Centella Asiatica Extract, Phenoxyethanol, Hyaluronic Acid, Fragrance, Coconut Oil.";
+        closeProductCamera(); textarea.focus();
+        alert("Bahan aktif berhasil dipindai! Klik 'Check Compatibility'. ✨");
+    }
+
+    function closeProductCamera() {
+        const modal = document.getElementById('modal-product-camera');
+        modal.classList.add('hidden'); modal.classList.remove('flex');
+        if (productStream) { productStream.getTracks().forEach(t => t.stop()); productStream = null; }
+    }
+
+    function handleUpload(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const preview = document.getElementById('captured-preview');
+                closeFaceCamera();
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                
+                document.getElementById('default-face-icon')?.classList.add('hidden');
+                
+                runScan();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function runScan() {
+        document.getElementById('scan-empty').classList.add('hidden');
+        document.getElementById('scan-results').classList.add('hidden');
+        document.getElementById('scan-loading').classList.remove('hidden');
+
+        const steps = [
+            { id: 'step-1', text: 'Mendeteksi kontur wajah...' },
+            { id: 'step-2', text: 'Menganalisis kadar hidrasi...' },
+            { id: 'step-3', text: 'Mendeteksi jerawat & pigmentasi...' },
+            { id: 'step-4', text: 'Menyusun rekomendasi AI...' }
+        ];
+        const stepTextEl = document.getElementById('loading-step-text');
+        const bar = document.getElementById('scan-progress-bar');
+        let progress = 0, currentStep = 0;
+
+        function activateStep(i) {
+            steps.forEach((s, idx) => {
+                const el = document.getElementById(s.id);
+                const dot = el.querySelector('.step-dot');
+                if (idx < i) {
+                    el.className = 'loading-step done';
+                    dot.innerHTML = '<i class="fa-solid fa-check text-green-500" style="font-size:9px"></i>';
+                    dot.style.background = '#dcfce7';
+                } else if (idx === i) {
+                    el.className = 'loading-step active';
+                    dot.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-purple-600" style="font-size:9px"></i>';
+                    dot.style.background = '#ede9fe';
+                } else {
+                    el.className = 'loading-step pending';
+                    dot.innerHTML = '<i class="fa-solid fa-circle text-gray-300" style="font-size:6px"></i>';
+                    dot.style.background = '#f3f4f6';
+                }
+            });
+            if (stepTextEl && steps[i]) stepTextEl.textContent = steps[i].text;
+        }
+        activateStep(0);
+
+        const interval = setInterval(() => {
+            progress += Math.random() * 14 + 4;
+            if (progress > 100) progress = 100;
+            bar.style.width = Math.min(progress, 100) + '%';
+
+            const newStep = Math.min(Math.floor(progress / 25), 3);
+            if (newStep !== currentStep) { currentStep = newStep; activateStep(currentStep); }
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                steps.forEach(s => {
+                    const el = document.getElementById(s.id);
+                    el.className = 'loading-step done';
+                    const dot = el.querySelector('.step-dot');
+                    dot.innerHTML = '<i class="fa-solid fa-check text-green-500" style="font-size:9px"></i>';
+                    dot.style.background = '#dcfce7';
+                });
+                setTimeout(() => {
+                    document.getElementById('scan-loading').classList.add('hidden');
+                    document.getElementById('scan-results').classList.remove('hidden');
+                    document.getElementById('scan-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+            }
+        }, 220);
+    }
+
+    function runIngredientCheck() {
+        const val = document.getElementById('ing-input').value.trim();
+        if (!val) { document.getElementById('ing-input').focus(); return; }
+        const results = document.getElementById('ing-results');
+        results.classList.remove('hidden');
+        setTimeout(() => results.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    }
+
+    function toggleHistory() {
+        document.getElementById('history-panel').classList.toggle('hidden');
+    }
+
+    function loadHistoryScan(score) {
+        toggleHistory();
+        switchMainTab('scan');
+        setTimeout(() => {
+            document.getElementById('scan-empty').classList.add('hidden');
+            document.getElementById('scan-loading').classList.add('hidden');
+            document.getElementById('scan-results').classList.remove('hidden');
+        }, 100);
+    }
+</script>
 </body>
 </html>
