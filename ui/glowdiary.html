@@ -39,7 +39,7 @@
 <body class="bg-gray-50 font-sans text-gray-800 h-screen overflow-hidden flex">
 
     <!-- SIDEBAR (DESKTOP) -->
-<aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-100 h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 transition-colors">        <div class="p-6 flex flex-col h-full">
+    <aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-100 h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 transition-colors">        <div class="p-6 flex flex-col h-full">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-purple-200">G</div>
                 <h1 class="text-xl font-black tracking-tight text-gray-800">Glow<span class="text-brand">Diary</span></h1>
@@ -72,8 +72,7 @@
     </aside>
 
     <!-- MAIN VIEW CONTAINER -->
-    <main class="flex-1 h-screen overflow-y-auto pb-24 md:pb-0 relative">
-        
+    <main class="flex-1 h-screen overflow-y-auto pb-24 md:pb-0 relative overflow-x-hidden">        
         <!-- SCREEN 1: HOME -->
         <div id="screen-home" class="screen w-full min-h-full gradient-bg p-4 md:p-8 animate-fade-in">
             <div class="max-w-5xl mx-auto">
@@ -87,9 +86,9 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-1 space-y-6">
-                        <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-5 shadow-sm border border-orange-100 flex items-center gap-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 w-full">
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-3 shadow-sm border border-orange-100 flex items-center gap-4">
                             <div class="w-12 h-12 bg-white text-orange-500 rounded-full flex items-center justify-center text-2xl shadow-sm">🔥</div>
                             <div>
                                 <h3 class="font-bold text-gray-800 text-lg">5 Day Streak</h3>
@@ -232,77 +231,111 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-rose-100 relative overflow-hidden transition-all duration-300" id="period-log-container">
-                            <div class="absolute top-4 right-4 z-20">
-                                <button onclick="togglePeriodFeature()" id="btn-hide-period" class="text-gray-400 hover:text-rose-500 text-sm transition-colors" title="Sembunyikan Period Log">
-                                    <i class="fa-solid fa-eye-slash"></i>
-                                </button>
-                            </div>
-
-                            <div id="period-log-content">
-                                <div class="absolute -right-10 -top-10 w-32 h-32 bg-rose-50 rounded-full blur-2xl"></div>
-                                <div class="flex justify-between items-start mb-6 relative z-10">
+                
+                        
+                        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                            <div class="bg-white rounded-3xl p-5 shadow-lg border border-purple-100/50 relative overflow-hidden mb-5">
+                                <div class="absolute -right-6 -top-6 w-24 h-24 bg-purple-50 rounded-full blur-xl pointer-events-none"></div>
+                                <div class="flex items-center justify-between mb-4 relative z-10">
                                     <div>
-                                        <h2 class="font-semibold text-lg text-gray-800 flex items-center gap-2 mb-1">
-                                            <i class="fa-solid fa-droplet text-rose-500"></i> Period Log
+                                        <h2 id="calendar-title-label" class="font-extrabold text-gray-900 text-base flex items-center gap-2">
+                                            <i class="fa-solid fa-calendar-days text-brand"></i> Glow Calendar
                                         </h2>
-                                        <p id="period-status-text" class="text-sm text-gray-500">Belum ada data tercatat</p>
+                                        <p id="calendar-subtitle-label" class="text-[10px] text-gray-400 mt-0.5">Catat perjalanan log harian kulitmu</p>
                                     </div>
-                                    <button onclick="toggleModal('modal-period')" class="mr-6 text-rose-500 hover:text-white hover:bg-rose-400 bg-rose-50 w-10 h-10 rounded-xl transition-colors flex items-center justify-center font-bold shadow-sm">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-                                </div>
-
-                                <div class="flex justify-between items-center mb-4 relative z-10 bg-gray-50 py-2 px-3 rounded-xl border border-gray-100">
-                                    <button onclick="changeMonth(-1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg shadow-sm transition-all"><i class="fa-solid fa-chevron-left text-sm"></i></button>
-                                    <h3 id="calendar-month-year" class="font-bold text-gray-800 text-sm tracking-wide">Bulan Tahun</h3>
-                                    <button onclick="changeMonth(1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-lg shadow-sm transition-all"><i class="fa-solid fa-chevron-right text-sm"></i></button>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="changeMonth(-1)" class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 hover:bg-purple-50 hover:text-brand transition-all"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                                        <span id="calendar-month-year" class="text-xs font-black text-gray-800 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-xl min-w-[100px] text-center">June 2026</span>
+                                        <button onclick="changeMonth(1)" class="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 hover:bg-purple-50 hover:text-brand transition-all"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                                        <button onclick="toggleModal('modal-calendar-options')" class="w-8 h-8 rounded-xl gradient-btn text-white flex items-center justify-center shadow-md shadow-purple-200 hover:opacity-90 transition-all"><i class="fa-solid fa-plus text-xs"></i></button>
+                                    </div>
                                 </div>
 
                                 <div class="relative z-10 select-none">
                                     <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2">
                                         <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                                     </div>
-                                    <div id="calendar-days" class="grid grid-cols-7 gap-y-2 text-center text-sm font-medium text-gray-700"></div>
-                                    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-5 pt-4 border-t border-gray-100 justify-center text-[10px] sm:text-xs text-gray-500 font-medium">
+                                    <div id="calendar-days" class="grid grid-cols-7 gap-1 text-center"></div>
+
+                                    <div id="period-prediction-box" class="hidden mt-4 bg-rose-50 border border-rose-100 rounded-2xl p-3.5 flex items-center justify-between gap-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-full bg-white text-rose-500 flex items-center justify-center text-sm shrink-0 shadow-sm">
+                                                <i class="fa-solid fa-droplet"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs font-bold text-rose-600">Perkiraan Haid Berikutnya</p>
+                                                <p id="period-prediction-text" class="text-xs text-rose-500 mt-0.5">-</p>
+                                            </div>
+                                        </div>
+                                        <button onclick="openEditPeriodModal()" class="shrink-0 text-[11px] font-bold text-rose-600 bg-white border border-rose-200 px-3 py-1.5 rounded-xl hover:bg-rose-100 transition-all flex items-center gap-1.5">
+                                            <i class="fa-solid fa-pen text-[9px]"></i> Edit
+                                        </button>
+                                    </div>
+                                    
+                                    <div id="calendar-legend-box" class="flex flex-wrap gap-x-4 gap-y-2 mt-5 pt-4 border-t border-gray-100 justify-center text-[10px] sm:text-xs text-gray-500 font-medium">
                                         <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-brand shadow-sm"></div> Today</div>
-                                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></div> Period</div>
-                                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-100 border border-rose-200"></div> Fertile</div>
+                                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-indigo-500 shadow-sm"></div> Diary Checked</div>
+                                        <div id="legend-period-item" class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></div> Period</div>
+                                        <div id="legend-predicted-item" class="hidden flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-rose-100 border border-rose-300 shadow-sm"></div> Prediksi Haid</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="period-log-off" class="hidden flex-col items-center justify-center py-2 relative z-10 text-center">
-                                <div class="w-10 h-10 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center text-lg mb-2">
-                                    <i class="fa-solid fa-droplet-slash"></i>
+                            <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                                <h3 class="font-bold text-gray-800 text-sm mb-4 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-purple-400"></i> Riwayat & Catatan Kulit</h3>
+                                <div id="diary-history-list" class="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+                                    <p class="text-xs text-gray-400 italic">Belum ada catatan atau aktivitas log tersimpan.</p>
                                 </div>
-                                <p class="text-xs font-medium text-gray-500 mb-2">Fitur Period Log dinonaktifkan.</p>
-                                <button onclick="togglePeriodFeature()" class="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full font-bold transition-colors">
-                                    <i class="fa-solid fa-eye mr-1"></i> Aktifkan
-                                </button>
                             </div>
                         </div>
+                        
+                        <div id="modal-calendar-options" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-[100] hidden items-center justify-center p-5">
+                            <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl p-5 relative animate-fade-in">
+                                <button onclick="toggleModal('modal-calendar-options')" class="absolute right-4 top-4 w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all"><i class="fa-solid fa-xmark text-sm"></i></button>
+                                <h3 class="font-extrabold text-gray-900 text-base mb-4">Tambahkan Data Aktivitas</h3>
+                                <div class="space-y-3">
+                                    <button onclick="openSpecificModal('modal-diary')" class="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-all text-left">
+                                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-purple-50 text-brand-dark"><i class="fa-solid fa-book"></i></div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-800 text-sm">Tulis Catatan Diary</h4>
+                                            <p class="text-[10px] text-gray-400 mt-0.5">Catat kondisi real-time kulit & mood hari ini</p>
+                                        </div>
+                                    </button>
+                                    <button id="btn-option-period" onclick="openSpecificModal('modal-period')" class="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-rose-200 hover:bg-rose-50 transition-all text-left">
+                                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-rose-50 text-rose-400"><i class="fa-solid fa-droplet"></i></div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-800 text-sm">Catat Siklus Haid</h4>
+                                            <p class="text-[10px] text-gray-400 mt-0.5">Prediksi & penanda menstruasi bulanan</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="modal-diary" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-[100] hidden items-center justify-center p-5">
+                            <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl animate-fade-in">
+                                <div class="p-5 relative bg-gradient-to-br from-purple-100 to-indigo-50">
+                                    <button onclick="toggleModal('modal-diary')" class="absolute right-4 top-4 w-8 h-8 bg-white/80 rounded-xl flex items-center justify-center text-purple-600 hover:bg-white transition-all"><i class="fa-solid fa-xmark"></i></button>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-white bg-brand-dark shadow-md"><i class="fa-solid fa-book"></i></div>
+                                        <div><h3 class="font-extrabold text-gray-900 text-base">Tulis Diary Kulit</h3><p class="text-xs text-purple-600 font-medium">Gimana progress kulitmu hari ini?</p></div>
+                                    </div>
+                                </div>
+                                <div class="p-5 space-y-4">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Tanggal</label>
+                                        <input type="date" id="input-diary-date" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm text-gray-800 focus:border-brand outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Catatan Kondisi Kulit</label>
+                                        <textarea id="input-diary-text" rows="4" placeholder="Hari ini kulit terasa terhidrasi dengan baik, tapi muncul jerawat kecil merah di dahi..." class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-sm outline-none focus:border-brand resize-none leading-relaxed"></textarea>
+                                    </div>
+                                    <button onclick="saveDiaryData()" class="w-full gradient-btn text-white font-bold py-3.5 rounded-2xl shadow-md hover:opacity-95 transition-all text-sm">Simpan Catatan</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <!-- <div class="lg:col-span-2">
-                        <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-gray-100 h-full">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="font-semibold text-lg text-gray-800">Products Used Today</h2>
-                                <button onclick="openAddModal()" class="text-brand hover:text-white hover:bg-brand bg-purple-50 w-8 h-8 rounded-lg transition-colors flex items-center justify-center font-bold shadow-sm text-sm">
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
-                            </div>
-
-                            <div id="routine-list"></div>
-
-                            <div class="mt-6 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                                <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand mr-2"></i> Riwayat Terkini</h3>
-                                <div id="home-history-list" class="space-y-2">
-                                    </div>
-                            </div>
-                        </div>
-                    </div> -->
 
                     <div class="lg:col-span-2 space-y-6">
                         <div class="bg-white rounded-2xl p-5 md:p-6 shadow-xs border border-gray-100">
@@ -375,7 +408,143 @@
                     <button onclick="filterDiscover('Kandungan')" class="discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap hover:bg-purple-50 hover:text-brand-dark shadow-sm transition-all snap-start">Bahan Aktif</button>
                     <button onclick="filterDiscover('Rekomendasi')" class="discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap hover:bg-purple-50 hover:text-brand-dark shadow-sm transition-all snap-start">Rekomendasi</button>
                     <button onclick="filterDiscover('produk')" class="discover-tag bg-white border border-gray-100 text-gray-600 text-xs font-semibold px-5 py-2.5 rounded-full whitespace-nowrap hover:bg-purple-50 hover:text-brand-dark shadow-sm transition-all snap-start"><i class="fa-solid fa-bag-shopping mr-1"></i> Produk</button>
+                </div>
                 
+                <!-- ================= PREMIUM SECTIONS ================= -->
+                <div id="discover-premium-sections" class="space-y-8 mb-8 transition-all duration-300">
+                    <!-- BANNER ULASAN KOMUNITAS (Dengan Pemicu Ulasan Umum) -->
+                    <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-comments text-purple-500 text-lg"></i>
+                                <h3 class="text-base font-bold text-gray-800">Ulasan Komunitas</h3>
+                            </div>
+                            <p class="text-xs text-gray-500">Baca review jujur produk skincare dari pengguna GlowDiary lainnya, atau bagikan pengalamanmu!</p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            <!-- Klik tombol ini untuk menulis ulasan produk bebas (ketik sendiri) -->
+                            <a href="ulasan.html" class="w-full sm:w-auto text-center bg-purple-50 hover:bg-purple-100 text-brand font-bold text-xs py-3 px-5 rounded-xl transition-colors whitespace-nowrap shadow-sm">
+                                Lihat Semua Ulasan <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- PERSONALIZED RECOMMENDATION -->
+                    <div class="bg-gradient-to-r from-purple-50/70 to-fuchsia-50/70 rounded-2xl p-5 border border-purple-100/60 shadow-sm">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles text-brand"></i>
+                                <h3 class="text-base font-bold text-gray-800">Rekomendasi Spesifik Untukmu</h3>
+                            </div>
+                            <span id="user-skin-badge" class="text-[10px] bg-brand text-white font-bold px-2.5 py-1 rounded-full shadow-sm tracking-wide">
+                                Mendeteksi...
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Produk kurasi terbaik yang disesuaikan dengan kondisi skin profile kuesioner Anda.</p>
+                        
+                        <!-- Container Produk Rekomendasi (Diisi via JS) -->
+                        <div id="personalized-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Loading State / Diisi oleh JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- 2. 5 TOP PRODUCTS -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-ranking-star text-amber-500"></i>
+                                <h3 class="text-base font-bold text-gray-800">5 Top Products Bulan Ini</h3>
+                            </div>
+                            <span class="text-[11px] text-brand font-semibold"><i class="fa-solid fa-fire mr-1 text-orange-500"></i> Trending</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Produk dengan review tertinggi dan paling dicari oleh komunitas GlowDiary.</p>
+
+                        <!-- Horizontal Scroll Container -->
+                        <div class="flex gap-4 overflow-x-auto pb-3 no-scrollbar snap-x snap-mandatory">
+                            
+                            <!-- Top #1 -->
+                            <div class="min-w-[170px] max-w-[170px] bg-white border border-gray-100 rounded-2xl p-4 shadow-sm snap-start flex flex-col justify-between hover:shadow-md transition-shadow">
+                                <div>
+                                    <span class="text-[9px] bg-amber-50 text-amber-700 font-extrabold px-2 py-0.5 rounded-md border border-amber-200">#1 Sunscreen</span>
+                                    <div class="text-3xl my-3 text-center">☀️</div>
+                                    <h4 class="font-bold text-gray-800 text-xs line-clamp-2">Anessa Perfect UV Sunscreen Milk</h4>
+                                    <!-- Tombol Ulasan Khusus Produk Ini -->
+                                    <button onclick="openFlexibleReviewModal('Anessa Perfect UV Sunscreen Milk')" class="text-brand hover:underline text-[11px] font-bold mt-2 text-left flex items-center gap-1.5">
+                                        <i class="fa-solid fa-star text-[9px] text-yellow-400"></i> Beri Ulasan
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px]">
+                                    <span class="text-gray-400">Rating</span>
+                                    <span class="text-gray-800 font-bold"><i class="fa-solid fa-star text-amber-400 mr-0.5"></i> 4.9</span>
+                                </div>
+                            </div>
+
+                            <!-- Top #2 -->
+                            <div class="min-w-[170px] max-w-[170px] bg-white border border-gray-100 rounded-2xl p-4 shadow-sm snap-start flex flex-col justify-between hover:shadow-md transition-shadow">
+                                <div>
+                                    <span class="text-[9px] bg-purple-50 text-purple-700 font-extrabold px-2 py-0.5 rounded-md border border-purple-200">#2 Moisture</span>
+                                    <div class="text-3xl my-3 text-center">🧴</div>
+                                    <h4 class="font-bold text-gray-800 text-xs line-clamp-2">Skintific 5X Ceramide Moisture Gel</h4>
+                                    <button onclick="openFlexibleReviewModal('Skintific 5X Ceramide Moisture Gel')" class="text-brand hover:underline text-[11px] font-bold mt-2 text-left flex items-center gap-1.5">
+                                        <i class="fa-solid fa-star text-[9px] text-yellow-400"></i> Beri Ulasan
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px]">
+                                    <span class="text-gray-400">Rating</span>
+                                    <span class="text-gray-800 font-bold"><i class="fa-solid fa-star text-amber-400 mr-0.5"></i> 4.8</span>
+                                </div>
+                            </div>
+
+                            <!-- Top #3 -->
+                            <div class="min-w-[170px] max-w-[170px] bg-white border border-gray-100 rounded-2xl p-4 shadow-sm snap-start flex flex-col justify-between hover:shadow-md transition-shadow">
+                                <div>
+                                    <span class="text-[9px] bg-blue-50 text-blue-700 font-extrabold px-2 py-0.5 rounded-md border border-blue-200">#3 Cleanser</span>
+                                    <div class="text-3xl my-3 text-center">🧼</div>
+                                    <h4 class="font-bold text-gray-800 text-xs line-clamp-2">COSRX Low pH Good Morning Gel</h4>
+                                    <button onclick="openFlexibleReviewModal('COSRX Low pH Good Morning Gel')" class="text-brand hover:underline text-[11px] font-bold mt-2 text-left flex items-center gap-1.5">
+                                        <i class="fa-solid fa-star text-[9px] text-yellow-400"></i> Beri Ulasan
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px]">
+                                    <span class="text-gray-400">Rating</span>
+                                    <span class="text-gray-800 font-bold"><i class="fa-solid fa-star text-amber-400 mr-0.5"></i> 4.7</span>
+                                </div>
+                            </div>
+
+                            <!-- Top #4 -->
+                            <div class="min-w-[170px] max-w-[170px] bg-white border border-gray-100 rounded-2xl p-4 shadow-sm snap-start flex flex-col justify-between hover:shadow-md transition-shadow">
+                                <div>
+                                    <span class="text-[9px] bg-rose-50 text-rose-700 font-extrabold px-2 py-0.5 rounded-md border border-rose-200">#4 Serum</span>
+                                    <div class="text-3xl my-3 text-center">💧</div>
+                                    <h4 class="font-bold text-gray-800 text-xs line-clamp-2">Somethinc Niacinamide Sabi Serum</h4>
+                                    <button onclick="openFlexibleReviewModal('Somethinc Niacinamide Sabi Serum')" class="text-brand hover:underline text-[11px] font-bold mt-2 text-left flex items-center gap-1.5">
+                                        <i class="fa-solid fa-star text-[9px] text-yellow-400"></i> Beri Ulasan
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px]">
+                                    <span class="text-gray-400">Rating</span>
+                                    <span class="text-gray-800 font-bold"><i class="fa-solid fa-star text-amber-400 mr-0.5"></i> 4.7</span>
+                                </div>
+                            </div>
+
+                            <!-- Top #5 -->
+                            <div class="min-w-[170px] max-w-[170px] bg-white border border-gray-100 rounded-2xl p-4 shadow-sm snap-start flex flex-col justify-between hover:shadow-md transition-shadow">
+                                <div>
+                                    <span class="text-[9px] bg-emerald-50 text-emerald-700 font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">#5 Toner</span>
+                                    <div class="text-3xl my-3 text-center">🧪</div>
+                                    <h4 class="font-bold text-gray-800 text-xs line-clamp-2">Anua Heartleaf 77% Soothing Toner</h4>
+                                    <button onclick="openFlexibleReviewModal('Anua Heartleaf 77% Soothing Toner')" class="text-brand hover:underline text-[11px] font-bold mt-2 text-left flex items-center gap-1.5">
+                                        <i class="fa-solid fa-star text-[9px] text-yellow-400"></i> Beri Ulasan
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px]">
+                                    <span class="text-gray-400">Rating</span>
+                                    <span class="text-gray-800 font-bold"><i class="fa-solid fa-star text-amber-400 mr-0.5"></i> 4.6</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Grid Konten Utama Discover -->
@@ -389,17 +558,17 @@
         <div id="screen-analyze" class="screen hidden w-full min-h-full gradient-bg p-4 md:p-8 animate-fade-in">
             <div class="max-w-4xl mx-auto space-y-8">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Skin Analysis Pro</h1>
-                    <button onclick="alert('Membuka riwayat analisis terdahulu...')" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 hover:text-brand transition-colors">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Skin Analysis</h1>
+                    <!-- <button onclick="alert('Membuka riwayat analisis terdahulu...')" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-400 shadow-sm border border-gray-100 hover:text-brand transition-colors">
                         <i class="fa-solid fa-clock-rotate-left"></i>
-                    </button>
+                    </button> -->
                 </div>
 
                 <!-- AI Scan Hero Banner -->
                 <div class="w-full bg-white rounded-3xl p-5 md:p-8 shadow-sm border border-gray-100 relative overflow-hidden">
                     <div class="flex flex-col md:flex-row gap-8 items-center">
                         
-                        <div class="relative w-full md:w-1/2 h-72 md:h-80 bg-gray-100 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center shrink-0">
+                        <!-- <div class="relative w-full md:w-1/2 h-72 md:h-80 bg-gray-100 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center shrink-0">
                             <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600" alt="Face Scan" class="w-full h-full object-cover opacity-90 transition-all duration-500" id="scan-image">
                             
                             <div class="absolute inset-6 md:inset-8 border-2 border-dashed border-white/60 rounded-2xl"></div>
@@ -410,11 +579,79 @@
 
                             <div id="scanner-laser" class="absolute top-0 left-0 w-full h-1.5 bg-brand shadow-[0_0_25px_#c084fc] hidden z-10"></div>
                             <div id="scan-overlay" class="absolute inset-0 bg-brand/20 backdrop-blur-[2px] hidden z-0"></div>
-                        </div>
+                        </div> -->
 
                         <div class="flex-1 text-center md:text-left w-full">
-                            <h2 class="text-2xl md:text-3xl font-black text-gray-800 mb-2">Daily Skin Scan</h2>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">Pindai wajahmu untuk mengukur kelembapan, kadar sebum, dan analisis perkembangan jerawat secara real-time.</p>
+                            <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden mb-6">
+                                <div class="relative z-10">
+                                    <span class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Pro</span>
+                                    <span class="bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">GlowAI Engine</span>
+                                    <h3 class="font-black text-xl mt-2">Daily Skin Scan</h3>
+                                    <p class="text-xs text-purple-100 mt-1 max-w-[90%]">Pindai wajah Anda secara real-time untuk analisis kondisi skin barrier, kelembapan, dan tingkat minyak.</p>
+                                    
+                                    <div id="scan-view-container" class="hidden mt-4 relative w-full aspect-[4/3] bg-black rounded-xl overflow-hidden border-2 border-white/30 shadow-inner">
+                                        <video id="webcam" autoplay playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
+                                        <div class="absolute inset-0 border-[24px] border-black/40 pointer-events-none flex items-center justify-center">
+                                            <div class="w-48 h-48 rounded-full border-2 border-dashed border-brand animate-pulse relative">
+                                                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 bg-brand text-[8px] font-bold px-1 rounded text-white uppercase tracking-widest">Posisikan Wajah</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="scan-loading" class="hidden mt-4 bg-white/20 h-2 rounded-full overflow-hidden">
+                                        <div id="scan-progress-bar" class="bg-brand h-full w-0 transition-all duration-200"></div>
+                                    </div>
+
+                                    <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                                        <button id="btn-start-scan" onclick="startSkinCamera()" class="bg-white text-indigo-600 font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-purple-50 transition inline-flex items-center align-center gap-1.5 active:scale-95 shrink-0">
+                                            <i class="fa-solid fa-video text-sm"></i> Mulai Live Scan
+                                        </button>
+                                        <button id="btn-capture-scan" onclick="captureAndAnalyzeSkin()" class="hidden bg-purple-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:bg-purple-600 transition inline-flex items-center gap-1.5 active:scale-95">
+                                            <i class="fa-solid fa-circle-dot text-sm"></i> Ambil & Analisis Foto
+                                        </button>
+                                    </div>
+
+                                    <canvas id="scan-canvas" class="hidden"></canvas>
+                                </div>
+                                <i class="fa-solid fa-expand absolute right-4 bottom-4 text-7xl text-white/10 pointer-events-none"></i>
+                            </div>
+
+                            <div id="scan-results" class="hidden bg-white rounded-2xl p-5 border border-gray-100 shadow-sm mb-6 animate-fade-in">
+                                <div class="flex justify-between items-start border-b border-gray-100 pb-3 mb-4">
+                                    <div>
+                                        <h4 class="font-bold text-gray-800 text-sm">Hasil Analisis Skin AI</h4>
+                                        <p id="scan-result-date" class="text-[10px] text-gray-400 mt-0.5">Baru saja dianalisis</p>
+                                    </div>
+                                    <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full border border-purple-200">
+                                        <i class="fa-solid fa-sparkles mr-1"></i> Teranalisis Akurat
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-2 mb-4">
+                                    <div class="bg-purple-50/50 p-3 rounded-xl text-center border border-purple-50">
+                                        <p class="text-[10px] text-gray-400 font-medium">Moisture (Air)</p>
+                                        <p id="res-moisture" class="text-lg font-black text-purple-600 mt-0.5">65%</p>
+                                    </div>
+                                    <div class="bg-amber-50/50 p-3 rounded-xl text-center border border-amber-50">
+                                        <p class="text-[10px] text-gray-400 font-medium">Oil (Minyak)</p>
+                                        <p id="res-oil" class="text-lg font-black text-amber-600 mt-0.5">32%</p>
+                                    </div>
+                                    <div class="bg-emerald-50/50 p-3 rounded-xl text-center border border-emerald-50">
+                                        <p class="text-[10px] text-gray-400 font-medium">Skin Barrier</p>
+                                        <p id="res-barrier" class="text-xs font-bold text-emerald-600 mt-1.5">Stabil</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-xl p-3 flex gap-3">
+                                    <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center text-white text-sm shrink-0">
+                                        <i class="fa-solid fa-user-doctor"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-gray-800">Rekomendasi Ahli GlowAI:</p>
+                                        <p id="res-recommendation" class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">Kondisi hidrasi kulit Anda cukup baik. Namun, tingkat sebum di area T-zone sedikit meningkat. Sebaiknya gunakan produk berbahan dasar Niacinamide atau Centella Asiatica untuk menjaga keseimbangan sebum hari ini.</p>
+                                    </div>
+                                </div>
+                            </div>
                             
                             <div id="scan-results" class="hidden mb-6 space-y-3 animate-fade-in text-left">
                                 <div class="flex justify-between items-center bg-rose-50 p-3 rounded-xl border border-rose-100">
@@ -431,9 +668,21 @@
                                 </div>
                             </div>
 
-                            <button id="btn-scan" onclick="startFaceScan()" class="w-full md:w-auto gradient-btn text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-purple-200 hover:scale-105 transition-all flex items-center justify-center gap-2 mx-auto md:mx-0">
-                                <i class="fa-solid fa-camera"></i> Mulai Analisis Wajah
-                            </button>
+                            <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm mb-6 text-left">
+                                <div class="flex items-center justify-between border-b border-gray-50 pb-3 mb-4">
+                                    <div class="flex items-center gap-2 text-purple-600">
+                                        <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+                                        <h4 class="font-black text-sm text-gray-800">Riwayat Analisis Kulit Anda</h4>
+                                    </div>
+                                    <span id="scan-history-count" class="bg-purple-50 text-purple-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                                        0 Scan
+                                    </span>
+                                </div>
+
+                                <div id="skin-scan-history-list" class="space-y-3 max-h-[280px] overflow-y-auto pr-1">
+                                    <p class="text-xs text-gray-400 italic py-4 text-center">Belum ada catatan riwayat pemindaian.</p>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -539,27 +788,57 @@
     <div id="modal-period" class="fixed inset-0 bg-gray-900/60 z-50 hidden items-center justify-center p-4 transition-opacity">
         <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
-                <h3 class="font-bold text-xl text-gray-800">Set Period Data</h3>
+                <div>
+                    <h3 class="font-bold text-xl text-gray-800">Siklus Menstruasi</h3>
+                    <p class="text-xs text-gray-400 font-medium mt-0.5">Bantu prediksi hormon & kondisi skin barrier</p>
+                    <span id="period-edit-mode-badge" class="hidden mt-1.5 inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded-full">
+                        <i class="fa-solid fa-pen text-[9px]"></i> <span id="period-status-text">Mengedit siklus tersimpan</span>
+                    </span>
+                </div>
                 <button onclick="toggleModal('modal-period')" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
             <div class="p-6">
                 <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai Terakhir</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai Haid Terakhir</label>
                     <input type="date" id="period-start-input" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-brand outline-none">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Berapa Lama (Hari)</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Berapa Lama Haid (Hari)</label>
                     <input type="number" id="period-duration-input" value="5" min="1" max="10" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-brand outline-none">
                 </div>
-                <div class="mb-6">
+                <div class="mb-2">
                     <label class="text-sm font-bold text-gray-700 block mb-2">Lama Siklus (Hari)</label>
                     <input type="number" id="period-cycle-input" value="28" min="21" max="45" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-brand outline-none">
                 </div>
-                <button onclick="savePeriodData()" class="w-full bg-rose-500 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-rose-600 transition-all flex justify-center gap-2">
-                    <i class="fa-solid fa-check mt-1"></i> Simpan
-                </button>
+                <p class="text-xs text-gray-400 mb-4">Rata-rata siklus normal adalah 21&ndash;35 hari, dihitung dari hari pertama haid hingga hari pertama haid berikutnya.</p>
+
+                <div id="period-result-preview" class="hidden mb-5 bg-rose-50 border border-rose-100 rounded-xl p-3.5 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-white text-rose-500 flex items-center justify-center text-xs shrink-0 shadow-sm">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-rose-600">Perkiraan Haid Berikutnya</p>
+                        <p id="period-result-preview-text" class="text-sm font-black text-rose-600 mt-0.5">-</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button id="btn-cancel-period-edit" onclick="editingPeriodEntryId = null; resetPeriodForm(); updatePeriodEditBadge();" class="hidden shrink-0 text-gray-500 font-bold py-4 px-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all text-sm">
+                        Batal
+                    </button>
+                    <button onclick="savePeriodData()" class="w-full bg-rose-500 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-rose-600 transition-all flex justify-center gap-2">
+                        <i class="fa-solid fa-check mt-1"></i> <span id="btn-save-period-label">Simpan ke Riwayat</span>
+                    </button>
+                </div>
+
+                <div class="mt-6 pt-5 border-t border-gray-100">
+                    <h4 class="text-xs font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-rose-400"></i> Riwayat Siklus Bulan Lalu</h4>
+                    <div id="period-history-list" class="space-y-2 max-h-[180px] overflow-y-auto pr-1">
+                        <p class="text-xs text-gray-400 italic text-center py-3">Belum ada riwayat siklus tercatat.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -621,7 +900,22 @@
         </div>
     </div>
 
+    <!--  STRUKTUR MODAL SUKSES DI GLOWDIARY.HTML -->
+    <div id="modal-success" class="fixed inset-0 bg-black/40 z-[1000] hidden flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+        <div class="bg-white w-full max-w-xs rounded-[2rem] p-6 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 border border-green-100 shadow-sm animate-bounce">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 id="success-title" class="font-extrabold text-gray-800 text-base mb-1">Berhasil!</h3>
+            <p id="success-desc" class="text-xs text-gray-500 leading-relaxed mb-5">Aksi Anda telah berhasil diproses.</p>
+            <button onclick="document.getElementById('modal-success').classList.add('hidden')" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-xl text-xs transition-all shadow-md">
+                Selesai
+            </button>
+        </div>
+    </div>
+
     <script src="rewards.js"></script>
+    <script src="camera.js"></script>
 
     <!-- MAIN CORE LOGIC JAVASCRIPT -->
     <script>
@@ -833,6 +1127,9 @@
             if (document.getElementById('profile-name')) document.getElementById('profile-name').textContent = username;
             if (document.getElementById('profile-username')) document.getElementById('profile-username').textContent = `@${firstName.toLowerCase()}${Math.floor(Math.random() * 90 + 10)}`;
 
+            if (typeof renderSkinScanHistoryAnalyze === "function") { 
+                renderSkinScanHistoryAnalyze();
+            }
             // Parse Skin Type
             loadSkinConditionBadges();
             
@@ -851,15 +1148,10 @@
             }
 
             // Period Treacker
-            applyPeriodFeatureState();
-            if (localStorage.getItem('glowdiary_periodData')) {
-                userPeriodData = JSON.parse(localStorage.getItem('glowdiary_periodData'));
-                calculatePeriodDates();
-                if (userPeriodData.lastStart) document.getElementById('period-start-input').value = userPeriodData.lastStart;
-                if (userPeriodData.duration) document.getElementById('period-duration-input').value = userPeriodData.duration;
-                if (userPeriodData.cycleLength) document.getElementById('period-cycle-input').value = userPeriodData.cycleLength;
-                document.getElementById('period-status-text').textContent = "Siklus Terpantau Aktif";
-            }
+            if (typeof applyPeriodFeatureState === "function") applyPeriodFeatureState();
+            loadPeriodHistory();
+            calculatePeriodDates();
+            renderPeriodPredictionBox();
             renderCalendar();
             loadFavoritesFromStorage();
             renderDiscover();
@@ -1151,66 +1443,126 @@
         }
 
         // --- LOGIKA MODAL REVIEW ---
+        let currentSelectedRating = 0;
+        // Fungsi untuk mewarnai bintang (Kuning jika dipilih, Abu-abu jika tidak)
+        function setRating(rating) {
+            currentSelectedRating = rating;
+            const starButtons = document.querySelectorAll('#star-rating-input .star-btn');
+            
+            starButtons.forEach((button, index) => {
+                if (index < rating) {
+                    button.classList.remove('text-gray-300');
+                    button.classList.add('text-yellow-400');
+                } else {
+                    button.classList.remove('text-yellow-400');
+                    button.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // Fungsi Utama untuk Membuka Modal (Membuat Tampilan Form)
         function openReviewModal(id) {
             const product = discoverData.find(p => p.id === id);
             if (!product) return;
 
+            // Reset bintang ke 0 setiap kali membuka modal baru
+            currentSelectedRating = 0;
+
             const modalHtml = `
                 <div id="reviewModal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex justify-center items-center animate-fade-in p-4">
                     <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl animate-slide-up">
+                        
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-bold text-gray-800 text-lg">Beri Ulasan</h3>
                             <button onclick="document.getElementById('reviewModal').remove()" class="text-gray-400 hover:text-gray-600">
                                 <i class="fa-solid fa-xmark text-xl"></i>
                             </button>
                         </div>
-                        <p class="text-xs text-gray-500 mb-4">Bagaimana pengalaman Anda menggunakan <b>${product.title}</b>?</p>
                         
-                        <textarea id="reviewText" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand focus:border-brand outline-none mb-4" placeholder="Tulis ulasan jujur Anda di sini..."></textarea>
-                        
-                        <button onclick="submitReview(${product.id})" class="w-full bg-brand text-white font-bold py-3 rounded-xl shadow hover:bg-brand-dark transition">
-                            Kirim Ulasan
-                        </button>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Produk</label>
+                                <input type="text" id="review-product-input" value="${product.title}" readonly 
+                                    class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm text-gray-500 focus:outline-none cursor-not-allowed font-medium">
+                            </div>
+
+                            <div class="text-center bg-gray-50 py-3 rounded-xl border border-gray-100">
+                                <p class="text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">Rating Bintang</p>
+                                <div class="flex justify-center gap-2 text-3xl text-gray-300" id="star-rating-input">
+                                    <button onclick="setRating(1)" class="star-btn hover:text-yellow-400 hover:scale-110 transition-all"><i class="fa-solid fa-star"></i></button>
+                                    <button onclick="setRating(2)" class="star-btn hover:text-yellow-400 hover:scale-110 transition-all"><i class="fa-solid fa-star"></i></button>
+                                    <button onclick="setRating(3)" class="star-btn hover:text-yellow-400 hover:scale-110 transition-all"><i class="fa-solid fa-star"></i></button>
+                                    <button onclick="setRating(4)" class="star-btn hover:text-yellow-400 hover:scale-110 transition-all"><i class="fa-solid fa-star"></i></button>
+                                    <button onclick="setRating(5)" class="star-btn hover:text-yellow-400 hover:scale-110 transition-all"><i class="fa-solid fa-star"></i></button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Pengalamanmu</label>
+                                <textarea id="review-text-input" rows="3" placeholder="Ceritakan detail tekstur, hasil di kulit, dll..." 
+                                        class="w-full bg-white border border-gray-200 p-3 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 resize-none"></textarea>
+                            </div>
+
+                            <button onclick="submitReview(${product.id})" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-black active:scale-[0.98] transition-all">
+                                Kirim Ulasan
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             `;
             document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
-        function submitReview(id) {
-            const text = document.getElementById('reviewText').value;
-            if (!text.trim()) {
-                alert("Ulasan tidak boleh kosong!");
+        // Fungsi Menangani saat Tombol "Kirim Ulasan" Diklik
+       function submitReview(id) {
+            const textInput = document.getElementById('review-text-input');
+            const reviewText = textInput ? textInput.value.trim() : '';
+            
+            // --- VALIDASI ---
+            if (currentSelectedRating === 0) {
+                alert("Pilih rating bintang terlebih dahulu sebelum mengirim ulasan!");
+                return;
+            }
+
+            if (!reviewText) {
+                alert("Ulasan tidak boleh kosong! Ceritakan sedikit pengalamanmu.");
+                if (textInput) textInput.focus();
                 return;
             }
             
-            // 1. Proses simpan review bawaan Anda
+            // --- PROSES SIMPAN & HADIAH ---
             alert("Terima kasih! Ulasan Anda telah berhasil disimpan.");
 
-            // 2. --- PROSES PENYIMPANAN POIN LANGSUNG KE PROFILE_2 ---
-            // Menggunakan key 'glowdiary_glowPoints' agar SAMA PERSIS dengan yang dibaca profile_2.html
+            // Tambahkan +1 poin ke localStorage profile_2
             let totalPoin = parseInt(localStorage.getItem('glowdiary_glowPoints')) || 0;
-            
-            // Tambahkan 10 poin baru
-            totalPoin += 10;
-            
-            // Simpan kembali nilai ter-update ke localStorage
+            totalPoin += 1;
             localStorage.setItem('glowdiary_glowPoints', totalPoin);
-            // --------------------------------------------------------
 
-            // 3. --- PEMICU NOTIFIKASI VISUAL ---
-            // Memanggil fungsi dari rewards.js jika file tersebut berhasil dimuat
+            // Memunculkan efek toast poin (jika fungsi rewards Anda aktif)
             if (typeof showPointToast === "function") {
-                showPointToast(10); // Menampilkan efek toast +10 poin saja karena datanya sudah disimpan di atas
-            } else if (typeof addUserPoints === "function") {
-                // Jika Anda menggunakan rewards.js versi alternatif, jalankan ini
-                // (Pastikan key di dalam rewards.js juga sudah diubah ke 'glowdiary_glowPoints')
-                // addUserPoints(10); 
+                showPointToast(1); 
             }
             
-            // Hapus modal ulasan dari layar
+            // Tutup dan hapus modal dari layar
             const reviewModal = document.getElementById('reviewModal');
             if (reviewModal) reviewModal.remove();
+        }
+        // JEMBATAN OTOMATIS: Agar tombol "Beri Ulasan" di bagian "5 Top Product" yang menggunakan teks nama produk juga bisa langsung memakai modal di atas.
+        function openFlexibleReviewModal(productName) {
+            let product = discoverData.find(p => p.title.toLowerCase() === productName.toLowerCase());
+            
+            // Jika nama produk belum terdaftar di database discoverData, buat data tiruan instan
+            if (!product) {
+                product = {
+                    id: Date.now(),
+                    title: productName
+                };
+                discoverData.push(product);
+            }
+            
+            // Buka modal baru menggunakan ID produk tersebut
+            openReviewModal(product.id);
         }
 
         // --- FUNGSI BARU: Integrasi Tombol Rutinitas Tab Discover & Home ---
@@ -1334,7 +1686,112 @@
         }
         loadFavoritesFromStorage(); // Panggil fungsi ini saat inisialisasi halaman 
 
+        // Fungsi Utama: Mengambil data kuesioner dan membuat rekomendasi dinamis
+    function renderPersonalizedRecommendations() {
+        const container = document.getElementById('personalized-container');
+        const badge = document.getElementById('user-skin-badge');
+        if (!container) return;
 
+        // Ambil data kuesioner dari localStorage (sesuaikan key-nya jika berbeda)
+        const rawData = localStorage.getItem('glowdiary_skin');
+
+        if (!rawData) {
+            if (badge) badge.innerText = "Umum";
+            container.innerHTML = `
+                <div class="col-span-full bg-white p-5 rounded-xl text-center border border-gray-100">
+                    <p class="text-xs text-gray-500 mb-3">Yuk, isi kuesioner profil kulit untuk membuka rekomendasi produk kustom khusus kebutuhanmu!</p>
+                    <a href="kuesioner.html" class="inline-block bg-brand text-white text-xs font-bold px-4 py-2 rounded-xl transition-transform active:scale-95 shadow-sm">Mulai Analisis Kulit</a>
+                </div>
+            `;
+            return;
+        }
+
+        const skinData = JSON.parse(rawData);
+        // Asumsi format JSON kuesioner: { skinType: ["Oily"], skinConcern: "Berjerawat" }
+        const type = (skinData.skinType && skinData.skinType[0]) ? skinData.skinType[0] : 'Normal';
+        const concern = skinData.skinConcern || 'Normal';
+
+        if (badge) badge.innerText = `${type} • ${concern}`;
+
+        // Database Produk Pintar Berdasarkan Kondisi Kulit
+        let products = [];
+        const lowerConcern = concern.toLowerCase();
+        const lowerType = type.toLowerCase();
+
+        if (lowerType.includes('oily') || lowerConcern.includes('jerawat') || lowerConcern.includes('breakout')) {
+            products = [
+                { name: "Sukin Blemish Control Wash", icon: "🧼", tag: "Salicylic Acid", desc: "Membersihkan pori tersumbat jauh ke dalam tanpa sensasi ketarik." },
+                { name: "The Originote Acne B5 Serum", icon: "💧", tag: "Acne Care", desc: "Menenangkan jerawat meradang dan mempercepat penyembuhan kulit." }
+            ];
+        } else if (lowerType.includes('dry') || lowerConcern.includes('kering') || lowerConcern.includes('dehidrasi')) {
+            products = [
+                { name: "Hada Labo Premium Lotion", icon: "🧪", tag: "Hyaluronic Acid", desc: "Suntikan hidrasi intensif berkali-kali lipat untuk tekstur kulit kenyal." },
+                { name: "The Originote Hyalucera Gel", icon: "🧴", tag: "Ceramide", desc: "Mengunci kelembapan alami sekaligus memperkokoh dinding pertahanan kulit." }
+            ];
+        } else if (lowerConcern.includes('kusam') || lowerConcern.includes('flek') || lowerConcern.includes('merata')) {
+            products = [
+                { name: "Azarine Vitamin C Serum", icon: "🍊", tag: "Vitamin C", desc: "Membantu memudarkan noda hitam sisa jerawat dan mencerahkan warna kulit." },
+                { name: "Avoskin Miraculous Ref. Toner", icon: "🧪", tag: "AHA/BHA/PHA", desc: "Eksfoliasi kimia lembut untuk mengangkat penumpukan sel kulit mati." }
+            ];
+        } else if (lowerType.includes('sensi')) {
+            products = [
+                { name: "Skin1004 Centella Ampoule", icon: "🌸", tag: "Pure Centella", desc: "Meredakan iritasi, kemerahan, dan menstabilkan barrier wajah sensitif." },
+                { name: "Cetaphil Gentle Cleanser", icon: "🧼", tag: "Hypoallergenic", desc: "Formula super aman tanpa busa berlebih yang menjaga pH seimbang wajah." }
+            ];
+        } else {
+            products = [
+                { name: "Npure Centella Toner", icon: "🧪", tag: "Hydrating", desc: "Menjaga keseimbangan hidrasi harian agar kulit selalu segar merona." },
+                { name: "Skintific Light Sunscreen", icon: "☀️", tag: "UV Protection", desc: "Tabir surya ultra-ringan pelindung dari penuaan dini akibat radiasi matahari." }
+            ];
+        }
+
+        // Render ke HTML
+        container.innerHTML = products.map(prod => `
+            <div class="bg-white border border-gray-100/80 rounded-xl p-3.5 flex items-start gap-3 shadow-sm hover:shadow-md transition-all">
+                <div class="text-2xl p-2.5 bg-purple-50 rounded-xl flex items-center justify-center">${prod.icon}</div>
+                <div class="flex-1">
+                    <span class="inline-block text-[9px] font-extrabold tracking-wider uppercase text-purple-600 bg-purple-100/80 px-2 py-0.5 rounded-md mb-1">${prod.tag}</span>
+                    <h4 class="font-bold text-gray-800 text-xs mb-0.5">${prod.name}</h4>
+                    <p class="text-[11px] text-gray-500 leading-relaxed">${prod.desc}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Interseptor Filter: Menyembunyikan bagian premium jika memilih kategori edukasi/bahan aktif
+    function filterDiscoverWithPremium(category) {
+        const premiumSections = document.getElementById('discover-premium-sections');
+        if (premiumSections) {
+            if (category === 'all' || category === 'Rekomendasi' || category === 'produk') {
+                premiumSections.classList.remove('hidden');
+            } else {
+                premiumSections.classList.add('hidden');
+            }
+        }
+        // Panggil fungsi filter bawaan kode Anda sebelumnya
+        if (typeof filterDiscover === 'function') filterDiscover(category);
+    }
+
+    // Interseptor Search: Menyembunyikan bagian premium jika user sedang aktif mengetik pencarian
+    function searchDiscoverWithPremium() {
+        const searchVal = document.getElementById('search-discover').value.trim();
+        const premiumSections = document.getElementById('discover-premium-sections');
+        
+        if (premiumSections) {
+            if (searchVal.length > 0) {
+                premiumSections.classList.add('hidden');
+            } else {
+                premiumSections.classList.remove('hidden');
+            }
+        }
+        // Panggil fungsi pencarian bawaan kode Anda sebelumnya
+        if (typeof searchDiscover === 'function') searchDiscover();
+    }
+
+    // Jalankan saat dokumen siap dimuat
+    document.addEventListener("DOMContentLoaded", function() {
+        renderPersonalizedRecommendations();
+    });
         function toggleFavoriteProduct(id) {
             const product = discoverData.find(p => p.id === id);
             if (!product) return;
@@ -1618,58 +2075,228 @@
             }
         }
 
-        // --- 7. PERIOD TRACKER LOGIC ---
+        // ==================== LOGIKA KALENDER INTEGRASI (MENSTRUASI & DIARY KULIT) ====================
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
-        let userPeriodData = { lastStart: '', duration: 5, cycleLength: 28 };
-        let periodDates = []; let fertileDates = [];
+        // periodHistory: array riwayat siklus, satu entri per bulan/catatan.
+        // Setiap entri punya tanggal mulai, durasi, dan panjang siklusnya sendiri,
+        // karena tiap bulan bisa berbeda-beda (tidak harus pakai siklus yang sama terus).
+        // { id, lastStart: 'YYYY-MM-DD', duration: Number, cycleLength: Number }
+        let periodHistory = [];
+        let userPeriodData = { lastStart: '', duration: 5, cycleLength: 28 }; // form input aktif (entri yang sedang diisi/diedit)
+        let periodDates = [];
+        let predictedPeriodDates = []; // Tanggal prediksi murni (siklus mendatang yang belum terjadi)
+        let nextPeriodStart = null;    // Tanggal mulai prediksi haid berikutnya (Date object), dihitung dari entri TERAKHIR di riwayat
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-        function togglePeriodFeature() {
-            const hide = localStorage.getItem('glowdiary_hide_period') === 'true';
-            localStorage.setItem('glowdiary_hide_period', !hide);
-            applyPeriodFeatureState();
+        // Memuat riwayat siklus dari LocalStorage. Jika masih ada data lama format tunggal
+        // (glowdiary_periodData dari versi sebelumnya), data itu dipindahkan otomatis jadi
+        // entri pertama di riwayat baru, lalu key lama dihapus supaya tidak terbaca dua kali.
+        function loadPeriodHistory() {
+            const stored = localStorage.getItem('glowdiary_periodHistory');
+            periodHistory = stored ? JSON.parse(stored) : [];
+
+            const legacy = localStorage.getItem('glowdiary_periodData');
+            if (legacy) {
+                const legacyData = JSON.parse(legacy);
+                if (legacyData && legacyData.lastStart) {
+                    periodHistory.push({
+                        id: Date.now(),
+                        lastStart: legacyData.lastStart,
+                        duration: legacyData.duration || 5,
+                        cycleLength: legacyData.cycleLength || 28
+                    });
+                    savePeriodHistory();
+                }
+                localStorage.removeItem('glowdiary_periodData');
+            }
+
+            sortPeriodHistory();
         }
 
-        function applyPeriodFeatureState() {
-            const hide = localStorage.getItem('glowdiary_hide_period') === 'true';
-            const content = document.getElementById('period-log-content');
-            const off = document.getElementById('period-log-off');
-            if(hide) { content.classList.add('hidden'); off.classList.remove('hidden'); }
-            else { content.classList.remove('hidden'); off.classList.add('hidden'); }
+        function savePeriodHistory() {
+            localStorage.setItem('glowdiary_periodHistory', JSON.stringify(periodHistory));
+        }
+
+        function sortPeriodHistory() {
+            periodHistory.sort((a, b) => new Date(a.lastStart) - new Date(b.lastStart));
         }
 
         function calculatePeriodDates() {
-            if (!userPeriodData.lastStart) return;
-            periodDates = []; fertileDates = [];
-            let base = new Date(userPeriodData.lastStart);
-            for (let i = 0; i < 2; i++) {
-                for (let d = 0; d < userPeriodData.duration; d++) {
-                    let p = new Date(base); p.setDate(base.getDate() + d);
+            periodDates = [];
+            predictedPeriodDates = [];
+            nextPeriodStart = null;
+
+            if (periodHistory.length === 0) return;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // 1. Tandai tanggal period dari SETIAP entri riwayat (tiap bulan bisa beda tanggal & durasi)
+            periodHistory.forEach(entry => {
+                if (!entry.lastStart || !entry.duration) return;
+                let cycleStart = new Date(entry.lastStart);
+                for (let d = 0; d < entry.duration; d++) {
+                    let p = new Date(cycleStart);
+                    p.setDate(cycleStart.getDate() + d);
                     periodDates.push(p.toDateString());
+                    if (p > today) predictedPeriodDates.push(p.toDateString());
                 }
-                base.setDate(base.getDate() + userPeriodData.cycleLength);
+            });
+
+            // 2. Prediksi haid berikutnya dihitung HANYA dari entri TERAKHIR (paling baru) di riwayat
+            const latest = periodHistory[periodHistory.length - 1];
+            if (latest && latest.lastStart && latest.cycleLength) {
+                let predictedStart = new Date(latest.lastStart);
+                predictedStart.setDate(predictedStart.getDate() + latest.cycleLength);
+
+                // Jika prediksi dari siklus terakhir sudah lewat (user belum update lagi),
+                // proyeksikan terus ke depan memakai panjang siklus yang sama sampai ketemu tanggal mendatang
+                while (predictedStart <= today) {
+                    predictedStart.setDate(predictedStart.getDate() + latest.cycleLength);
+                }
+                nextPeriodStart = predictedStart;
+
+                // Tandai juga tanggal prediksi haid berikutnya ini di kalender
+                for (let d = 0; d < latest.duration; d++) {
+                    let p = new Date(predictedStart);
+                    p.setDate(predictedStart.getDate() + d);
+                    if (p > today) predictedPeriodDates.push(p.toDateString());
+                }
             }
         }
 
+        function renderPeriodPredictionBox() {
+            const box = document.getElementById('period-prediction-box');
+            const textEl = document.getElementById('period-prediction-text');
+            const legendPredicted = document.getElementById('legend-predicted-item');
+            if (!box || !textEl) return;
+
+            if (periodHistory.length === 0 || !nextPeriodStart) {
+                box.classList.add('hidden');
+                if (legendPredicted) legendPredicted.classList.add('hidden');
+                return;
+            }
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const diffDays = Math.round((nextPeriodStart - today) / (1000 * 60 * 60 * 24));
+
+            const dateLabel = nextPeriodStart.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            let dayLabel = '';
+            if (diffDays === 0) dayLabel = 'Hari ini';
+            else if (diffDays === 1) dayLabel = 'Besok';
+            else if (diffDays > 1) dayLabel = `${diffDays} hari lagi`;
+            else dayLabel = 'Segera';
+
+            textEl.textContent = `${dateLabel} (${dayLabel})`;
+            box.classList.remove('hidden');
+            if (legendPredicted) legendPredicted.classList.remove('hidden');
+        }
+
+        // Menampilkan/menyembunyikan badge "Mengedit siklus tersimpan" di modal Siklus Menstruasi,
+        // dan menyesuaikan label tombol simpan + tombol batal sesuai mode (tambah baru vs edit).
+        // Badge ini tampil saat user sedang mengedit entri riwayat yang sudah ada (editingPeriodEntryId terisi).
+        function updatePeriodEditBadge() {
+            const badge = document.getElementById('period-edit-mode-badge');
+            const cancelBtn = document.getElementById('btn-cancel-period-edit');
+            const saveLabel = document.getElementById('btn-save-period-label');
+            const isEditing = editingPeriodEntryId !== null;
+
+            if (badge) { isEditing ? badge.classList.remove('hidden') : badge.classList.add('hidden'); }
+            if (cancelBtn) { isEditing ? cancelBtn.classList.remove('hidden') : cancelBtn.classList.add('hidden'); }
+            if (saveLabel) { saveLabel.textContent = isEditing ? 'Perbarui Catatan' : 'Simpan ke Riwayat'; }
+        }
+
+        // Dipanggil dari tombol "Edit" pada kotak Perkiraan Haid Berikutnya di kalender.
+        // Membuka langsung modal Siklus Menstruasi dengan data siklus TERAKHIR (terbaru) yang
+        // tersimpan, agar user bisa mengoreksi tanggal mulai haid bulan ini tanpa lewat menu "+" dulu.
+        function openEditPeriodModal() {
+            if (periodHistory.length > 0) {
+                const latest = periodHistory[periodHistory.length - 1];
+                startEditPeriodEntry(latest.id);
+            }
+            renderPeriodHistoryList();
+            toggleModal('modal-period');
+        }
+
+        function updatePeriodPreview() {
+            const startVal = document.getElementById('period-start-input').value;
+            const durationVal = parseInt(document.getElementById('period-duration-input').value) || 5;
+            const cycleVal = parseInt(document.getElementById('period-cycle-input').value) || 28;
+            const previewBox = document.getElementById('period-result-preview');
+            const previewText = document.getElementById('period-result-preview-text');
+
+            if (!startVal) {
+                previewBox.classList.add('hidden');
+                return;
+            }
+
+            const start = new Date(startVal);
+            const next = new Date(start);
+            next.setDate(start.getDate() + cycleVal);
+
+            const dateLabel = next.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const diffDays = Math.round((next - today) / (1000 * 60 * 60 * 24));
+            let extra = '';
+            if (diffDays >= 0) extra = ` — sekitar ${diffDays} hari dari sekarang`;
+
+            previewText.textContent = `${dateLabel}${extra}`;
+            previewBox.classList.remove('hidden');
+        }
+
+        // FUNGSI RENDER KALENDER YANG SUDAH DIGABUNGKAN
         function renderCalendar() {
             const daysContainer = document.getElementById('calendar-days');
             if(!daysContainer) return;
+            
             document.getElementById('calendar-month-year').textContent = `${monthNames[currentMonth]} ${currentYear}`;
             daysContainer.innerHTML = '';
             
             const firstDay = new Date(currentYear, currentMonth, 1).getDay();
             const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
             
+            // Ambil data catatan diary kulit dari localStorage
+            const savedDiaries = JSON.parse(localStorage.getItem('glowdiary_user_diaries')) || {};
+            const todayStr = new Date().toDateString();
+            
+            // Render slot kosong hari bulan sebelumnya
             for(let i=0; i<firstDay; i++) daysContainer.innerHTML += '<div></div>';
             
+            // Render tanggal aktif
             for(let d=1; d<=totalDays; d++) {
                 let cur = new Date(currentYear, currentMonth, d);
-                let cls = "hover:bg-gray-100 rounded-lg py-1 transition-colors cursor-pointer";
+                let curDateString = cur.toDateString(); // Untuk pencocokan tanggal objek Date
                 
-                if(periodDates.includes(cur.toDateString())) cls = "bg-rose-500 text-white rounded-lg py-1 font-bold shadow-sm";
-                daysContainer.innerHTML += `<div class="${cls}">${d}</div>`;
+                // Format string YYYY-MM-DD untuk key localStorage data diary
+                let storageKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                
+                let cls = "hover:bg-purple-50 rounded-lg py-1 transition-colors cursor-pointer text-xs h-8 flex items-center justify-center text-gray-700";
+                
+                // Kondisi Pengecekan Prioritas Warna Kalender:
+                // 1. Jika Hari Ini (Today)
+                if (curDateString === todayStr) {
+                    cls = "bg-purple-600 text-white rounded-lg py-1 font-bold shadow-sm text-xs h-8 flex items-center justify-center";
+                }
+                // 2. Jika merupakan tanggal Menstruasi yang sudah terjadi/sedang terjadi
+                else if (periodDates.includes(curDateString) && !predictedPeriodDates.includes(curDateString)) {
+                    cls = "bg-rose-500 text-white rounded-lg py-1 font-bold shadow-sm text-xs h-8 flex items-center justify-center";
+                }
+                // 3. Jika merupakan tanggal PREDIKSI haid berikutnya (belum terjadi)
+                else if (predictedPeriodDates.includes(curDateString)) {
+                    cls = "bg-rose-100 text-rose-600 border border-rose-300 rounded-lg py-1 font-bold shadow-sm text-xs h-8 flex items-center justify-center";
+                }
+                // 4. Jika tanggal tersebut memiliki Log Catatan Diary Kulit
+                else if (savedDiaries[storageKey]) {
+                    cls = "bg-indigo-500 text-white rounded-lg py-1 font-bold shadow-sm text-xs h-8 flex items-center justify-center";
+                }
+
+                daysContainer.innerHTML += `
+                    <div class="${cls}" onclick="handleCalendarDayClick('${storageKey}', '${curDateString}')">${d}</div>
+                `;
             }
         }
 
@@ -1680,65 +2307,245 @@
             renderCalendar();
         }
 
+        // ID entri riwayat yang sedang diedit (null jika sedang menambah entri baru)
+        let editingPeriodEntryId = null;
+
+        // Disimpan saat tombol "Simpan" di modal period diklik.
+        // Menambahkan entri BARU ke riwayat siklus (glowdiary_periodHistory), atau memperbarui
+        // entri yang sedang diedit jika editingPeriodEntryId terisi. Setiap entri menyimpan
+        // tanggal mulai, durasi, dan panjang siklusnya sendiri, sehingga catatan bulan-bulan
+        // sebelumnya tidak tertimpa dan tetap tampil sebagai riwayat terpisah.
         function savePeriodData() {
-            userPeriodData = {
-                lastStart: document.getElementById('period-start-input').value,
-                duration: parseInt(document.getElementById('period-duration-input').value) || 5,
-                cycleLength: parseInt(document.getElementById('period-cycle-input').value) || 28
-            };
-            localStorage.setItem('glowdiary_periodData', JSON.stringify(userPeriodData));
-            calculatePeriodDates(); renderCalendar(); toggleModal('modal-period');
+            const startVal = document.getElementById('period-start-input').value;
+            const durationVal = parseInt(document.getElementById('period-duration-input').value);
+            const cycleVal = parseInt(document.getElementById('period-cycle-input').value);
+
+            if (!startVal) {
+                alert("Harap isi tanggal mulai haid terakhir terlebih dahulu.");
+                return;
+            }
+            if (!durationVal || durationVal < 1) {
+                alert("Harap isi lama haid (dalam hari) dengan benar.");
+                return;
+            }
+            if (!cycleVal || cycleVal < 21 || cycleVal > 45) {
+                alert("Harap isi lama siklus haid yang wajar (21–45 hari).");
+                return;
+            }
+
+            const isEditingExisting = editingPeriodEntryId !== null;
+
+            if (isEditingExisting) {
+                // Perbarui entri riwayat yang sedang diedit
+                const idx = periodHistory.findIndex(e => e.id === editingPeriodEntryId);
+                if (idx > -1) {
+                    periodHistory[idx] = { id: editingPeriodEntryId, lastStart: startVal, duration: durationVal, cycleLength: cycleVal };
+                }
+            } else {
+                // Tambahkan sebagai entri riwayat baru (catatan bulan ini/bulan yang dipilih)
+                periodHistory.push({ id: Date.now(), lastStart: startVal, duration: durationVal, cycleLength: cycleVal });
+            }
+
+            sortPeriodHistory();
+            savePeriodHistory();
+            editingPeriodEntryId = null;
+
+            calculatePeriodDates();
+            renderCalendar();
+            renderPeriodPredictionBox();
+            renderPeriodHistoryList();
+            updatePeriodEditBadge();
+            toggleModal('modal-period');
+
+            // Tampilkan modal sukses dengan info prediksi
+            if (nextPeriodStart) {
+                const dateLabel = nextPeriodStart.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                document.getElementById('success-title').textContent = isEditingExisting ? "Catatan Haid Diperbarui!" : "Catatan Haid Tersimpan!";
+                document.getElementById('success-desc').textContent = isEditingExisting
+                    ? `Riwayat sudah disesuaikan. Perkiraan haid berikutnya: ${dateLabel}.`
+                    : `Tercatat di riwayat siklusmu. Perkiraan haid berikutnya: ${dateLabel}.`;
+                document.getElementById('modal-success').classList.remove('hidden');
+                document.getElementById('modal-success').classList.add('flex');
+            }
         }
 
-        // --- LOGIKA SIMULASI AI FACE SCAN ---
-        function startFaceScan() {
-            const btn = document.getElementById('btn-scan');
-            const scannerLaser = document.getElementById('scanner-laser');
-            const overlay = document.getElementById('scan-overlay');
-            const results = document.getElementById('scan-results');
-            const image = document.getElementById('scan-image');
+        // Menampilkan daftar riwayat siklus (semua bulan yang sudah tercatat) di dalam modal,
+        // diurutkan dari yang paling baru, masing-masing dengan tombol Edit & Hapus.
+        function renderPeriodHistoryList() {
+            const container = document.getElementById('period-history-list');
+            if (!container) return;
 
-            // 1. Reset tampilan awal
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> AI Sedang Menganalisis...';
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
-            results.classList.add('hidden');
+            if (periodHistory.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic text-center py-3">Belum ada riwayat siklus tercatat.</p>`;
+                return;
+            }
+
+            const sorted = [...periodHistory].sort((a, b) => new Date(b.lastStart) - new Date(a.lastStart));
+            container.innerHTML = sorted.map(entry => {
+                const dateLabel = new Date(entry.lastStart).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                return `
+                    <div class="flex items-center justify-between gap-2 bg-rose-50/60 border border-rose-100 rounded-xl px-3 py-2.5">
+                        <div>
+                            <p class="text-xs font-bold text-gray-700">${dateLabel}</p>
+                            <p class="text-[10px] text-gray-400">${entry.duration} hari haid &middot; siklus ${entry.cycleLength} hari</p>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button onclick="startEditPeriodEntry(${entry.id})" class="w-7 h-7 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-brand hover:border-brand flex items-center justify-center transition-colors" title="Edit catatan ini">
+                                <i class="fa-solid fa-pen text-[10px]"></i>
+                            </button>
+                            <button onclick="deletePeriodEntry(${entry.id})" class="w-7 h-7 rounded-lg bg-white border border-gray-200 text-red-300 hover:text-red-500 hover:border-red-300 flex items-center justify-center transition-colors" title="Hapus catatan ini">
+                                <i class="fa-solid fa-trash-can text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Membuka form dengan data entri riwayat tertentu untuk diedit (misal salah tanggal bulan lalu)
+        function startEditPeriodEntry(entryId) {
+            const entry = periodHistory.find(e => e.id === entryId);
+            if (!entry) return;
+
+            editingPeriodEntryId = entryId;
+            document.getElementById('period-start-input').value = entry.lastStart;
+            document.getElementById('period-duration-input').value = entry.duration;
+            document.getElementById('period-cycle-input').value = entry.cycleLength;
+            updatePeriodPreview();
+            updatePeriodEditBadge();
+        }
+
+        // Menghapus satu entri riwayat siklus (misal salah catat / duplikat)
+        function deletePeriodEntry(entryId) {
+            if (!confirm("Hapus catatan siklus ini dari riwayat?")) return;
+
+            periodHistory = periodHistory.filter(e => e.id !== entryId);
+            savePeriodHistory();
+
+            if (editingPeriodEntryId === entryId) {
+                editingPeriodEntryId = null;
+                resetPeriodForm();
+            }
+
+            calculatePeriodDates();
+            renderCalendar();
+            renderPeriodPredictionBox();
+            renderPeriodHistoryList();
+            updatePeriodEditBadge();
+        }
+
+        // Mengosongkan form input period (dipakai saat mulai menambah catatan baru / batal edit)
+        function resetPeriodForm() {
+            document.getElementById('period-start-input').value = '';
+            document.getElementById('period-duration-input').value = 5;
+            document.getElementById('period-cycle-input').value = 28;
+            const previewBox = document.getElementById('period-result-preview');
+            if (previewBox) previewBox.classList.add('hidden');
+        }
+
+
+        // ==================== FITUR TAMBAHAN BARU (LOGIKA FORM DIARY & RIWAYAT) ====================
+        function openSpecificModal(modalId) {
+            toggleModal('modal-calendar-options'); // Tutup menu pilihan global
+            const todayStr = new Date().toISOString().split('T')[0];
             
-            // Beri efek abu-abu pada foto seolah-olah kamera infrared aktif
-            image.classList.add('grayscale', 'contrast-125'); 
+            if (modalId === 'modal-diary') {
+                document.getElementById('input-diary-date').value = todayStr;
+            }
+            if (modalId === 'modal-period') {
+                // Dibuka lewat menu "+" -> mode TAMBAH catatan baru (bukan edit entri lama)
+                editingPeriodEntryId = null;
+                resetPeriodForm();
+                updatePeriodEditBadge();
+                renderPeriodHistoryList();
+            }
+            toggleModal(modalId);
+        }
+
+        function saveDiaryData() {
+            const targetDate = document.getElementById('input-diary-date').value;
+            const notesText = document.getElementById('input-diary-text').value.trim();
+
+            if (!targetDate || !notesText) {
+                alert("Harap lengkapi tanggal dan isi catatan diary terlebih dahulu.");
+                return;
+            }
+
+            let currentLogs = JSON.parse(localStorage.getItem('glowdiary_user_diaries')) || {};
+            currentLogs[targetDate] = notesText;
+            localStorage.setItem('glowdiary_user_diaries', JSON.stringify(currentLogs));
+
+            document.getElementById('input-diary-text').value = '';
+            toggleModal('modal-diary');
             
-            // 2. Munculkan Laser & Overlay
-            scannerLaser.classList.remove('hidden');
-            overlay.classList.remove('hidden');
+            // Refresh Kalender & List Riwayat di bawahnya
+            renderCalendar();
+            renderDiaryHistoryLog();
             
-            // 3. Gerakkan Laser Naik-Turun (Animasi Native API)
-            scannerLaser.animate([
-                { top: '0%', opacity: 0.8 },
-                { top: '98%', opacity: 1 },
-                { top: '0%', opacity: 0.8 }
-            ], {
-                duration: 2000,       // Kecepatan 2 detik
-                iterations: 2,        // Bolak balik 2 kali
-                easing: 'ease-in-out' // Efek pergerakan natural
+            // Integrasi poin opsional jika file rewards.js Anda aktif
+            if(typeof addUserPoints === 'function') addUserPoints(5); 
+        }
+
+        function renderDiaryHistoryLog() {
+            const container = document.getElementById('diary-history-list');
+            if (!container) return;
+
+            const diaries = JSON.parse(localStorage.getItem('glowdiary_user_diaries')) || {};
+            const dynamicKeys = Object.keys(diaries).sort((a, b) => new Date(b) - new Date(a));
+
+            if (dynamicKeys.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic py-2">Belum ada catatan kulit harian.</p>`;
+                return;
+            }
+
+            let innerContent = "";
+            dynamicKeys.forEach(date => {
+                innerContent += `
+                    <div class="p-3 bg-gray-50 border border-gray-100 rounded-xl flex flex-col gap-1 animate-fade-in">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[11px] font-black text-purple-600 flex items-center gap-1"><i class="fa-solid fa-bookmark text-[9px]"></i> ${date}</span>
+                            <button onclick="removeDiaryEntry('${date}')" class="text-gray-300 hover:text-red-500 text-[10px] transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                        <p class="text-xs text-gray-600 leading-relaxed">${diaries[date]}</p>
+                    </div>
+                `;
             });
-
-            // 4. Proses Selesai (Setelah 4 Detik)
-            setTimeout(() => {
-                // Sembunyikan laser
-                scannerLaser.classList.add('hidden');
-                overlay.classList.add('hidden');
-                image.classList.remove('grayscale', 'contrast-125');
-                
-                // Tampilkan Kotak Hasil
-                results.classList.remove('hidden');
-                
-                // Kembalikan Tombol ke Mode "Pindai Ulang"
-                btn.disabled = false;
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                btn.innerHTML = '<i class="fa-solid fa-rotate-right mr-2"></i> Pindai Ulang Wajah';
-                
-            }, 4000); // 4000 ms = 4 detik (2 iterasi x 2000ms)
+            container.innerHTML = innerContent;
         }
+
+        function removeDiaryEntry(dateKey) {
+            if (confirm(`Hapus catatan diary pada tanggal ${dateKey}?`)) {
+                let currentLogs = JSON.parse(localStorage.getItem('glowdiary_user_diaries')) || {};
+                delete currentLogs[dateKey];
+                localStorage.setItem('glowdiary_user_diaries', JSON.stringify(currentLogs));
+                renderCalendar();
+                renderDiaryHistoryLog();
+            }
+        }
+
+        function handleCalendarDayClick(storageKey, dateString) {
+            const diaries = JSON.parse(localStorage.getItem('glowdiary_user_diaries')) || {};
+            if (diaries[storageKey]) {
+                alert(`[Log Catatan Kulit - ${storageKey}]:\n\n"${diaries[storageKey]}"`);
+            } else {
+                if (confirm(`Belum ada catatan pada tanggal ${storageKey}. Tulis diary baru untuk hari ini?`)) {
+                    toggleModal('modal-diary');
+                    document.getElementById('input-diary-date').value = storageKey;
+                }
+            }
+        }
+
+        // Pastikan inisialisasi awal membaca data localstorage saat aplikasi pertama dibuka
+        document.addEventListener("DOMContentLoaded", function() {
+            renderPeriodHistoryList();
+            renderDiaryHistoryLog();
+
+            // Live-update preview prediksi tiap kali input form period diubah
+            ['period-start-input', 'period-duration-input', 'period-cycle-input'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', updatePeriodPreview);
+            });
+        });
 
         // --- LOGIKA INGREDIENT COMPATIBILITY CHECKER ---
         function checkCompatibility() {

@@ -6,6 +6,7 @@
     <title>GlowDiary - Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -41,6 +42,14 @@
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Kartu pilihan Jenis Kelamin pada form Edit Profil */
+        .gender-radio-input:checked + .gender-radio-card {
+            background: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%);
+            border-color: #c084fc;
+            color: #7e22ce;
+            box-shadow: 0 4px 12px -2px rgba(192, 132, 252, 0.15);
         }
     </style>
 </head>
@@ -91,7 +100,7 @@
                 <div class="flex flex-col md:flex-row gap-6">
                     
                     <div class="w-full md:w-1/3 flex flex-col items-center bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 h-fit relative transition-colors">
-                        <button onclick="toggleModal('modal-edit-profile')" class="absolute top-6 right-6 w-10 h-10 bg-gray-50 dark:bg-slate-700 text-gray-500 dark:text-gray-300 rounded-full flex items-center justify-center hover:bg-brand hover:text-white transition-colors shadow-sm" title="Edit Profil">
+                        <button onclick="openEditProfileModal()" class="absolute top-6 right-6 w-10 h-10 bg-gray-50 dark:bg-slate-700 text-gray-500 dark:text-gray-300 rounded-full flex items-center justify-center hover:bg-brand hover:text-white transition-colors shadow-sm" title="Edit Profil">
                             <i class="fa-solid fa-pen text-sm"></i>
                         </button>
 
@@ -133,15 +142,16 @@
                         <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-2">My Skincare Data</h2>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <button onclick="toggleModal('modal-basic-dashboard')" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 hover:border-purple-200 dark:hover:border-purple-500 hover:shadow-md transition-all text-left flex flex-col gap-4 group">
+                            <button onclick="openBasicDashboard()" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 hover:border-purple-200 dark:hover:border-purple-500 hover:shadow-md transition-all text-left flex flex-col gap-4 group">
                                 <div class="w-14 h-14 bg-purple-50 dark:bg-slate-700 text-brand rounded-2xl flex items-center justify-center text-2xl group-hover:scale-105 transition-transform"><i class="fa-solid fa-chart-pie"></i></div>
                                 <div>
+                                    <span class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Pro</span>
                                     <h4 class="font-bold text-gray-800 dark:text-white text-lg mb-1">Basic Dashboard</h4>
                                     <p class="text-sm text-gray-400 dark:text-gray-400 leading-relaxed">Lihat statistik dasar rutinitas & produk harianmu.</p>
                                 </div>
                             </button>
 
-                            <button onclick="window.location.href='skin_report.html'" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 hover:border-pink-200 dark:hover:border-pink-500 hover:shadow-md transition-all text-left flex flex-col gap-4 group">
+                            <button onclick="goToExportReport()" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 hover:border-pink-200 dark:hover:border-pink-500 hover:shadow-md transition-all text-left flex flex-col gap-4 group">
                                 <div class="w-14 h-14 bg-pink-50 dark:bg-slate-700 text-pink-400 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-105 transition-transform"><i class="fa-solid fa-file-pdf"></i></div>
                                 <div>
                                     <span class="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Pro</span>
@@ -186,37 +196,38 @@
                         </div>
 
                         <div class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-6 shadow-sm mt-6 transition-colors">
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2 mb-4 border-b border-gray-50 dark:border-slate-700 pb-4">
-                                <i class="fa-solid fa-calendar-check text-brand"></i> Catatan Harian Skincare
-                            </h3>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-gray-50 dark:border-slate-700 pb-4">
+                                <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-calendar-check text-brand"></i> Catatan Harian Skincare
+                                </h3>
+                                <div class="flex gap-1.5 bg-gray-50 dark:bg-slate-700/50 p-1 rounded-full w-fit">
+                                    <button onclick="setHistoryFilter('day')" id="filter-day" class="text-[11px] font-bold px-3 py-1.5 rounded-full transition-all"></button>
+                                    <button onclick="setHistoryFilter('week')" id="filter-week" class="text-[11px] font-bold px-3 py-1.5 rounded-full transition-all"></button>
+                                    <button onclick="setHistoryFilter('month')" id="filter-month" class="text-[11px] font-bold px-3 py-1.5 rounded-full transition-all"></button>
+                                </div>
+                            </div>
                             <div id="profile-history-list" class="space-y-3 max-h-64 overflow-y-auto pr-2">
                                 </div>
                         </div>
 
                         <div class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-6 shadow-sm mt-6 transition-colors">
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Product Empties Progress</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-slate-700 text-brand flex items-center justify-center shrink-0"><i class="fa-solid fa-bottle-droplet text-sm"></i></div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between text-xs font-bold mb-1"><span class="text-gray-700 dark:text-gray-300">Toner BHA</span><span class="text-gray-500">Hampir Habis</span></div>
-                                        <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5"><div class="bg-brand h-1.5 rounded-full" style="width: 85%"></div></div>
-                                    </div>
+                            <div class="flex justify-between items-center mb-4 border-b border-gray-50 dark:border-slate-700 pb-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white">Product Empties Progress</h3>
+                                    <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">Pantau sisa stok skincare-mu, jangan sampai kehabisan!</p>
                                 </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-slate-700 text-blue-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-jar text-sm"></i></div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between text-xs font-bold mb-1"><span class="text-gray-700 dark:text-gray-300">Moisturizer Gel</span><span class="text-gray-500">Setengah Pakai</span></div>
-                                        <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5"><div class="bg-blue-400 h-1.5 rounded-full" style="width: 50%"></div></div>
-                                    </div>
-                                </div>
+                                <button onclick="openAddEmptyModal()" class="text-brand hover:text-white hover:bg-brand bg-purple-50 dark:bg-slate-700 w-9 h-9 rounded-xl transition-colors flex items-center justify-center font-bold shadow-xs text-sm shrink-0" title="Tambah Produk">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
                             </div>
+                            <div id="empties-list" class="space-y-4">
+                                </div>
                         </div>
 
                         <div class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-4 shadow-sm space-y-1 transition-colors">
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-4 py-2 mb-1">Pengaturan Akun</h3>
                            
-                            <button onclick="alert('Fitur edit detail profil akan segera hadir!')" class="w-full flex items-center justify-between p-3.5 hover:bg-purple-50/50 dark:hover:bg-slate-700 rounded-2xl transition-colors group">
+                            <button onclick="openEditProfileModal()" class="w-full flex items-center justify-between p-3.5 hover:bg-purple-50/50 dark:hover:bg-slate-700 rounded-2xl transition-colors group">
                                 <div class="flex items-center gap-4 text-gray-700 dark:text-gray-200 font-medium">
                                     <div class="w-10 h-10 bg-blue-50 dark:bg-slate-700 text-blue-500 rounded-xl flex items-center justify-center text-base group-hover:bg-blue-500 group-hover:text-white transition-all"><i class="fa-solid fa-sliders"></i></div>
                                     <span>Ubah Detail Profil & Sandi</span>
@@ -224,10 +235,63 @@
                                 <i class="fa-solid fa-chevron-right text-gray-300 text-sm group-hover:text-blue-500 transition-colors"></i>
                             </button>
                             
-                            <div class="p-4 flex justify-between items-center border-b border-gray-50 dark:border-slate-700">
-                                <span class="font-medium text-gray-700 dark:text-gray-200">Notifications</span>
-                                <div class="w-12 h-6 bg-brand rounded-full relative cursor-pointer shadow-inner">
-                                    <div class="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5 shadow-sm"></div>
+                            <!-- TOMBOL TOGGLE INFO AKUN -->
+                            <button onclick="toggleAkunInfo()" class="w-full flex items-center justify-between p-3.5 hover:bg-purple-50/50 dark:hover:bg-slate-700 rounded-2xl transition-colors group">
+                                <div class="flex items-center gap-4 text-gray-700 dark:text-gray-200 font-medium">
+                                    <div class="w-10 h-10 bg-purple-50 dark:bg-slate-700 text-brand rounded-xl flex items-center justify-center text-base group-hover:bg-brand group-hover:text-white transition-all">
+                                        <i class="fa-solid fa-id-card"></i>
+                                    </div>
+                                    <span>Lihat Informasi Akun</span>
+                                </div>
+                                <i id="icon-akun-chevron" class="fa-solid fa-chevron-down text-gray-300 text-sm transition-all"></i>
+                            </button>
+
+                            <!-- PANEL INFO AKUN (tersembunyi by default) -->
+                            <div id="panel-akun-info" class="hidden mx-2 mb-2 animate-fade-in">
+                                <div class="space-y-2 bg-gray-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-600">
+
+                                    <div class="flex justify-between items-center bg-white dark:bg-slate-700 px-4 py-3 rounded-xl border border-gray-100 dark:border-slate-600">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Username</p>
+                                            <p id="display-username" class="text-sm font-semibold text-gray-800 dark:text-white mt-0.5">-</p>
+                                        </div>
+                                        <i class="fa-solid fa-user text-brand text-sm"></i>
+                                    </div>
+
+                                    <div class="flex justify-between items-center bg-white dark:bg-slate-700 px-4 py-3 rounded-xl border border-gray-100 dark:border-slate-600">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Email</p>
+                                            <p id="display-email" class="text-sm font-semibold text-gray-800 dark:text-white mt-0.5">-</p>
+                                        </div>
+                                        <i class="fa-solid fa-envelope text-brand text-sm"></i>
+                                    </div>
+
+                                    <div class="flex justify-between items-center bg-white dark:bg-slate-700 px-4 py-3 rounded-xl border border-gray-100 dark:border-slate-600">
+                                        <div class="flex-1">
+                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Password</p>
+                                            <p id="display-password" data-pass="" class="text-sm font-semibold text-gray-800 dark:text-white mt-0.5 tracking-widest">••••••••</p>
+                                        </div>
+                                        <button onclick="toggleShowPassword()" class="ml-3 w-8 h-8 rounded-lg bg-purple-50 dark:bg-slate-600 text-brand hover:bg-purple-100 dark:hover:bg-slate-500 flex items-center justify-center transition-colors">
+                                            <i id="icon-toggle-pass" class="fa-solid fa-eye text-sm"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="flex justify-between items-center bg-white dark:bg-slate-700 px-4 py-3 rounded-xl border border-gray-100 dark:border-slate-600">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nomor Telepon</p>
+                                            <p id="display-phone" class="text-sm font-semibold text-gray-800 dark:text-white mt-0.5">-</p>
+                                        </div>
+                                        <i class="fa-solid fa-phone text-brand text-sm"></i>
+                                    </div>
+
+                                    <div class="flex justify-between items-center bg-white dark:bg-slate-700 px-4 py-3 rounded-xl border border-gray-100 dark:border-slate-600">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Jenis Kelamin</p>
+                                            <p id="display-gender" class="text-sm font-semibold text-gray-800 dark:text-white mt-0.5">-</p>
+                                        </div>
+                                        <i class="fa-solid fa-venus-mars text-brand text-sm"></i>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -245,7 +309,7 @@
         </main>
     </div>
     
-    <<nav class="md:hidden fixed bottom-0 w-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-t border-gray-200 dark:border-slate-700 px-4 py-3 pb-safe flex justify-between items-center z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] transition-colors">
+    <nav class="md:hidden fixed bottom-0 w-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-t border-gray-200 dark:border-slate-700 px-4 py-3 pb-safe flex justify-between items-center z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] transition-colors">
         
         <button onclick="window.location.href='glowdiary.html#home'" id="mobile-home" class="flex flex-col items-center gap-1 flex-1 text-gray-400 dark:text-gray-500 transition-all hover:text-brand">
             <i class="fa-solid fa-house text-xl"></i>
@@ -271,7 +335,7 @@
        
     
     <div id="modal-edit-profile" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden justify-center items-end sm:items-center">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-sm sm:rounded-3xl rounded-t-3xl p-6 shadow-2xl animate-fade-in-up">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm sm:rounded-3xl rounded-t-3xl p-6 shadow-2xl animate-fade-in-up max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800 dark:text-white">Edit Profil</h2>
                 <button onclick="toggleModal('modal-edit-profile')" class="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 dark:bg-slate-700 transition-colors"><i class="fa-solid fa-xmark"></i></button>
@@ -279,8 +343,41 @@
             <div class="space-y-4 mb-6">
                 <div>
                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">Nama Lengkap</label>
-                    <input type="text" id="edit-profile-name" class="w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-brand">
+                    <input type="text" id="edit-profile-name" placeholder="Contoh: Aisyah Putri" class="w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-brand">
                 </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">Nomor Telepon</label>
+                    <input type="tel" id="edit-profile-phone" placeholder="Contoh: 081234567890" class="w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-brand">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">Jenis Kelamin</label>
+                    <div class="grid grid-cols-3 gap-2 text-xs font-semibold select-none">
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="edit-profile-gender" value="Perempuan" class="sr-only gender-radio-input">
+                            <div class="gender-radio-card flex flex-col items-center gap-1.5 bg-gray-50 dark:bg-slate-700 p-3 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 transition-all duration-200 hover:border-purple-200">
+                                <i class="fa-solid fa-venus text-rose-400"></i>
+                                <span>Perempuan</span>
+                            </div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="edit-profile-gender" value="Laki-laki" class="sr-only gender-radio-input">
+                            <div class="gender-radio-card flex flex-col items-center gap-1.5 bg-gray-50 dark:bg-slate-700 p-3 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 transition-all duration-200 hover:border-purple-200">
+                                <i class="fa-solid fa-mars text-blue-400"></i>
+                                <span>Laki-laki</span>
+                            </div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="edit-profile-gender" value="Lainnya" class="sr-only gender-radio-input">
+                            <div class="gender-radio-card flex flex-col items-center gap-1.5 bg-gray-50 dark:bg-slate-700 p-3 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 transition-all duration-200 hover:border-purple-200">
+                                <i class="fa-solid fa-circle-user text-gray-400"></i>
+                                <span>Lainnya</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">Tipe Kulit (Skin Type)</label>
                     <div class="p-3 bg-purple-50 dark:bg-slate-700 rounded-xl border border-purple-100 dark:border-slate-600 flex justify-between items-center">
@@ -320,8 +417,45 @@
                 <button onclick="toggleModal('modal-basic-dashboard')" class="w-10 h-10 bg-gray-50 dark:bg-slate-700 rounded-full text-gray-500 dark:text-gray-300 flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6">
-                <p class="text-sm text-gray-600 dark:text-gray-300">Statistik pelacakan rutin harian Anda tercatat dengan konsistensi yang baik.</p>
+                <div id="basic-dashboard-content" class="space-y-4">
+                    <p class="text-xs text-gray-400 italic text-center py-10">Memuat statistik...</p>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL: TAMBAH/EDIT PRODUCT EMPTIES -->
+    <div id="modal-empty" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden justify-center items-end sm:items-center">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm sm:rounded-3xl rounded-t-3xl p-6 shadow-2xl animate-fade-in-up">
+            <div class="flex justify-between items-center mb-5">
+                <h3 id="modal-empty-title" class="text-lg font-bold text-gray-800 dark:text-white">Tambah Produk</h3>
+                <button onclick="toggleModal('modal-empty')" class="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 dark:bg-slate-700 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="emptyForm" onsubmit="saveEmptyProduct(event)" class="space-y-4">
+                <input type="hidden" id="emptyId" value="">
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">Nama Produk</label>
+                    <input type="text" id="emptyName" required placeholder="Contoh: Toner BHA" class="w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-brand">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">Kategori (opsional)</label>
+                    <input type="text" id="emptyCategory" placeholder="Contoh: Toner, Serum, Moisturizer" class="w-full bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-brand">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">Sisa Produk Saat Ini</label>
+                    <input type="range" id="emptyStock" min="0" max="100" value="100" oninput="document.getElementById('emptyStockLabel').innerText = this.value + '%'" class="w-full accent-purple-500">
+                    <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+                        <span>Habis</span>
+                        <span id="emptyStockLabel" class="text-sm font-bold text-brand-dark dark:text-brand-light">100%</span>
+                        <span>Penuh</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-brand to-brand-dark hover:opacity-90 text-white font-bold py-3.5 rounded-xl shadow-md transition-all">Simpan</button>
+            </form>
         </div>
     </div>
     
@@ -336,12 +470,16 @@
                 return;
             }
 
-           
-
             loadUserProfile();
             loadFavoritesFromStorage();
             renderProfileFavorites();
-            renderProfileHistory();
+
+            // Catatan Harian Skincare: defaultnya tampil mode "Harian"
+            setHistoryFilter('day');
+
+            // Product Empties Progress: isi data contoh pertama kali, lalu render
+            initEmptiesIfNeeded();
+            renderEmpties();
         });
 
 
@@ -361,16 +499,133 @@
             if (pointsEl) pointsEl.textContent = points;
         }
 
-        function saveProfileChanges() {
-            const editNameInput = document.getElementById('edit-profile-name');
-            if (!editNameInput) return;
-            
-            const newName = editNameInput.value;
-            if (newName.trim() === '') return alert('Nama tidak boleh kosong!');
-            
-            localStorage.setItem('glowdiary_username', newName);
-            loadUserProfile(); 
+        function toggleAkunInfo() {
+            const panel   = document.getElementById('panel-akun-info');
+            const chevron = document.getElementById('icon-akun-chevron');
+            if (!panel) return;
+
+            const isHidden = panel.classList.contains('hidden');
+
+            if (isHidden) {
+                panel.classList.remove('hidden');
+                chevron.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                chevron.classList.add('text-brand');
+                // Isi data saat panel dibuka
+                loadAkunInfo();
+            } else {
+                panel.classList.add('hidden');
+                chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                chevron.classList.remove('text-brand');
+                // Reset password ke tersembunyi saat panel ditutup
+                passwordVisible = false;
+                const elPass = document.getElementById('display-password');
+                const elIcon = document.getElementById('icon-toggle-pass');
+                if (elPass) elPass.textContent = '••••••••';
+                if (elPass) elPass.classList.add('tracking-widest');
+                if (elIcon) elIcon.className = 'fa-solid fa-eye text-sm';
+            }
+        }
+
+        function loadAkunInfo() {
+            const username = localStorage.getItem('glowdiary_username') || '-';
+            const email    = localStorage.getItem('glowdiary_email')    || '-';
+            const password = localStorage.getItem('glowdiary_password') || '-';
+            const phone    = localStorage.getItem('glowdiary_phone')    || 'Belum diisi';
+            const gender   = localStorage.getItem('glowdiary_gender')   || 'Belum diisi';
+
+            const elUser   = document.getElementById('display-username');
+            const elMail   = document.getElementById('display-email');
+            const elPass   = document.getElementById('display-password');
+            const elPhone  = document.getElementById('display-phone');
+            const elGender = document.getElementById('display-gender');
+
+            if (elUser) elUser.textContent = username;
+            if (elMail) elMail.textContent = email;
+            if (elPass) elPass.setAttribute('data-pass', password);
+            if (elPhone) elPhone.textContent = phone;
+            if (elGender) elGender.textContent = gender;
+        }
+
+        // Membuka modal Edit Profil sekaligus memuat data Nama, No. Telepon & Gender yang tersimpan
+        function openEditProfileModal() {
+            const username = localStorage.getItem('glowdiary_username') || '';
+            const phone    = localStorage.getItem('glowdiary_phone') || '';
+            const gender   = localStorage.getItem('glowdiary_gender') || '';
+
+            const nameInput  = document.getElementById('edit-profile-name');
+            const phoneInput = document.getElementById('edit-profile-phone');
+            if (nameInput) nameInput.value = username;
+            if (phoneInput) phoneInput.value = phone;
+
+            document.querySelectorAll('input[name="edit-profile-gender"]').forEach(radio => {
+                radio.checked = (radio.value === gender);
+            });
+
             toggleModal('modal-edit-profile');
+        }
+
+        let passwordVisible = false;
+        function toggleShowPassword() {
+            const elPass = document.getElementById('display-password');
+            const elIcon = document.getElementById('icon-toggle-pass');
+            if (!elPass || !elIcon) return;
+
+            passwordVisible = !passwordVisible;
+
+            if (passwordVisible) {
+                elPass.textContent = elPass.getAttribute('data-pass');
+                elPass.classList.remove('tracking-widest');
+                elIcon.className = 'fa-solid fa-eye-slash text-sm';
+            } else {
+                elPass.textContent = '••••••••';
+                elPass.classList.add('tracking-widest');
+                elIcon.className = 'fa-solid fa-eye text-sm';
+            }
+        }
+
+        function saveProfileChanges() {
+            const editNameInput  = document.getElementById('edit-profile-name');
+            const editPhoneInput = document.getElementById('edit-profile-phone');
+            const selectedGender = document.querySelector('input[name="edit-profile-gender"]:checked');
+            if (!editNameInput) return;
+
+            const newName  = editNameInput.value.trim();
+            const newPhone = editPhoneInput ? editPhoneInput.value.trim() : '';
+            const newGender = selectedGender ? selectedGender.value : '';
+
+            // --- VALIDASI NAMA ---
+            if (newName === '') {
+                alert('Nama lengkap tidak boleh kosong!');
+                editNameInput.focus();
+                return;
+            }
+
+            // --- VALIDASI NOMOR TELEPON ---
+            if (newPhone === '') {
+                alert('Nomor telepon tidak boleh kosong!');
+                editPhoneInput.focus();
+                return;
+            }
+            const phonePattern = /^\+?[0-9\s-]{8,15}$/;
+            if (!phonePattern.test(newPhone)) {
+                alert('Format nomor telepon tidak valid. Gunakan angka saja, contoh: 081234567890');
+                editPhoneInput.focus();
+                return;
+            }
+
+            // --- VALIDASI JENIS KELAMIN ---
+            if (!newGender) {
+                alert('Silakan pilih jenis kelamin Anda terlebih dahulu.');
+                return;
+            }
+
+            localStorage.setItem('glowdiary_username', newName);
+            localStorage.setItem('glowdiary_phone', newPhone);
+            localStorage.setItem('glowdiary_gender', newGender);
+
+            loadUserProfile();
+            toggleModal('modal-edit-profile');
+            alert('Profil berhasil diperbarui!');
         }
 
         function logout() {
@@ -448,6 +703,40 @@
             `).join('');
         }
 
+        // ======================================================================
+        // --- CATATAN HARIAN SKINCARE: FILTER HARIAN / MINGGUAN / BULANAN ---
+        // ======================================================================
+        let currentHistoryFilter = 'day';
+
+        function setHistoryFilter(mode) {
+            currentHistoryFilter = mode;
+
+            const labels = { day: 'Harian', week: 'Mingguan', month: 'Bulanan' };
+            ['day', 'week', 'month'].forEach(m => {
+                const btn = document.getElementById('filter-' + m);
+                if (!btn) return;
+                btn.innerText = labels[m];
+                if (m === mode) {
+                    btn.className = "text-[11px] font-bold px-3 py-1.5 rounded-full transition-all bg-brand text-white shadow-sm";
+                } else {
+                    btn.className = "text-[11px] font-bold px-3 py-1.5 rounded-full transition-all text-gray-500 dark:text-gray-300 hover:bg-white dark:hover:bg-slate-600";
+                }
+            });
+
+            renderProfileHistory();
+        }
+
+        function getWeekStart(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() - d.getDay()); // mundur ke hari Minggu
+            return d;
+        }
+
+        function formatShortDate(date) {
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        }
+
         // --- RIWAYAT (HISTORY) ---
         function renderProfileHistory() {
             const container = document.getElementById('profile-history-list');
@@ -459,7 +748,11 @@
 
             if (historyDates.length === 0) {
                 container.innerHTML = '<p class="text-xs text-gray-400 italic py-6 text-center">Belum ada riwayat pemakaian produk.</p>';
-            } else {
+                return;
+            }
+
+            // MODE HARIAN: tampilan asli, satu kartu per tanggal
+            if (currentHistoryFilter === 'day') {
                 container.innerHTML = historyDates.map(date => `
                     <div class="border-l-2 border-brand pl-4 py-2 relative">
                         <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full ${date === today ? 'bg-brand' : 'bg-gray-300 dark:bg-slate-600'}"></div>
@@ -467,6 +760,561 @@
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">${history[date].join(', ')}</p>
                     </div>
                 `).join('');
+                return;
+            }
+
+            // MODE MINGGUAN / BULANAN: kelompokkan tanggal-tanggal ke dalam periode yang sama
+            const groups = {};
+            historyDates.forEach(dateStr => {
+                const d = new Date(dateStr);
+                let key, label;
+
+                if (currentHistoryFilter === 'week') {
+                    const start = getWeekStart(d);
+                    const end = new Date(start);
+                    end.setDate(start.getDate() + 6);
+                    key = start.toDateString();
+                    label = `${formatShortDate(start)} - ${formatShortDate(end)} ${end.getFullYear()}`;
+                } else { // month
+                    key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, '0')}`;
+                    label = d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+                }
+
+                if (!groups[key]) groups[key] = { label, dates: [], productsCount: {} };
+                groups[key].dates.push(dateStr);
+                history[dateStr].forEach(p => {
+                    groups[key].productsCount[p] = (groups[key].productsCount[p] || 0) + 1;
+                });
+            });
+
+            // Urutkan grup dari periode paling baru, berdasar tanggal asli di dalam grup (bukan key string)
+            const sortedKeys = Object.keys(groups).sort((a, b) => 
+                new Date(groups[b].dates[0]) - new Date(groups[a].dates[0])
+            );
+
+            container.innerHTML = sortedKeys.map(key => {
+                const grp = groups[key];
+                const productBadges = Object.entries(grp.productsCount)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([name, count]) => `
+                        <span class="inline-flex items-center gap-1 bg-purple-50 dark:bg-slate-600 text-brand-dark dark:text-purple-200 text-[10px] font-semibold px-2 py-1 rounded-lg border border-purple-100 dark:border-slate-500">
+                            ${name} <span class="text-gray-400 dark:text-gray-300">×${count}</span>
+                        </span>
+                    `).join('');
+
+                return `
+                    <div class="border-l-2 border-brand pl-4 py-3 relative">
+                        <div class="absolute -left-[5px] top-4 w-2 h-2 rounded-full bg-brand"></div>
+                        <div class="flex items-center justify-between flex-wrap gap-1">
+                            <p class="text-xs font-bold text-gray-700 dark:text-gray-300">${grp.label}</p>
+                            <span class="text-[10px] text-gray-400 dark:text-gray-500 font-semibold">${grp.dates.length} hari tercatat</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-2">${productBadges}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ======================================================================
+        // --- BASIC DASHBOARD: STATISTIK REAL-TIME BERDASARKAN DATA TERSIMPAN ---
+        // ======================================================================
+        function calculateStreakDays() {
+            const history = JSON.parse(localStorage.getItem('glowdiary_history')) || {};
+            let streak = 0;
+            let cursor = new Date();
+            
+            // 1. Cek apakah hari ini sudah isi rutinitas
+            const todayStr = cursor.toDateString();
+            const hasToday = history[todayStr] && history[todayStr].length > 0;
+            
+            if (hasToday) {
+                streak++; // Jika hari ini sudah, tambah 1
+            }
+            
+            // 2. Mundur ke kemarin, lalu hitung terus ke belakang
+            cursor.setDate(cursor.getDate() - 1);
+            
+            while (true) {
+                const key = cursor.toDateString();
+                if (history[key] && history[key].length > 0) {
+                    streak++;
+                    cursor.setDate(cursor.getDate() - 1);
+                } else {
+                    // Jika ketemu hari yang bolong, langsung berhenti menghitung
+                    break;
+                }
+            }
+            return streak;
+        }
+
+        // Ganti pemanggilan di tombol atau event Anda menjadi:
+        function openBasicDashboard() {
+            renderBasicDashboard();
+            toggleModal('modal-basic-dashboard');
+
+            // MENGGUNAKAN PENGECEKAN KESIAPAN LIBRARY
+            const waitForChart = setInterval(() => {
+                if (typeof Chart !== 'undefined') {
+                    clearInterval(waitForChart); // Hentikan pengecekan jika Chart sudah ada
+                    
+                    // Ambil data dan Render
+                    const products = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
+                    const scanHistory = JSON.parse(localStorage.getItem('glowdiary_scan_history')) || [];
+                    const doneCount = products.filter(p => p.isDone).length;
+                    const totalProducts = products.length;
+
+                    renderDashboardCharts(doneCount, totalProducts, scanHistory.length);
+                } else {
+                    console.log("Menunggu Chart.js memuat...");
+                }
+            }, 100); // Cek setiap 100ms
+        }
+
+        function renderBasicDashboard() {
+            const container = document.getElementById('basic-dashboard-content');
+            if (!container) return;
+
+            const products = JSON.parse(localStorage.getItem('glowdiary_products')) || [];
+            const doneCount = products.filter(p => p.isDone).length;
+            const totalProducts = products.length;
+            const routinePercent = totalProducts > 0 ? Math.round((doneCount / totalProducts) * 100) : 0;
+
+            const diaries = JSON.parse(localStorage.getItem('glowdiary_user_diaries')) || {};
+            const diaryCount = Object.keys(diaries).length;
+
+            const scanHistory = JSON.parse(localStorage.getItem('glowdiary_scan_history')) || [];
+            const lastScan = scanHistory[0];
+
+            const skinRaw = localStorage.getItem('glowdiary_skin');
+            const skinData = skinRaw ? JSON.parse(skinRaw) : null;
+
+            const streak = calculateStreakDays();
+            const points = parseInt(localStorage.getItem('glowdiary_glowPoints')) || 0;
+
+            const skinTypes = skinData ? (Array.isArray(skinData.skinType) ? skinData.skinType : [skinData.skinType]) : [];
+            const skinConcerns = skinData ? (Array.isArray(skinData.skinConcern) ? skinData.skinConcern : [skinData.skinConcern]) : [];
+
+            container.innerHTML = `
+                <div class="grid grid-cols-2 gap-3 mb-2">
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-700">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Rutinitas Hari Ini</p>
+                        <p class="text-2xl font-black text-brand-dark dark:text-brand-light">${routinePercent}%</p>
+                        <p class="text-[10px] text-gray-400 mt-1">${doneCount}/${totalProducts} produk selesai</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-700">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Streak Konsisten</p>
+                        <p class="text-2xl font-black text-orange-500">${streak} <span class="text-xs font-bold text-gray-400">hari</span></p>
+                        <p class="text-[10px] text-gray-400 mt-1">Pertahankan rutinitasmu!</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-700">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Catatan Diary Kulit</p>
+                        <p class="text-2xl font-black text-purple-500">${diaryCount}</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Total catatan tersimpan</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-700">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">GlowPoints</p>
+                        <p class="text-2xl font-black text-yellow-500">${points}</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Poin reward terkumpul</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-700 mb-2">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Profil Kulit Aktif</p>
+                    ${skinData ? `
+                        <div class="flex flex-wrap gap-1.5">
+                            ${skinTypes.map(t => `<span class="bg-purple-50 dark:bg-slate-700 text-brand-dark dark:text-purple-200 text-[10px] font-bold px-2 py-1 rounded-lg border border-purple-100 dark:border-slate-600">${t}</span>`).join('')}
+                            ${skinConcerns.map(c => `<span class="bg-amber-50 dark:bg-slate-700 text-amber-700 dark:text-amber-300 text-[10px] font-bold px-2 py-1 rounded-lg border border-amber-100 dark:border-slate-600">${c}</span>`).join('')}
+                        </div>
+                    ` : `<p class="text-xs text-gray-400 italic">Belum ada data kuesioner kulit. <a href="kuesioner.html" class="text-brand font-bold underline">Isi sekarang &rarr;</a></p>`}
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-700">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Hasil Skin Scan Terakhir</p>
+                    ${lastScan ? `
+                        <div class="flex justify-between items-center text-xs gap-3">
+                            <div>
+                                <p class="font-bold text-gray-700 dark:text-gray-200">${lastScan.tanggal}, ${lastScan.jam}</p>
+                                <p class="text-gray-400 mt-0.5">Kelembapan ${lastScan.moisture}% • Minyak ${lastScan.oil}%</p>
+                            </div>
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-lg bg-purple-50 dark:bg-slate-700 text-brand-dark dark:text-purple-200 text-right shrink-0">${lastScan.barrier}</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-2">Total ${scanHistory.length}x pemindaian dilakukan.</p>
+                    ` : `<p class="text-xs text-gray-400 italic">Belum ada riwayat pemindaian AI. <a href="glowdiary.html#analyze" class="text-brand font-bold underline">Mulai scan &rarr;</a></p>`}
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-700">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">Visualisasi Rutinitas & Scan</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-semibold mb-1 text-center">Rutinitas Hari Ini</p>
+                            <div class="relative h-40">
+                                ${totalProducts > 0
+                                    ? `<canvas id="chart-doughnut-routine"></canvas>`
+                                    : `<div class="h-full flex items-center justify-center text-[11px] text-gray-400 italic text-center px-4">Belum ada produk rutinitas tercatat.</div>`}
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-semibold mb-1 text-center">Aktivitas 7 Hari Terakhir</p>
+                            <div class="relative h-40">
+                                <canvas id="chart-bar-week"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-semibold mb-1 text-center">Tren Kelembapan & Minyak (Skin Scan)</p>
+                        <div class="relative h-48">
+                            ${scanHistory.length >= 2
+                                ? `<canvas id="chart-line-scan"></canvas>`
+                                : `<div class="h-full flex items-center justify-center text-[11px] text-gray-400 italic text-center px-4">Lakukan minimal 2x pemindaian AI untuk melihat tren kelembapan & minyak kulitmu.</div>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render grafik setelah elemen canvas tersedia di DOM
+            setTimeout(() => {
+                renderDashboardCharts(doneCount, totalProducts, scanHistory.length);
+            }, 50);
+        }
+
+        // ======================================================================
+        // --- GRAFIK DASHBOARD (CHART.JS): RUTINITAS, AKTIVITAS, & TREN SCAN ---
+        // ======================================================================
+        let dashboardDoughnutChart = null;
+        let dashboardBarChart = null;
+        let dashboardLineChart = null;
+
+        function destroyDashboardCharts() {
+            [dashboardDoughnutChart, dashboardBarChart, dashboardLineChart].forEach(c => { if (c) c.destroy(); });
+            dashboardDoughnutChart = null;
+            dashboardBarChart = null;
+            dashboardLineChart = null;
+        }
+
+        function getLast7DaysActivity() {
+            const history = JSON.parse(localStorage.getItem('glowdiary_history')) || {};
+            const dayAbbr = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+            const labels = [];
+            const counts = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                labels.push(dayAbbr[d.getDay()]);
+                counts.push((history[d.toDateString()] || []).length);
+            }
+            return { labels, counts };
+        }
+
+        function getScanTrendData() {
+            const scanHistory = JSON.parse(localStorage.getItem('glowdiary_scan_history')) || [];
+            // Ambil maksimal 8 scan terakhir, lalu urutkan dari yang paling lama ke paling baru (kronologis)
+            const recent = scanHistory.slice(0, 8).reverse();
+            const labels = recent.map(item => {
+                const parts = (item.tanggal || '').split(' ');
+                return parts.length >= 2 ? `${parts[0]} ${parts[1].slice(0, 3)}` : (item.tanggal || '-');
+            });
+            return {
+                labels,
+                moisture: recent.map(item => item.moisture),
+                oil: recent.map(item => item.oil)
+            };
+        }
+
+        function renderDashboardCharts(doneCount, totalProducts, scanHistoryLength) {
+            console.log("Mencoba render chart..."); // Cek apakah fungsi ini terpanggil
+    
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js tidak ditemukan!");
+                return;
+            }
+            if (typeof Chart === 'undefined') return;
+
+            destroyDashboardCharts();
+
+            // 1. Doughnut: Progres Rutinitas
+            const doughnutEl = document.getElementById('chart-doughnut-routine');
+            if (doughnutEl && totalProducts > 0) {
+                dashboardDoughnutChart = new Chart(doughnutEl, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Selesai', 'Belum'],
+                        datasets: [{
+                            data: [doneCount, totalProducts - doneCount],
+                            backgroundColor: ['#9333ea', '#f3e8ff'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        devicePixelRatio: 2, // Ketajaman lebih baik
+                        cutout: '70%',
+                        plugins: {
+                            legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
+                        }
+                    }
+                });
+            }
+
+            // 2. Bar: Aktivitas 7 Hari
+            const barEl = document.getElementById('chart-bar-week');
+            if (barEl) {
+                const { labels, counts } = getLast7DaysActivity();
+                dashboardBarChart = new Chart(barEl, {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Produk Digunakan',
+                            data: counts,
+                            backgroundColor: '#c084fc',
+                            borderRadius: 6,
+                            maxBarThickness: 24
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        devicePixelRatio: 2,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                            x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // 3. Line: Tren Kelembapan vs Minyak
+            const lineEl = document.getElementById('chart-line-scan');
+            if (lineEl && scanHistoryLength >= 2) {
+                const { labels, moisture, oil } = getScanTrendData();
+                dashboardLineChart = new Chart(lineEl, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [
+                            {
+                                label: 'Kelembapan (%)',
+                                data: moisture,
+                                borderColor: '#9333ea',
+                                backgroundColor: 'rgba(147,51,234,0.05)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 4
+                            },
+                            {
+                                label: 'Minyak (%)',
+                                data: oil,
+                                borderColor: '#f59e0b',
+                                backgroundColor: 'rgba(245,158,11,0.05)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        devicePixelRatio: 2,
+                        // UX PENTING: User tidak perlu hover tepat di titik
+                        interaction: { mode: 'index', intersect: false }, 
+                        plugins: { 
+                            legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+                            tooltip: {
+                                callbacks: {
+                                    label: (item) => `${item.dataset.label}: ${item.raw}%`
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, max: 100, ticks: { font: { size: 10 } }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                            x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+                        }
+                    }
+                });
+            }
+        }
+
+        // ======================================================================
+        // --- EXPORT REPORT: SINKRONISASI DATA SEBELUM PINDAH KE SKIN_REPORT.HTML ---
+        // ======================================================================
+        function goToExportReport() {
+            // Susun ulang "snapshot" data pengguna terbaru sebelum membuka halaman laporan,
+            // supaya nama dan riwayat yang ditampilkan di skin_report.html selalu sinkron
+            // dengan apa yang ada di profil ini (tidak basi/ketinggalan data).
+            const snapshot = {
+                username: localStorage.getItem('glowdiary_username') || 'User Glow',
+                phone: localStorage.getItem('glowdiary_phone') || '-',
+                gender: localStorage.getItem('glowdiary_gender') || '-',
+                email: localStorage.getItem('glowdiary_email') || '-',
+                glowPoints: parseInt(localStorage.getItem('glowdiary_glowPoints')) || 0,
+                skin: JSON.parse(localStorage.getItem('glowdiary_skin')) || null,
+                skinHistory: JSON.parse(localStorage.getItem('glowdiary_skin_history')) || [],
+                scanHistory: JSON.parse(localStorage.getItem('glowdiary_scan_history')) || [],
+                diaryNotes: JSON.parse(localStorage.getItem('glowdiary_user_diaries')) || {},
+                routineHistory: JSON.parse(localStorage.getItem('glowdiary_history')) || {},
+                empties: JSON.parse(localStorage.getItem('glowdiary_empties')) || [],
+                products : JSON.parse(localStorage.getItem('glowdiary_products')) || [],
+                generatedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('glowdiary_export_snapshot', JSON.stringify(snapshot));
+            window.location.href = 'skin_report.html';
+        }
+
+        // ======================================================================
+        // --- PRODUCT EMPTIES PROGRESS: CRUD STOK SKINCARE PENGGUNA ---
+        // ======================================================================
+        function loadEmpties() {
+            return JSON.parse(localStorage.getItem('glowdiary_empties')) || [];
+        }
+
+        function saveEmpties(list) {
+            localStorage.setItem('glowdiary_empties', JSON.stringify(list));
+        }
+
+        // Isi 2 contoh data hanya pada pemakaian pertama kali (supaya kotak tidak kosong total)
+        function initEmptiesIfNeeded() {
+            if (localStorage.getItem('glowdiary_empties') === null) {
+                saveEmpties([
+                    { id: 1, name: 'Toner BHA', category: 'Toner', stock: 15 },
+                    { id: 2, name: 'Moisturizer Gel', category: 'Moisturizer', stock: 50 }
+                ]);
+            }
+        }
+
+        function getEmptyStatus(stock) {
+            if (stock <= 15) return { label: 'Segera Restock!', color: 'red' };
+            if (stock <= 40) return { label: 'Hampir Habis', color: 'amber' };
+            if (stock <= 70) return { label: 'Setengah Pakai', color: 'blue' };
+            return { label: 'Stok Aman', color: 'emerald' };
+        }
+
+        function renderEmpties() {
+            const container = document.getElementById('empties-list');
+            if (!container) return;
+
+            let list = loadEmpties();
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 bg-gray-50 dark:bg-slate-700/30 rounded-2xl border border-dashed border-gray-200 dark:border-slate-700">
+                        <i class="fa-solid fa-flask text-gray-300 dark:text-slate-600 text-2xl mb-2"></i>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Belum ada produk yang dipantau stoknya.</p>
+                        <button onclick="openAddEmptyModal()" class="mt-2 text-xs font-bold text-brand hover:underline">Tambah Produk Sekarang &rarr;</button>
+                    </div>`;
+                return;
+            }
+
+            // Urutkan dari yang paling hampir habis agar paling mendesak terlihat duluan
+            list = [...list].sort((a, b) => a.stock - b.stock);
+
+            const colorMap = {
+                red:     { bar: 'bg-red-500',     badge: 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400',         icon: 'text-red-500' },
+                amber:   { bar: 'bg-amber-400',   badge: 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400', icon: 'text-amber-500' },
+                blue:    { bar: 'bg-blue-400',    badge: 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400',     icon: 'text-blue-500' },
+                emerald: { bar: 'bg-emerald-400', badge: 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400', icon: 'text-emerald-500' }
+            };
+
+            container.innerHTML = list.map(item => {
+                const status = getEmptyStatus(item.stock);
+                const c = colorMap[status.color];
+                return `
+                    <div class="flex items-center gap-3 group">
+                        <div class="w-9 h-9 rounded-xl bg-purple-50 dark:bg-slate-700 ${c.icon} flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-bottle-droplet text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center gap-2 text-xs font-bold mb-1">
+                                <span class="text-gray-700 dark:text-gray-300 truncate">${item.name}${item.category ? ` <span class="text-gray-400 font-medium">• ${item.category}</span>` : ''}</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] shrink-0 ${c.badge}">${status.label}</span>
+                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-1.5">
+                                <div class="${c.bar} h-1.5 rounded-full transition-all" style="width: ${item.stock}%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button onclick="openEditEmptyModal(${item.id})" class="w-7 h-7 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-400 hover:text-brand flex items-center justify-center text-xs transition-colors" title="Edit Stok"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="restockEmptyProduct(${item.id})" class="w-7 h-7 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-400 hover:text-emerald-500 flex items-center justify-center text-xs transition-colors" title="Sudah Restock (Isi Penuh)"><i class="fa-solid fa-rotate"></i></button>
+                            <button onclick="deleteEmptyProduct(${item.id})" class="w-7 h-7 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-400 hover:text-red-500 flex items-center justify-center text-xs transition-colors" title="Hapus dari Daftar"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openAddEmptyModal() {
+            document.getElementById('modal-empty-title').innerText = 'Tambah Produk';
+            document.getElementById('emptyForm').reset();
+            document.getElementById('emptyId').value = '';
+            document.getElementById('emptyStock').value = 100;
+            document.getElementById('emptyStockLabel').innerText = '100%';
+            toggleModal('modal-empty');
+        }
+
+        function openEditEmptyModal(id) {
+            const item = loadEmpties().find(p => p.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-empty-title').innerText = 'Edit Stok Produk';
+            document.getElementById('emptyId').value = item.id;
+            document.getElementById('emptyName').value = item.name;
+            document.getElementById('emptyCategory').value = item.category || '';
+            document.getElementById('emptyStock').value = item.stock;
+            document.getElementById('emptyStockLabel').innerText = item.stock + '%';
+            toggleModal('modal-empty');
+        }
+
+        function saveEmptyProduct(e) {
+            e.preventDefault();
+            let list = loadEmpties();
+            const idVal = document.getElementById('emptyId').value;
+
+            const data = {
+                id: idVal ? parseInt(idVal) : Date.now(),
+                name: document.getElementById('emptyName').value.trim(),
+                category: document.getElementById('emptyCategory').value.trim(),
+                stock: parseInt(document.getElementById('emptyStock').value)
+            };
+
+            if (!data.name) { alert('Nama produk wajib diisi!'); return; }
+
+            if (idVal) {
+                const idx = list.findIndex(p => p.id === data.id);
+                if (idx !== -1) list[idx] = data;
+            } else {
+                list.push(data);
+            }
+
+            saveEmpties(list);
+            toggleModal('modal-empty');
+            renderEmpties();
+        }
+
+        function restockEmptyProduct(id) {
+            let list = loadEmpties();
+            const idx = list.findIndex(p => p.id === id);
+            if (idx === -1) return;
+
+            if (confirm(`Tandai "${list[idx].name}" sebagai sudah di-restock (stok kembali penuh)?`)) {
+                list[idx].stock = 100;
+                saveEmpties(list);
+                renderEmpties();
+            }
+        }
+
+        function deleteEmptyProduct(id) {
+            const item = loadEmpties().find(p => p.id === id);
+            if (!item) return;
+
+            if (confirm(`Hapus "${item.name}" dari daftar pantauan stok?`)) {
+                const list = loadEmpties().filter(p => p.id !== id);
+                saveEmpties(list);
+                renderEmpties();
             }
         }
     </script>

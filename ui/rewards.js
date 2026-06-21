@@ -6,13 +6,13 @@
 // 1. Fungsi Utama Menambah Poin
 function addUserPoints(amount) {
     // Ambil poin saat ini
-    let currentPoints = parseInt(localStorage.getItem('glowdiary_user_points')) || 0;
+    let currentPoints = parseInt(localStorage.getItem('glowdiary_glowPoints')) || 0;
     
     // Tambahkan poin baru
     currentPoints += amount;
     
     // Simpan kembali
-    localStorage.setItem('glowdiary_user_points', currentPoints);
+    localStorage.setItem('glowdiary_glowPoints', currentPoints);
     
     // Munculkan notifikasi visual
     showPointToast(amount);
@@ -39,7 +39,7 @@ function showPointToast(amount) {
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 500);
-    }, 3000);
+    }, 5000);
 }
 
 // 3. Fungsi Sinkronisasi Tampilan Poin
@@ -48,7 +48,7 @@ function updatePointsDisplay() {
     const pointBadge = document.getElementById('user-points-display') || document.querySelector('.text-xl.font-black.text-purple-600');
     
     if (pointBadge) {
-        const currentPoints = localStorage.getItem('glowdiary_user_points') || '0';
+        const currentPoints = localStorage.getItem('glowdiary_glowPoints') || '0';
         pointBadge.innerText = currentPoints + " Pts";
     }
 }

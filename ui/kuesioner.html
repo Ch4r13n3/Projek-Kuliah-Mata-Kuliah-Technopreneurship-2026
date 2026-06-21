@@ -47,13 +47,11 @@
         .check-icon { display: none; }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center antialiased">
+<body class="bg-slate-50 min-h-screen flex items-center justify-center antialiased p-0 md:p-6">
 
-    <div class="relative w-full min-full-screen bg-white md:w-[412px] md:h-[892px] md:min-h-[892px] md:my-6 md:rounded-[48px] md:border-[12px] md:border-slate-950 md:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] md:overflow-hidden flex flex-col">
+    <div class="w-full min-h-screen md:min-h-[620px] md:max-w-2xl bg-white flex flex-col md:rounded-3xl md:shadow-xl md:border md:border-gray-100 relative overflow-hidden transition-all">
         
-        <div class="hidden md:block absolute top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-950 rounded-full z-50 shadow-inner"></div>
-        
-        <div class="px-6 pt-8 md:pt-12 pb-4 bg-white z-10">
+        <div class="px-6 pt-6 pb-4 bg-white z-10">
             <div class="flex justify-between items-center mb-6">
                 <button id="btn-prev" onclick="prevStep()" class="text-gray-400 hover:text-gray-800 transition-colors w-8 h-8 flex items-center justify-center rounded-full invisible">
                     <i class="fa-solid fa-arrow-left text-lg"></i>
@@ -71,13 +69,13 @@
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto px-6 pb-36 scrollbar-hide">
+        <div class="flex-1 overflow-y-auto px-6 pb-6 scrollbar-hide">
             
             <div id="step-1" class="step-container active">
                 <h1 class="text-2xl font-bold text-gray-900 mb-2">What's your skin type?</h1>
                 <p class="text-gray-500 text-sm mb-6">Select all that apply to get personalized recommendations.</p>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     <div class="option-card border-2 border-gray-100 rounded-2xl p-4 cursor-pointer text-center transition-all relative" onclick="toggleSelection(this)">
                         <i class="fa-solid fa-circle-check text-brand absolute top-3 right-3 check-icon"></i>
                         <div class="text-4xl mb-2">💧</div>
@@ -116,16 +114,16 @@
 
                 <div class="space-y-3">
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group hover:border-purple-200" onclick="singleSelection(this, 'step-2')">
-                        <span class="font-medium text-gray-700">Baru pertama kali mencoba</span>
-                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Baru pertama kali mencoba</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio shrink-0"></div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group hover:border-purple-200" onclick="singleSelection(this, 'step-2')">
-                        <span class="font-medium text-gray-700">Pernah, tapi sudah jarang/berhenti</span>
-                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Pernah, tapi sudah jarang/berhenti</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio shrink-0"></div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group hover:border-purple-200" onclick="singleSelection(this, 'step-2')">
-                        <span class="font-medium text-gray-700">Sering / Pengguna aktif</span>
-                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Sering / Pengguna aktif</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio shrink-0"></div>
                     </div>
                 </div>
             </div>
@@ -135,26 +133,26 @@
                 
                 <div class="space-y-3">
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
-                        <span class="font-medium text-gray-700">Mencatat rutinitas skincare (Tracker)</span>
-                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Mencatat rutinitas skincare (Tracker)</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-check text-white text-xs check-icon"></i>
                         </div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
-                        <span class="font-medium text-gray-700">Analisa bahan produk (Ingredients Scan)</span>
-                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Analisa bahan produk (Ingredients Scan)</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-check text-white text-xs check-icon"></i>
                         </div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
-                        <span class="font-medium text-gray-700">Pengingat Jadwal (Reminders)</span>
-                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Pengingat Jadwal (Reminders)</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-check text-white text-xs check-icon"></i>
                         </div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all" onclick="toggleSelection(this)">
-                        <span class="font-medium text-gray-700">Rekomendasi Produk</span>
-                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center">
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Rekomendasi Produk</span>
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-check text-white text-xs check-icon"></i>
                         </div>
                     </div>
@@ -166,27 +164,27 @@
                 
                 <div class="space-y-3">
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
-                        <span class="font-medium text-gray-700">Sedang Breakout / Berjerawat</span>
-                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Sedang Breakout / Berjerawat</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio shrink-0"></div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
-                        <span class="font-medium text-gray-700">Kering dan Mengelupas</span>
-                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Kering dan Mengelupas</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio shrink-0"></div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
-                        <span class="font-medium text-gray-700">Kusam / Warna kulit tidak merata</span>
-                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Kusam / Warna kulit tidak merata</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio shrink-0"></div>
                     </div>
                     <div class="option-card border-2 border-gray-100 rounded-xl p-4 cursor-pointer flex justify-between items-center transition-all group" onclick="singleSelection(this, 'step-4')">
-                        <span class="font-medium text-gray-700">Normal / Sedang dalam kondisi baik</span>
-                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio"></div>
+                        <span class="font-medium text-gray-700 text-sm md:text-base">Normal / Sedang dalam kondisi baik</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 check-icon-radio shrink-0"></div>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <div class="absolute bottom-0 w-full bg-white border-t border-gray-100 p-6 z-20">
+        <div class="w-full bg-white border-t border-gray-100 p-6 z-20 mt-auto">
             <button id="btn-next" onclick="nextStep()" class="w-full gradient-btn text-white font-bold py-4 rounded-xl shadow-lg shadow-purple-200 hover:opacity-90 transition-all">
                 Continue
             </button>
